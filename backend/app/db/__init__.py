@@ -1,0 +1,1 @@
+"""ShopSync Database Package"""

@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --color-cream: #F8F3EE;
+  --color-plum: #542B43;
+  --color-plum-dark: #3B1E2F;
+  --color-plum-light: #6E3958;
+  --color-rose: #D9A6AC;
+  --color-rose-light: #F4E2E5;
+  --color-rose-deep: #B8727A;
+  --color-beige: #E9DED5;
+  --color-beige-light: #F4EFEA;
+  --color-charcoal: #282426;
+  --color-charcoal-light: #524B4F;
+  --color-charcoal-muted: #827A7F;
+}
+
+@layer base {
+  :root {
+    --bg-cream: #F8F3EE;
+    --brand-plum: #542B43;
+    --brand-rose: #D9A6AC;
+    --brand-beige: #E9DED5;
+    --brand-charcoal: #282426;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background-color: #F8F3EE;
+    color: #282426;
+    overflow-x: hidden;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F8F3EE;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #D9A6AC;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #542B43;
+  }
+}
+
+/* Glassmorphism & Micro-effects */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(217, 166, 172, 0.3);
+}
+
+.glass-dark {
+  background: rgba(40, 36, 38, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(217, 166, 172, 0.2);
+}
+
+.glass-plum {
+  background: rgba(84, 43, 67, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(217, 166, 172, 0.3);
+}
+
+/* 3D Transform Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1200 {
+  perspective: 1200px;
+}
+
+.perspective-1500 {
+  perspective: 1500px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* 3D Floating Cosmetic Bottle Keyframes */
+@keyframes float3D1 {
+  0%, 100% {
+    transform: translateY(0px) rotateZ(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotateZ(2.5deg) rotateY(4deg);
+  }
+}
+
+@keyframes float3D2 {
+  0%, 100% {
+    transform: translateY(0px) rotateZ(0deg) rotateX(0deg);
+  }
+  50% {
+    transform: translateY(14px) rotateZ(-3deg) rotateX(-5deg);
+  }
+}
+
+@keyframes float3D3 {
+  0%, 100% {
+    transform: translateY(0px) rotateZ(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) rotateZ(1.5deg) scale(1.02);
+  }
+}
+
+@keyframes sparkleGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 8px #D9A6AC);
+  }
+}
+
+.animate-float-1 {
+  animation: float3D1 6s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: float3D2 7s ease-in-out infinite;
+}
+
+.animate-float-3 {
+  animation: float3D3 5s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkleGlow 3s ease-in-out infinite;
+}
+
+/* Subtle Shimmer for AI features */
+@keyframes aiShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.ai-shimmer {
+  background: linear-gradient(90deg, #542B43 0%, #D9A6AC 50%, #542B43 100%);
+  background-size: 200% auto;
+  animation: aiShimmer 4s ease-in-out infinite;
+}
+
+/* Hide default cursor on desktop when custom cursor is active */
+@media (pointer: fine) {
+  body.has-custom-cursor {
+    cursor: none !important;
+  }
+  body.has-custom-cursor a,
+  body.has-custom-cursor button,
+  body.has-custom-cursor input,
+  body.has-custom-cursor select,
+  body.has-custom-cursor textarea,
+  body.has-custom-cursor [role="button"],
+  body.has-custom-cursor [data-cursor-card] {
+    cursor: none !important;
+  }
+}

@@ -1,0 +1,1 @@
+"""ShopSync Pydantic Schemas Package"""
