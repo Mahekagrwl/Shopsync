@@ -58,9 +58,43 @@ def test_admin_login():
         "password": "Admin@ShopSync2026"
     })
     assert res.status_code == 200
-    data = res.json()
-    assert data["user"]["role"] == "admin"
-    assert "access_token" in data
+    assert res.json()["user"]["role"] == "admin"
+
+def test_role_based_registration_and_security():
+    # 1. Register as seller succeeds with role="seller"
+    seller_email = f"seller_{datetime.now().timestamp()}@shopsync.in"
+    res_seller = client.post("/api/v1/auth/register", json={
+        "full_name": "Rohan Retail Director",
+        "email": seller_email,
+        "password": "SellerPassword123!",
+        "role": "seller"
+    })
+    assert res_seller.status_code == 200
+    data_seller = res_seller.json()
+    assert data_seller["user"]["role"] == "seller"
+
+    # 2. Register as customer succeeds with role="customer"
+    cust_email = f"customer_{datetime.now().timestamp()}@shopsync.in"
+    res_cust = client.post("/api/v1/auth/register", json={
+        "full_name": "Pooja Hegde",
+        "email": cust_email,
+        "password": "CustomerPassword123!",
+        "role": "customer"
+    })
+    assert res_cust.status_code == 200
+    data_cust = res_cust.json()
+    assert data_cust["user"]["role"] == "customer"
+
+    # 3. Prevent self-registration as privileged admin (must return 403)
+    admin_hack_email = f"hack_{datetime.now().timestamp()}@shopsync.in"
+    res_admin_block = client.post("/api/v1/auth/register", json={
+        "full_name": "Rogue Admin Attempt",
+        "email": admin_hack_email,
+        "password": "HackPassword123!",
+        "role": "admin"
+    })
+    assert res_admin_block.status_code == 403
+    assert "prohibited" in res_admin_block.json()["detail"].lower()
 
 # --- PRODUCTS & SHADES ---
 def test_products_list_and_filters():

@@ -5,7 +5,10 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import CustomerLayout from '../components/layout/CustomerLayout'
 import AdminLayout from '../components/layout/AdminLayout'
 
-// Customer Pages (30 Pages)
+// Route Protection Guard
+import ProtectedRoute from '../components/common/ProtectedRoute'
+
+// Customer Pages (Storefront & Protected)
 import HomePage from '../pages/customer/HomePage'
 import CustomerLogin from '../pages/customer/CustomerLogin'
 import CustomerSignup from '../pages/customer/CustomerSignup'
@@ -29,7 +32,7 @@ import AISkinAnalysisPage from '../pages/customer/AISkinAnalysisPage'
 import AIRecommendationsPage from '../pages/customer/AIRecommendationsPage'
 import SkinSafeCheckerPage from '../pages/customer/SkinSafeCheckerPage'
 
-// Admin Pages (25 Pages)
+// Admin / Seller Pages
 import AdminLoginPage from '../pages/admin/AdminLoginPage'
 import AdminDashboardPage from '../pages/admin/AdminDashboardPage'
 import ProductManagementPage from '../pages/admin/ProductManagementPage'
@@ -56,14 +59,15 @@ import CustomerFeedbackAdminPage from '../pages/admin/CustomerFeedbackAdminPage'
 import NotificationsPage from '../pages/admin/NotificationsPage'
 import SettingsPage from '../pages/admin/SettingsPage'
 
-// Shared
+// Shared Fallback
 import NotFound from '../pages/NotFound'
 
 export function AppRoutes() {
   return (
     <Routes>
-      {/* Customer Storefront Routes */}
+      {/* 1. Public & Customer Storefront Routes */}
       <Route path="/" element={<CustomerLayout />}>
+        {/* Public Routes (Accessible without login) */}
         <Route index element={<HomePage />} />
         <Route path="login" element={<CustomerLogin />} />
         <Route path="signup" element={<CustomerSignup />} />
@@ -73,30 +77,109 @@ export function AppRoutes() {
         <Route path="product/:id" element={<ProductDetailsPage />} />
         <Route path="search" element={<SearchResultsPage />} />
         <Route path="wishlist" element={<WishlistPage />} />
-        <Route path="cart" element={<CartPage />} />
-        <Route path="checkout" element={<CheckoutPage />} />
-        <Route path="payment-status" element={<PaymentStatusPage />} />
-        <Route path="order-confirmation" element={<OrderConfirmationPage />} />
-        <Route path="orders" element={<MyOrdersPage />} />
-        <Route path="order-tracking" element={<OrderTrackingPage />} />
-        <Route path="order-tracking/:orderId" element={<OrderTrackingPage />} />
-        <Route path="profile" element={<CustomerProfilePage />} />
-        <Route path="saved-addresses" element={<SavedAddressesPage />} />
         <Route path="reviews" element={<ProductReviewsPage />} />
-        <Route path="feedback" element={<CustomerFeedbackPage />} />
         <Route path="ai-skin-analysis" element={<AISkinAnalysisPage />} />
         <Route path="ai-recommendations" element={<AIRecommendationsPage />} />
         <Route path="skinsafe" element={<SkinSafeCheckerPage />} />
-        
+
+        {/* Customer Protected Routes (Requires login with customer or admin role) */}
+        <Route
+          path="cart"
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="checkout"
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="payment-status"
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <PaymentStatusPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="order-confirmation"
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <OrderConfirmationPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="orders"
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <MyOrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="order-tracking"
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <OrderTrackingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="order-tracking/:orderId"
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <OrderTrackingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="profile"
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <CustomerProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="saved-addresses"
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <SavedAddressesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="feedback"
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <CustomerFeedbackPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Direct POS alias from customer nav */}
         <Route path="pos" element={<Navigate to="/admin/pos-billing" replace />} />
       </Route>
 
-      {/* Admin Authentication */}
+      {/* 2. Admin / Seller Standalone Authentication */}
       <Route path="/admin/login" element={<AdminLoginPage />} />
 
-      {/* Admin Panel Routes */}
-      <Route path="/admin" element={<AdminLayout />}>
+      {/* 3. Seller / Admin Protected Panel Routes */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute allowedRoles={['seller', 'admin']}>
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<AdminDashboardPage />} />
         <Route path="products" element={<ProductManagementPage />} />
@@ -126,7 +209,7 @@ export function AppRoutes() {
         <Route path="settings" element={<SettingsPage />} />
       </Route>
 
-      {/* 404 Fallback */}
+      {/* 4. 404 Fallback */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

@@ -1,18 +1,19 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Mail, Lock, User, Eye, EyeOff, ArrowRight, ShieldCheck, Check } from 'lucide-react'
+import { Mail, Lock, User, Eye, EyeOff, ArrowRight, ShieldCheck, Check, ShoppingBag, Store, Sparkles } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import AnimatedBackground from '../../components/common/AnimatedBackground'
 
 export function CustomerSignup() {
   const navigate = useNavigate()
-  const { signupCustomer } = useAuth()
+  const { register } = useAuth()
 
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [role, setRole] = useState('customer') // 'customer' or 'seller' only
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [agreeTerms, setAgreeTerms] = useState(true)
@@ -66,12 +67,26 @@ export function CustomerSignup() {
       return
     }
 
+    // Strictly ensure role cannot be privileged admin
+    const safeRole = role === 'seller' ? 'seller' : 'customer'
+
     setLoading(true)
 
     try {
-      await signupCustomer({ fullName: fullName.trim(), email: email.trim(), password })
+      const res = await register({
+        fullName: fullName.trim(),
+        email: email.trim(),
+        password,
+        role: safeRole
+      })
       setLoading(false)
-      navigate('/profile', { replace: true })
+
+      // Role-Based Navigation
+      if (res?.user?.role === 'seller') {
+        navigate('/admin/dashboard', { replace: true })
+      } else {
+        navigate('/shop', { replace: true })
+      }
     } catch (err) {
       setLoading(false)
       setError(err?.message || 'Unable to register account. Please check your information.')
@@ -79,16 +94,16 @@ export function CustomerSignup() {
   }
 
   return (
-    <div className="relative min-h-[90vh] flex items-center justify-center px-4 py-16 overflow-hidden">
-      {/* 5. Matching Animated Background */}
+    <div className="relative min-h-[90vh] flex items-center justify-center px-4 py-16 overflow-hidden bg-[#FFF9F5]">
+      {/* Subtle Animated Background */}
       <AnimatedBackground variant="auth" />
 
-      {/* 5. Sign Up Card */}
+      {/* Sign Up Card */}
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md bg-white/95 backdrop-blur-md rounded-3xl border border-[#E9DED5] p-8 sm:p-10 shadow-xl space-y-6 relative z-10"
+        className="w-full max-w-md bg-white/95 backdrop-blur-md rounded-3xl border border-[#F4C6D5] p-8 sm:p-10 shadow-2xl space-y-6 relative z-10"
       >
         {/* Brand Logo & Header */}
         <div className="text-center space-y-2.5">
@@ -96,15 +111,15 @@ export function CustomerSignup() {
             <img
               src="/logo.jpg"
               alt="ShopSync Logo"
-              className="h-16 w-16 rounded-2xl object-cover mx-auto shadow-md border border-[#E9DED5]"
+              className="h-16 w-16 rounded-2xl object-cover mx-auto shadow-md border border-[#F4C6D5]"
             />
           </Link>
           <div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#282426]">
-              Create Your ShopSync Account
+            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#352137]">
+              Create Your Account
             </h1>
-            <p className="text-xs text-[#827A7F] mt-1 leading-relaxed">
-              Join ShopSync and discover a smarter shopping experience.
+            <p className="text-xs text-stone-600 mt-1 leading-relaxed">
+              Join ShopSync to experience smart Indian beauty & retail.
             </p>
           </div>
         </div>
@@ -122,9 +137,61 @@ export function CustomerSignup() {
 
         {/* Registration Form */}
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+          {/* Role Selection (Customer or Seller) */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#352137] mb-2">
+              Select Your Account Type
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              {/* Customer Option */}
+              <button
+                type="button"
+                onClick={() => setRole('customer')}
+                className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                  role === 'customer'
+                    ? 'border-[#352137] bg-[#FFF9F5] shadow-xs ring-2 ring-[#352137]/10'
+                    : 'border-[#F4C6D5] bg-white hover:border-stone-400'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className={`p-1.5 rounded-xl ${role === 'customer' ? 'bg-[#352137] text-white' : 'bg-stone-100 text-stone-600'}`}>
+                    <ShoppingBag className="w-4 h-4" />
+                  </div>
+                  {role === 'customer' && <Check className="w-4 h-4 text-[#352137]" />}
+                </div>
+                <div className="mt-2">
+                  <p className="font-serif font-bold text-xs text-[#352137]">Customer</p>
+                  <p className="text-[10px] text-stone-500 leading-tight mt-0.5">Shop beauty & routines</p>
+                </div>
+              </button>
+
+              {/* Seller Option */}
+              <button
+                type="button"
+                onClick={() => setRole('seller')}
+                className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                  role === 'seller'
+                    ? 'border-[#352137] bg-[#FFF9F5] shadow-xs ring-2 ring-[#352137]/10'
+                    : 'border-[#F4C6D5] bg-white hover:border-stone-400'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className={`p-1.5 rounded-xl ${role === 'seller' ? 'bg-[#352137] text-white' : 'bg-stone-100 text-stone-600'}`}>
+                    <Store className="w-4 h-4" />
+                  </div>
+                  {role === 'seller' && <Check className="w-4 h-4 text-[#352137]" />}
+                </div>
+                <div className="mt-2">
+                  <p className="font-serif font-bold text-xs text-[#352137]">Seller</p>
+                  <p className="text-[10px] text-stone-500 leading-tight mt-0.5">POS, stock & products</p>
+                </div>
+              </button>
+            </div>
+          </div>
+
           {/* Full Name */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#524B4F] mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#352137] mb-1.5">
               Full Name
             </label>
             <div className="relative">
@@ -133,8 +200,8 @@ export function CustomerSignup() {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Camille Laurent"
-                className="w-full rounded-xl border border-[#E9DED5] bg-[#F8F3EE] px-4 py-3 pl-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#542B43] focus:border-transparent transition-all"
+                placeholder="e.g., Ananya Sharma"
+                className="w-full rounded-xl border border-[#F4C6D5] bg-[#FFF9F5] px-4 py-3 pl-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#352137] focus:border-transparent transition-all"
               />
               <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
             </div>
@@ -142,7 +209,7 @@ export function CustomerSignup() {
 
           {/* Email Address */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#524B4F] mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#352137] mb-1.5">
               Email Address
             </label>
             <div className="relative">
@@ -151,8 +218,8 @@ export function CustomerSignup() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="camille@example.com"
-                className="w-full rounded-xl border border-[#E9DED5] bg-[#F8F3EE] px-4 py-3 pl-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#542B43] focus:border-transparent transition-all"
+                placeholder="name@example.com"
+                className="w-full rounded-xl border border-[#F4C6D5] bg-[#FFF9F5] px-4 py-3 pl-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#352137] focus:border-transparent transition-all"
               />
               <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
             </div>
@@ -160,7 +227,7 @@ export function CustomerSignup() {
 
           {/* Password with Show / Hide Toggle */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#524B4F] mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#352137] mb-1.5">
               Password
             </label>
             <div className="relative">
@@ -170,7 +237,7 @@ export function CustomerSignup() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Minimum 8 characters"
-                className="w-full rounded-xl border border-[#E9DED5] bg-[#F8F3EE] px-4 py-3 pl-10 pr-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#542B43] focus:border-transparent transition-all"
+                className="w-full rounded-xl border border-[#F4C6D5] bg-[#FFF9F5] px-4 py-3 pl-10 pr-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#352137] focus:border-transparent transition-all"
               />
               <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
               <button
@@ -202,7 +269,7 @@ export function CustomerSignup() {
 
           {/* Confirm Password with Show / Hide Toggle */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#524B4F] mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#352137] mb-1.5">
               Confirm Password
             </label>
             <div className="relative">
@@ -212,7 +279,7 @@ export function CustomerSignup() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter your password"
-                className="w-full rounded-xl border border-[#E9DED5] bg-[#F8F3EE] px-4 py-3 pl-10 pr-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#542B43] focus:border-transparent transition-all"
+                className="w-full rounded-xl border border-[#F4C6D5] bg-[#FFF9F5] px-4 py-3 pl-10 pr-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#352137] focus:border-transparent transition-all"
               />
               <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
               <button
@@ -231,22 +298,22 @@ export function CustomerSignup() {
 
           {/* Terms and Conditions Checkbox */}
           <div className="pt-1">
-            <label className="flex items-start gap-2.5 cursor-pointer text-xs text-[#524B4F] leading-tight">
+            <label className="flex items-start gap-2.5 cursor-pointer text-xs text-[#352137] leading-tight">
               <input
                 type="checkbox"
                 checked={agreeTerms}
                 onChange={(e) => setAgreeTerms(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded text-[#542B43] focus:ring-[#542B43] border-[#E9DED5]"
+                className="mt-0.5 h-4 w-4 rounded text-[#352137] focus:ring-[#352137] border-[#F4C6D5]"
               />
               <span>
                 I agree to the{' '}
-                <Link to="/terms" className="text-[#542B43] underline font-semibold">
+                <span className="text-[#352137] underline font-semibold">
                   Terms & Conditions
-                </Link>{' '}
+                </span>{' '}
                 and{' '}
-                <Link to="/privacy-policy" className="text-[#542B43] underline font-semibold">
+                <span className="text-[#352137] underline font-semibold">
                   Privacy Policy
-                </Link>
+                </span>
                 .
               </span>
             </label>
@@ -256,16 +323,16 @@ export function CustomerSignup() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 bg-[#542B43] hover:bg-[#3B1E2F] active:scale-98 text-white py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            className="w-full mt-2 bg-[#352137] hover:bg-[#542B43] active:scale-98 text-white py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {loading ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Creating Account...
+                Creating {role === 'seller' ? 'Seller' : 'Customer'} Account...
               </span>
             ) : (
               <>
-                <span>Create Account</span>
+                <span>Create {role === 'seller' ? 'Seller' : 'Customer'} Account</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -273,9 +340,9 @@ export function CustomerSignup() {
         </form>
 
         {/* Bottom Link: "Existing account? Login" */}
-        <div className="pt-4 border-t border-[#E9DED5] text-center text-xs text-[#827A7F]">
+        <div className="pt-4 border-t border-[#F4C6D5] text-center text-xs text-stone-600">
           Existing account?{' '}
-          <Link to="/login" className="font-bold text-[#542B43] hover:underline">
+          <Link to="/login" className="font-bold text-[#352137] hover:underline">
             Login
           </Link>
         </div>

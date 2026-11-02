@@ -29,7 +29,7 @@ export function CustomerNavbar() {
   const location = useLocation()
   const { totalItemCount } = useCart()
   const { wishlistCount } = useWishlist()
-  const { customer, isCustomerAuthenticated, logoutCustomer } = useAuth()
+  const { user, isAuthenticated, role, isCustomer, isSeller, customer, logout } = useAuth()
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -140,16 +140,16 @@ export function CustomerNavbar() {
                 {categoriesDropdown && (
                   <div className="absolute top-full left-0 w-56 bg-white border border-[#F4C6D5] rounded-2xl shadow-xl py-2 z-50">
                     <Link
-                      to="/category/makeup"
-                      className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
-                    >
-                      💄 Makeup Essentials (Lakmé, Maybelline, SUGAR)
-                    </Link>
-                    <Link
                       to="/category/skincare"
                       className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
                     >
                       ✨ Skincare Formulations (Minimalist, L’Oréal)
+                    </Link>
+                    <Link
+                      to="/category/makeup"
+                      className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
+                    >
+                      💄 Makeup Essentials (Lakmé, Maybelline, SUGAR)
                     </Link>
                     <Link
                       to="/category/haircare"
@@ -158,35 +158,23 @@ export function CustomerNavbar() {
                       🌿 Botanical Haircare (Mamaearth Onion Oil)
                     </Link>
                     <Link
-                      to="/category/fragrance"
-                      className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
-                    >
-                      🌹 Royal Oud & Floral Fragrances
-                    </Link>
-                    <Link
-                      to="/category/bodycare"
-                      className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
-                    >
-                      🧴 Bodycare & Restorative Butters
-                    </Link>
-                    <Link
-                      to="/category/accessories"
+                      to="/shop"
                       className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium border-t border-[#F4C6D5]/40"
                     >
-                      ✂️ Beauty Tools & Brushes
+                      ✦ Beauty Essentials & Tools
                     </Link>
                   </div>
                 )}
               </div>
 
-              {/* Best Sellers */}
-              <a href="/#bestsellers" className="hover:text-[#352137] transition-colors py-2 flex items-center gap-1">
-                <Flame className="w-3.5 h-3.5 text-rose-500" /> Best Sellers
+              {/* About Us */}
+              <a href="/#about" className="hover:text-[#352137] transition-colors py-2">
+                About Us
               </a>
 
-              {/* New Arrivals */}
-              <a href="/#new-arrivals" className="hover:text-[#352137] transition-colors py-2 flex items-center gap-1">
-                <Star className="w-3.5 h-3.5 text-amber-500" /> New Arrivals
+              {/* Contact */}
+              <a href="#footer-contact" className="hover:text-[#352137] transition-colors py-2">
+                Contact
               </a>
 
               {/* AI Tech Dropdown */}
@@ -292,16 +280,17 @@ export function CustomerNavbar() {
                 )}
               </Link>
 
-              {/* Customer Profile / Auth Menu */}
+              {/* User Profile / Auth Menu */}
               <div className="relative">
-                {isCustomerAuthenticated ? (
+                {isAuthenticated && user ? (
                   <button
                     onClick={() => setUserDropdown(!userDropdown)}
                     className="flex items-center gap-2 p-1.5 rounded-full hover:bg-[#FFF9F5] transition-colors cursor-pointer"
+                    aria-label="User Account Menu"
                   >
                     <img
-                      src={customer.avatar}
-                      alt={customer.name}
+                      src={user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400'}
+                      alt={user.name}
                       className="h-8 w-8 rounded-full object-cover ring-2 ring-[#D985A5]"
                     />
                   </button>
@@ -323,42 +312,91 @@ export function CustomerNavbar() {
                   </div>
                 )}
 
-                {userDropdown && isCustomerAuthenticated && (
-                  <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl bg-white border border-[#F4C6D5] shadow-xl py-2 z-50">
-                    <div className="px-4 py-2 border-b border-[#F4C6D5]/60">
-                      <p className="text-xs font-semibold text-[#352137] truncate">{customer.name}</p>
-                      <p className="text-[10px] text-stone-500 truncate">{customer.email}</p>
-                      <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4C6D5]/40 text-[#352137]">
-                        {customer.loyaltyTier}
+                {userDropdown && isAuthenticated && user && (
+                  <div className="absolute right-0 top-full mt-2 w-60 rounded-2xl bg-white border border-[#F4C6D5] shadow-xl py-2 z-50">
+                    <div className="px-4 py-2.5 border-b border-[#F4C6D5]/60">
+                      <p className="text-xs font-semibold text-[#352137] truncate">{user.name}</p>
+                      <p className="text-[10px] text-stone-500 truncate">{user.email}</p>
+                      <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold ${
+                        isSeller
+                          ? 'bg-[#352137] text-white'
+                          : 'bg-[#F4C6D5]/50 text-[#352137]'
+                      }`}>
+                        {isSeller ? (user.role === 'admin' ? 'Store Director (Admin)' : 'Seller Partner') : (user.loyaltyTier || 'Customer')}
                       </span>
                     </div>
-                    <Link
-                      to="/profile"
-                      onClick={() => setUserDropdown(false)}
-                      className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
-                    >
-                      My Profile & Skin Preferences
-                    </Link>
-                    <Link
-                      to="/orders"
-                      onClick={() => setUserDropdown(false)}
-                      className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
-                    >
-                      My Orders & Tracking
-                    </Link>
-                    <Link
-                      to="/feedback"
-                      onClick={() => setUserDropdown(false)}
-                      className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
-                    >
-                      Report Reaction / Feedback
-                    </Link>
+
+                    {isCustomer ? (
+                      <>
+                        <Link
+                          to="/profile"
+                          onClick={() => setUserDropdown(false)}
+                          className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
+                        >
+                          My Profile & Skin Preferences
+                        </Link>
+                        <Link
+                          to="/orders"
+                          onClick={() => setUserDropdown(false)}
+                          className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
+                        >
+                          My Orders & Tracking
+                        </Link>
+                        <Link
+                          to="/cart"
+                          onClick={() => setUserDropdown(false)}
+                          className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
+                        >
+                          Shopping Bag ({totalItemCount})
+                        </Link>
+                        <Link
+                          to="/feedback"
+                          onClick={() => setUserDropdown(false)}
+                          className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
+                        >
+                          Report Reaction / Feedback
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          to="/admin/dashboard"
+                          onClick={() => setUserDropdown(false)}
+                          className="block px-4 py-2 text-xs font-bold text-[#352137] hover:bg-[#FFF9F5]"
+                        >
+                          📊 Seller Dashboard
+                        </Link>
+                        <Link
+                          to="/admin/pos-billing"
+                          onClick={() => setUserDropdown(false)}
+                          className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
+                        >
+                          🏪 POS Billing Register
+                        </Link>
+                        <Link
+                          to="/admin/products"
+                          onClick={() => setUserDropdown(false)}
+                          className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
+                        >
+                          📦 Product Catalog
+                        </Link>
+                        <Link
+                          to="/admin/inventory"
+                          onClick={() => setUserDropdown(false)}
+                          className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
+                        >
+                          📦 Stock & Batch Expiry
+                        </Link>
+                      </>
+                    )}
+
                     <button
                       onClick={() => {
                         setUserDropdown(false)
-                        logoutCustomer()
+                        logout()
+                        navigate('/')
                       }}
-                      className="w-full text-left px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 border-t border-[#F4C6D5]/40"
+                      className="w-full text-left px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 border-t border-[#F4C6D5]/40 font-semibold cursor-pointer"
                     >
                       Sign Out
                     </button>
@@ -416,6 +454,13 @@ export function CustomerNavbar() {
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-[#F4C6D5] bg-[#FFF9F5] px-4 pt-3 pb-6 space-y-2 text-sm font-semibold">
             <Link
+              to="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-2 text-[#352137] hover:text-[#D985A5]"
+            >
+              Home
+            </Link>
+            <Link
               to="/shop"
               onClick={() => setMobileMenuOpen(false)}
               className="block py-2 text-[#352137] hover:text-[#D985A5]"
@@ -443,6 +488,20 @@ export function CustomerNavbar() {
             >
               Haircare & Oils (Mamaearth)
             </Link>
+            <a
+              href="/#about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-2 text-[#352137] hover:text-[#D985A5]"
+            >
+              About Us
+            </a>
+            <a
+              href="#footer-contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-2 text-[#352137] hover:text-[#D985A5]"
+            >
+              Contact
+            </a>
             <Link
               to="/ai-skin-analysis"
               onClick={() => setMobileMenuOpen(false)}
@@ -459,6 +518,25 @@ export function CustomerNavbar() {
             </Link>
 
             <div className="pt-4 border-t border-[#F4C6D5] flex flex-col gap-2">
+              {!isAuthenticated ? (
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full bg-[#352137] text-white text-center py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider"
+                >
+                  Login / Sign Up
+                </Link>
+              ) : (
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false)
+                    logout()
+                  }}
+                  className="w-full bg-rose-50 border border-rose-200 text-rose-700 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider"
+                >
+                  Sign Out ({user?.name})
+                </button>
+              )}
               <button
                 onClick={() => {
                   setMobileMenuOpen(false)

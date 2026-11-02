@@ -20,7 +20,25 @@ USERS_DB = [
         "avatar_url": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400"
     },
     {
+        "id": "seller-001",
+        "email": "seller@shopsync.in",
+        "full_name": "Rohan Mehta (Seller & Retail Director)",
+        "role": "seller",
+        "hashed_password": get_password_hash("Seller@ShopSync2026"),
+        "is_active": True,
+        "avatar_url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400"
+    },
+    {
         "id": "cust-8901",
+        "email": "ananya.sharma@shopsync.in",
+        "full_name": "Ananya Sharma",
+        "role": "customer",
+        "hashed_password": get_password_hash("Beauty@1234"),
+        "is_active": True,
+        "avatar_url": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400"
+    },
+    {
+        "id": "cust-8902",
         "email": "camille.laurent@example.com",
         "full_name": "Camille Laurent",
         "role": "customer",
@@ -34,6 +52,7 @@ class UserRegisterRequest(BaseModel):
     full_name: str
     email: EmailStr
     password: str
+    role: Optional[str] = "customer"
     phone: Optional[str] = None
 
 class UserLoginRequest(BaseModel):
@@ -58,14 +77,25 @@ async def register(req: UserRegisterRequest):
             detail="An account with this email address already exists."
         )
 
-    user_id = f"cust-{uuid.uuid4().hex[:8]}"
+    # Strictly enforce allowed roles: only customer or seller. Never allow admin!
+    assigned_role = "customer"
+    if req.role and req.role.strip().lower() == "seller":
+        assigned_role = "seller"
+    elif req.role and req.role.strip().lower() == "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Self-registration as administrator is prohibited. Please contact the platform director."
+        )
+
+    prefix = "sell" if assigned_role == "seller" else "cust"
+    user_id = f"{prefix}-{uuid.uuid4().hex[:8]}"
     hashed_pwd = get_password_hash(req.password)
 
     new_user = {
         "id": user_id,
         "email": req.email.lower(),
         "full_name": req.full_name,
-        "role": "customer",
+        "role": assigned_role,
         "phone": req.phone,
         "hashed_password": hashed_pwd,
         "is_active": True,
@@ -73,20 +103,21 @@ async def register(req: UserRegisterRequest):
     }
     USERS_DB.append(new_user)
 
-    # Also register in db_store.customers
-    db_store.customers.append({
-        "id": user_id,
-        "full_name": req.full_name,
-        "email": req.email.lower(),
-        "phone": req.phone or "",
-        "loyalty_tier": "Bronze Member",
-        "loyalty_points": 100,
-        "lifetime_spend": 0.0,
-        "allergies": [],
-        "skin_profile": {"skin_type": "Normal", "skin_concerns": []}
-    })
+    if assigned_role == "customer":
+        # Register in customer loyalty and profiles
+        db_store.customers.append({
+            "id": user_id,
+            "full_name": req.full_name,
+            "email": req.email.lower(),
+            "phone": req.phone or "",
+            "loyalty_tier": "Bronze Member",
+            "loyalty_points": 100,
+            "lifetime_spend": 0.0,
+            "allergies": [],
+            "skin_profile": {"skin_type": "Normal", "skin_concerns": []}
+        })
 
-    token = create_access_token(subject=user_id, role="customer")
+    token = create_access_token(subject=user_id, role=assigned_role)
     return {
         "access_token": token,
         "token_type": "bearer",

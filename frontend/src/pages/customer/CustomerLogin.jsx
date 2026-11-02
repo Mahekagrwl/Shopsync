@@ -1,14 +1,19 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck, Check } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck, Check, Sparkles, Store, ShoppingBag } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import AnimatedBackground from '../../components/common/AnimatedBackground'
 
 export function CustomerLogin() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { loginCustomer, loginAdmin } = useAuth()
+  const { login, loginAsDemo } = useAuth()
+
+  // Get intended redirect destination if redirected from ProtectedRoute
+  const searchParams = new URLSearchParams(location.search)
+  const redirectParam = searchParams.get('redirect')
+  const from = redirectParam ? decodeURIComponent(redirectParam) : (location.state?.from?.pathname || null)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -17,14 +22,11 @@ export function CustomerLogin() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Redirect destination after login
-  const from = location.state?.from?.pathname || '/profile'
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
 
-    // Form validation
+    // Form validations
     if (!email.trim() || !password) {
       setError('Please provide both your registered email address and password.')
       return
@@ -39,40 +41,53 @@ export function CustomerLogin() {
     setLoading(true)
 
     try {
-      // Check if admin login is triggered from this portal
-      if (email.toLowerCase().includes('admin') || email.toLowerCase().includes('victoria@shopsyncbeauty.com')) {
-        const res = await loginAdmin(email, password)
-        setLoading(false)
-        navigate('/admin/dashboard', { replace: true })
-        return
-      }
-
-      // Customer login
-      const res = await loginCustomer(email, password)
+      const res = await login(email.trim(), password, rememberMe)
       setLoading(false)
-      navigate(from, { replace: true })
+
+      const userRole = res?.user?.role || 'customer'
+
+      // Role-Based Redirect
+      if (userRole === 'seller' || userRole === 'admin') {
+        const dest = from && from.startsWith('/admin') ? from : '/admin/dashboard'
+        navigate(dest, { replace: true })
+      } else {
+        // Customer
+        const dest = from && !from.startsWith('/admin') ? from : '/shop'
+        navigate(dest, { replace: true })
+      }
     } catch (err) {
       setLoading(false)
       setError(err?.message || 'Invalid email or password. Please verify your credentials.')
     }
   }
 
+  // Quick Demo Account Trigger
+  const handleQuickDemo = (role) => {
+    const user = loginAsDemo(role)
+    if (user.role === 'seller' || user.role === 'admin') {
+      const dest = from && from.startsWith('/admin') ? from : '/admin/dashboard'
+      navigate(dest, { replace: true })
+    } else {
+      const dest = from && !from.startsWith('/admin') ? from : '/shop'
+      navigate(dest, { replace: true })
+    }
+  }
+
   const handleGoogleLogin = () => {
-    // Elegant toast / notice for Google Auth connection
     setError('Google OAuth provider is ready in production. Please sign in with your email and password.')
   }
 
   return (
-    <div className="relative min-h-[85vh] flex items-center justify-center px-4 py-16 overflow-hidden">
-      {/* 4.A Subtle Animated Background */}
+    <div className="relative min-h-[90vh] flex items-center justify-center px-4 py-16 overflow-hidden bg-[#FFF9F5]">
+      {/* Subtle Animated Background */}
       <AnimatedBackground variant="auth" />
 
-      {/* 4.B Login Card */}
+      {/* Login Card */}
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md bg-white/95 backdrop-blur-md rounded-3xl border border-[#E9DED5] p-8 sm:p-10 shadow-xl space-y-6 relative z-10"
+        className="w-full max-w-md bg-white/95 backdrop-blur-md rounded-3xl border border-[#F4C6D5] p-8 sm:p-10 shadow-2xl space-y-6 relative z-10"
       >
         {/* Brand Logo & Header */}
         <div className="text-center space-y-2.5">
@@ -80,16 +95,43 @@ export function CustomerLogin() {
             <img
               src="/logo.jpg"
               alt="ShopSync Logo"
-              className="h-16 w-16 rounded-2xl object-cover mx-auto shadow-md border border-[#E9DED5]"
+              className="h-16 w-16 rounded-2xl object-cover mx-auto shadow-md border border-[#F4C6D5]"
             />
           </Link>
           <div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#282426]">
+            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#352137]">
               Welcome Back!
             </h1>
-            <p className="text-xs text-[#827A7F] mt-1 leading-relaxed">
-              Welcome back to ShopSync. Continue your shopping experience.
+            <p className="text-xs text-stone-600 mt-1 leading-relaxed">
+              Sign in to your ShopSync account to continue your beauty journey.
             </p>
+          </div>
+        </div>
+
+        {/* Demo One-Click Login Pills */}
+        <div className="bg-[#FFF9F5] border border-[#F4C6D5] rounded-2xl p-3 space-y-1.5">
+          <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#352137]">
+            <span className="flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-[#D985A5]" /> Quick Demo Logins:
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('customer')}
+              className="px-2.5 py-1.5 rounded-xl bg-white border border-[#F4C6D5] text-[11px] font-semibold text-[#352137] hover:bg-[#F4C6D5]/30 hover:border-[#D985A5] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+            >
+              <ShoppingBag className="w-3 h-3 text-[#D985A5]" />
+              <span>Customer Demo</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('seller')}
+              className="px-2.5 py-1.5 rounded-xl bg-white border border-[#F4C6D5] text-[11px] font-semibold text-[#352137] hover:bg-[#F4C6D5]/30 hover:border-[#D985A5] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+            >
+              <Store className="w-3 h-3 text-[#C58A78]" />
+              <span>Seller Demo</span>
+            </button>
           </div>
         </div>
 
@@ -108,7 +150,7 @@ export function CustomerLogin() {
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           {/* Email Address */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#524B4F] mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#352137] mb-1.5">
               Email Address
             </label>
             <div className="relative">
@@ -117,8 +159,8 @@ export function CustomerLogin() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="camille@example.com"
-                className="w-full rounded-xl border border-[#E9DED5] bg-[#F8F3EE] px-4 py-3 pl-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#542B43] focus:border-transparent transition-all"
+                placeholder="name@example.com"
+                className="w-full rounded-xl border border-[#F4C6D5] bg-[#FFF9F5] px-4 py-3 pl-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#352137] focus:border-transparent transition-all"
               />
               <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
             </div>
@@ -127,10 +169,10 @@ export function CustomerLogin() {
           {/* Password with Show / Hide Toggle */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#524B4F]">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#352137]">
                 Password
               </label>
-              <Link to="/forgot-password" className="text-xs text-[#542B43] hover:underline font-semibold">
+              <Link to="/forgot-password" className="text-xs text-[#D985A5] hover:underline font-semibold">
                 Forgot Password?
               </Link>
             </div>
@@ -141,7 +183,7 @@ export function CustomerLogin() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full rounded-xl border border-[#E9DED5] bg-[#F8F3EE] px-4 py-3 pl-10 pr-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#542B43] focus:border-transparent transition-all"
+                className="w-full rounded-xl border border-[#F4C6D5] bg-[#FFF9F5] px-4 py-3 pl-10 pr-10 text-xs text-[#282426] placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#352137] focus:border-transparent transition-all"
               />
               <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
               <button
@@ -157,14 +199,14 @@ export function CustomerLogin() {
 
           {/* Remember Me Option */}
           <div className="flex items-center justify-between pt-1">
-            <label className="flex items-center gap-2 cursor-pointer text-xs text-[#524B4F]">
+            <label className="flex items-center gap-2 cursor-pointer text-xs text-[#352137]">
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 rounded text-[#542B43] focus:ring-[#542B43] border-[#E9DED5]"
+                className="h-4 w-4 rounded text-[#352137] focus:ring-[#352137] border-[#F4C6D5]"
               />
-              <span>Remember Me</span>
+              <span className="font-medium">Remember Me</span>
             </label>
           </div>
 
@@ -172,7 +214,7 @@ export function CustomerLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 bg-[#542B43] hover:bg-[#3B1E2F] active:scale-98 text-white py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            className="w-full mt-2 bg-[#352137] hover:bg-[#542B43] active:scale-98 text-white py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -189,7 +231,7 @@ export function CustomerLogin() {
 
           {/* Divider */}
           <div className="relative py-2 flex items-center justify-center">
-            <div className="border-t border-[#E9DED5] w-full" />
+            <div className="border-t border-[#F4C6D5] w-full" />
             <span className="bg-white px-3 text-[10px] text-stone-400 uppercase tracking-wider absolute">
               or
             </span>
@@ -199,7 +241,7 @@ export function CustomerLogin() {
           <button
             type="button"
             onClick={handleGoogleLogin}
-            className="w-full py-3 px-4 rounded-xl border border-[#E9DED5] bg-[#F8F3EE] hover:bg-[#E9DED5] active:scale-98 text-[#282426] font-semibold text-xs transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+            className="w-full py-3 px-4 rounded-xl border border-[#F4C6D5] bg-[#FFF9F5] hover:bg-stone-100 active:scale-98 text-[#352137] font-semibold text-xs transition-all flex items-center justify-center gap-2.5 cursor-pointer"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -224,9 +266,9 @@ export function CustomerLogin() {
         </form>
 
         {/* Bottom Link: "Don't have an account? Sign Up" */}
-        <div className="pt-4 border-t border-[#E9DED5] text-center text-xs text-[#827A7F]">
+        <div className="pt-4 border-t border-[#F4C6D5] text-center text-xs text-stone-600">
           Don't have an account?{' '}
-          <Link to="/signup" className="font-bold text-[#542B43] hover:underline">
+          <Link to="/signup" className="font-bold text-[#352137] hover:underline">
             Sign Up
           </Link>
         </div>

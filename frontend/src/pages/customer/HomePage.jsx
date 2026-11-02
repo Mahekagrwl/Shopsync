@@ -25,9 +25,13 @@ import {
   Truck,
   IndianRupee,
   Search,
-  Tag
+  Tag,
+  ShieldAlert,
+  Clock,
+  Sparkle,
+  RotateCcw
 } from 'lucide-react'
-import { BEAUTY_PRODUCTS, CATEGORIES, BRANDS, MOCK_REVIEWS } from '../../data/mockBeautyData'
+import { BEAUTY_PRODUCTS, BRANDS, MOCK_REVIEWS } from '../../data/mockBeautyData'
 import ProductCard from '../../components/common/ProductCard'
 import AnimatedBackground from '../../components/common/AnimatedBackground'
 import RoleSelectionModal from '../../components/common/RoleSelectionModal'
@@ -59,11 +63,51 @@ export function HomePage() {
     setHeroTilt({ x: 0, y: 0 })
   }
 
+  // 4 Primary Required Categories
+  const FEATURED_CATEGORIES = [
+    {
+      id: 'skincare',
+      title: 'Skincare',
+      description: 'Clinical actives, 10% Niacinamide, Hyaluronic hydration & barrier repair formulations.',
+      image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80',
+      link: '/category/skincare',
+      badge: 'Clinically Tested',
+      productCount: '180+ Formulations'
+    },
+    {
+      id: 'makeup',
+      title: 'Makeup',
+      description: 'Flawless matte foundations, high-pigment lipsticks, waterproof kajals & blushes.',
+      image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
+      link: '/category/makeup',
+      badge: 'Pro Artistry',
+      productCount: '240+ Shades'
+    },
+    {
+      id: 'haircare',
+      title: 'Haircare',
+      description: 'Ayurvedic onion seed oils, Redensyl scalp therapy & bond repair conditioning masks.',
+      image: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=800&auto=format&fit=crop&q=80',
+      link: '/category/haircare',
+      badge: 'Ayurvedic Actives',
+      productCount: '95+ Formulations'
+    },
+    {
+      id: 'beauty-essentials',
+      title: 'Beauty Essentials',
+      description: 'Sunscreen fluid SPF 50+, precision blending tools, micellar waters & routine kits.',
+      image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&auto=format&fit=crop&q=80',
+      link: '/shop',
+      badge: 'Everyday Must-Haves',
+      productCount: '120+ Essentials'
+    }
+  ]
+
   // Filtered Products based on rotating tabs
   const tabCategories = [
     { id: 'all', label: 'All Collections' },
-    { id: 'makeup', label: 'Makeup' },
     { id: 'skincare', label: 'Skincare' },
+    { id: 'makeup', label: 'Makeup' },
     { id: 'haircare', label: 'Haircare' },
     { id: 'fragrance', label: 'Fragrance' },
     { id: 'bodycare', label: 'Bodycare' },
@@ -75,28 +119,23 @@ export function HomePage() {
 
   const trendingProducts = BEAUTY_PRODUCTS.slice(0, 4)
   const bestSellers = BEAUTY_PRODUCTS.filter(p => p.isBestSeller).slice(0, 4)
-  const newArrivals = BEAUTY_PRODUCTS.filter(p => p.isNewArrival || p.id === 'prod-006' || p.id === 'prod-009' || p.id === 'prod-012').slice(0, 4)
-  const makeupProducts = BEAUTY_PRODUCTS.filter(p => p.category === 'makeup').slice(0, 4)
-  const skincareProducts = BEAUTY_PRODUCTS.filter(p => p.category === 'skincare').slice(0, 4)
-  const haircareProducts = BEAUTY_PRODUCTS.filter(p => p.category === 'haircare').slice(0, 4)
-  const fragranceProducts = BEAUTY_PRODUCTS.filter(p => p.category === 'fragrance' || p.subcategory === 'fragrance').slice(0, 4)
 
   return (
     <div className="space-y-24 pb-16 overflow-hidden relative bg-[#FFF9F5]">
-      {/* 1. CINEMATIC 3D HERO SECTION */}
+      {/* 1. CINEMATIC HERO SECTION */}
       <section
         onMouseMove={handleHeroMouseMove}
         onMouseLeave={handleHeroMouseLeave}
-        className="relative overflow-hidden bg-gradient-to-b from-[#FFF9F5] via-[#F4C6D5]/20 to-[#FFF9F5] pt-12 pb-24 lg:pt-20 lg:pb-32 border-b border-[#F4C6D5]/60"
+        className="relative overflow-hidden bg-gradient-to-b from-[#FFF9F5] via-[#F4C6D5]/25 to-[#FFF9F5] pt-12 pb-24 lg:pt-20 lg:pb-32 border-b border-[#F4C6D5]/60"
       >
-        {/* Animated background bubbles, soft gradient blobs & particles */}
+        {/* Subtle moving gradients and floating particles */}
         <AnimatedBackground variant="hero" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            {/* Left Column: Headlines & Call-to-Actions */}
+            {/* Left Column: Required Headlines & CTA Buttons */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              {/* Animated Top Pill */}
+              {/* Brand Pill */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -119,10 +158,10 @@ export function HomePage() {
                   initial={{ opacity: 0, y: 35 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#352137] leading-[1.14]"
+                  className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#352137] leading-[1.12]"
                 >
-                  Discover Your Beauty.{' '}
-                  <span className="italic font-normal text-[#D985A5] block mt-1">Shop Smarter.</span>
+                  Your Beauty. Your Style.{' '}
+                  <span className="italic font-normal text-[#D985A5] block mt-1">Your Shop.</span>
                 </motion.h1>
               </div>
 
@@ -131,12 +170,12 @@ export function HomePage() {
                 initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
                 animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                 transition={{ duration: 0.6, delay: 0.25 }}
-                className="text-base sm:text-lg text-stone-700 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-normal"
+                className="text-base sm:text-xl text-stone-700 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-normal"
               >
-                Explore your favourite beauty essentials, discover products that suit your preferences and enjoy a smarter shopping experience with SHOPSYNC.
+                Everything You Love, All in One Place.
               </motion.p>
 
-              {/* CTAs: "SHOP NOW", "EXPLORE COLLECTION", and Glowing "BUY NOW" */}
+              {/* Required CTAs: "Explore Collection" & "Shop Now" */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -147,21 +186,21 @@ export function HomePage() {
                   to="/shop"
                   className="bg-[#352137] hover:bg-[#542B43] text-white px-8 py-4 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
                 >
-                  <ShoppingBag className="w-4 h-4 text-[#F4C6D5]" /> SHOP NOW
+                  <ShoppingBag className="w-4 h-4 text-[#F4C6D5]" /> Shop Now
                 </Link>
 
                 <a
-                  href="#trending"
+                  href="#categories"
                   className="bg-white hover:bg-[#FFF9F5] text-[#352137] border-2 border-[#D985A5] px-7 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-xs hover:shadow-md hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
                 >
-                  <Compass className="w-4 h-4 text-[#D985A5]" /> EXPLORE COLLECTION
+                  <Compass className="w-4 h-4 text-[#D985A5]" /> Explore Collection
                 </a>
 
                 <button
                   onClick={() => setRoleModalOpen(true)}
-                  className="bg-gradient-to-r from-[#D985A5] via-[#C58A78] to-[#352137] text-white px-7 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-2xl hover:scale-108 active:scale-95 flex items-center gap-2 cursor-pointer border border-white/40 animate-pulse"
+                  className="bg-gradient-to-r from-[#D985A5] via-[#C58A78] to-[#352137] text-white px-7 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-2xl hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer border border-white/40"
                 >
-                  <Sparkles className="w-4 h-4 text-amber-200" /> BUY NOW / SWITCH ROLE
+                  <Sparkles className="w-4 h-4 text-amber-200" /> Switch Role / POS
                 </button>
               </motion.div>
 
@@ -203,7 +242,7 @@ export function HomePage() {
                     alt="SHOPSYNC Indian Beauty Collection"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#352137]/80 via-transparent to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#352137]/85 via-transparent to-black/10" />
                   <div className="absolute bottom-6 inset-x-6 text-white text-center">
                     <span className="text-[10px] uppercase font-bold tracking-widest text-[#F4C6D5]">
                       Luxury Indian Formulations
@@ -279,80 +318,89 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 2. SECTION 1: ROTATING CATEGORY NAVIGATION TABS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center space-y-3 mb-10">
+      {/* 2. PRODUCT CATEGORIES (Skincare, Makeup, Haircare, Beauty Essentials) */}
+      <section id="categories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+        <div className="text-center space-y-3 mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F4C6D5]/40 text-[#352137] text-xs font-bold uppercase tracking-wider">
-            <RefreshCw className="w-3.5 h-3.5 text-[#D985A5] animate-spin" style={{ animationDuration: '8s' }} />
-            <span>Interactive Catalog Filter</span>
+            <Layers className="w-3.5 h-3.5 text-[#D985A5]" />
+            <span>Curated Collections</span>
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#352137]">
-            Curated Beauty Formulations
+            Shop By Categories
           </h2>
           <p className="text-xs sm:text-sm text-stone-600 max-w-xl mx-auto">
-            Switch between categories to explore clinical skincare, high-pigment makeup, and traditional Ayurvedic hair care.
+            Discover precision beauty formulations tailored to your skin tone, texture, and personal care routine.
           </p>
         </div>
 
-        {/* Rotating Tabs Bar */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap mb-10">
-          {tabCategories.map((tab) => {
-            const isActive = activeCategoryTab === tab.id
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveCategoryTab(tab.id)}
-                className={`relative px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-[#352137] text-white shadow-md scale-105'
-                    : 'bg-white text-stone-700 border border-[#F4C6D5] hover:border-[#D985A5] hover:bg-[#FFF9F5]'
-                }`}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="activeTabPill"
-                    className="absolute inset-0 rounded-full bg-[#352137] -z-10"
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-                <span className="flex items-center gap-1.5">
-                  {tab.id === 'makeup' && '💄'}
-                  {tab.id === 'skincare' && '✨'}
-                  {tab.id === 'haircare' && '🌿'}
-                  {tab.id === 'fragrance' && '🌹'}
-                  {tab.id === 'bodycare' && '🧴'}
-                  {tab.id === 'all' && '✦'}
-                  <span>{tab.label}</span>
-                </span>
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Tab Products Grid */}
+        {/* 4 Category Cards with Hover Animation and Image Zoom */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredTabProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {FEATURED_CATEGORIES.map((cat, idx) => (
+            <motion.div
+              key={cat.id}
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              whileHover={{ y: -8 }}
+              className="group relative rounded-3xl overflow-hidden bg-white border border-[#F4C6D5] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+            >
+              {/* Image Container with Subtle Zoom */}
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100">
+                <img
+                  src={cat.image}
+                  alt={cat.title}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
+                <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider text-[#352137] shadow-xs">
+                  {cat.badge}
+                </span>
+                <span className="absolute bottom-3 left-4 text-white text-xs font-medium">
+                  {cat.productCount}
+                </span>
+              </div>
+
+              {/* Card Body */}
+              <div className="p-6 space-y-3 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-serif text-xl font-bold text-[#352137] group-hover:text-[#D985A5] transition-colors">
+                    {cat.title}
+                  </h3>
+                  <p className="text-xs text-stone-600 leading-relaxed mt-1.5">
+                    {cat.description}
+                  </p>
+                </div>
+
+                <Link
+                  to={cat.link}
+                  className="pt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#352137] group-hover:text-[#D985A5] transition-colors"
+                >
+                  <span>Explore {cat.title}</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </motion.div>
           ))}
         </div>
       </section>
 
-      {/* 3. SECTION 2: TRENDING NOW */}
-      <section id="trending" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 3. TRENDING PRODUCTS */}
+      <section id="trending" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-4 border-b border-[#F4C6D5]/60">
           <div>
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#D985A5]">
               <Flame className="w-4 h-4 text-rose-500" /> Most Desired Across India
             </div>
             <h2 className="font-serif text-3xl font-bold text-[#352137] mt-1">
-              Trending Right Now
+              Trending Products
             </h2>
           </div>
           <Link
             to="/shop"
             className="text-xs font-bold uppercase tracking-wider text-[#352137] hover:text-[#D985A5] flex items-center gap-1.5 transition-colors"
           >
-            <span>View All Trending ({BEAUTY_PRODUCTS.length})</span>
+            <span>View All Trending</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -364,22 +412,22 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 4. SECTION 3: BEST SELLERS */}
-      <section id="bestsellers" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 4. BESTSELLING PRODUCTS */}
+      <section id="bestsellers" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-4 border-b border-[#F4C6D5]/60">
           <div>
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-600">
               <Star className="w-4 h-4 fill-amber-500 text-amber-500" /> Rated 4.8+ Stars
             </div>
             <h2 className="font-serif text-3xl font-bold text-[#352137] mt-1">
-              Customer Best Sellers
+              Bestselling Formulations
             </h2>
           </div>
           <Link
             to="/shop"
             className="text-xs font-bold uppercase tracking-wider text-[#352137] hover:text-[#D985A5] flex items-center gap-1.5 transition-colors"
           >
-            <span>Explore All Best Sellers</span>
+            <span>Explore All Bestsellers</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -391,228 +439,18 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 5. SECTION 4: NEW ARRIVALS */}
-      <section id="new-arrivals" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-4 border-b border-[#F4C6D5]/60">
-          <div>
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#A56D8A]">
-              <Sparkles className="w-4 h-4 text-[#D985A5]" /> Just Landed
-            </div>
-            <h2 className="font-serif text-3xl font-bold text-[#352137] mt-1">
-              New Arrivals & Innovations
-            </h2>
-          </div>
-          <Link
-            to="/shop"
-            className="text-xs font-bold uppercase tracking-wider text-[#352137] hover:text-[#D985A5] flex items-center gap-1.5 transition-colors"
-          >
-            <span>Browse New Additions</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {newArrivals.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
-
-      {/* 6. SECTION 5: MAKEUP ESSENTIALS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-[#FFF9F5] via-[#F4C6D5]/30 to-[#FFF9F5] p-6 sm:p-10 border border-[#F4C6D5]">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#D985A5]">
-                Complexion & Couture Lips
-              </span>
-              <h2 className="font-serif text-3xl font-bold text-[#352137] mt-1">
-                Makeup Essentials
-              </h2>
-            </div>
-            <Link
-              to="/category/makeup"
-              className="text-xs font-bold uppercase tracking-wider text-[#352137] hover:text-[#D985A5] flex items-center gap-1"
-            >
-              <span>Explore Makeup Range</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {makeupProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. SECTION 6: SKINCARE FAVOURITES */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-[#FFF9F5] via-[#A56D8A]/15 to-[#FFF9F5] p-6 sm:p-10 border border-[#F4C6D5]">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-emerald-800">
-                Clinical Actives & Barrier Science
-              </span>
-              <h2 className="font-serif text-3xl font-bold text-[#352137] mt-1">
-                Skincare Favourites
-              </h2>
-            </div>
-            <Link
-              to="/category/skincare"
-              className="text-xs font-bold uppercase tracking-wider text-[#352137] hover:text-[#D985A5] flex items-center gap-1"
-            >
-              <span>Explore Skincare Range</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {skincareProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 8. SECTION 7 & 8: HAIRCARE & FRAGRANCE HIGHLIGHTS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Haircare Card */}
-        <div className="rounded-3xl bg-white border border-[#F4C6D5] p-8 shadow-xs flex flex-col justify-between space-y-6">
-          <div className="space-y-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#D985A5]">
-              Ayurvedic & Botanical
-            </span>
-            <h3 className="font-serif text-2xl font-bold text-[#352137]">
-              Haircare & Scalp Wellness
-            </h3>
-            <p className="text-xs text-stone-600 leading-relaxed">
-              Formulations powered by onion seed extracts, Redensyl, bhringraj, and cold-pressed oils engineered to curb hair fall and nourish Indian hair textures.
-            </p>
-          </div>
-          <div className="flex items-center justify-between pt-4 border-t border-[#F4C6D5]/60">
-            <span className="text-xs font-bold text-[#352137]">Featuring Mamaearth Onion Oil ({formatINR(419)})</span>
-            <Link
-              to="/category/haircare"
-              className="bg-[#352137] text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#542B43] transition-colors"
-            >
-              View Haircare
-            </Link>
-          </div>
-        </div>
-
-        {/* Fragrance Card */}
-        <div className="rounded-3xl bg-white border border-[#F4C6D5] p-8 shadow-xs flex flex-col justify-between space-y-6">
-          <div className="space-y-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#C58A78]">
-              Royal Oriental Blends
-            </span>
-            <h3 className="font-serif text-2xl font-bold text-[#352137]">
-              Haute Parfumerie & Attars
-            </h3>
-            <p className="text-xs text-stone-600 leading-relaxed">
-              Opulent notes of Damascus Rose, aged Assam Agarwood (Oud), saffron threads, and warm amber cashmere with up to 18 hours of luxurious sillage.
-            </p>
-          </div>
-          <div className="flex items-center justify-between pt-4 border-t border-[#F4C6D5]/60">
-            <span className="text-xs font-bold text-[#352137]">Royal Velvet Oud EDP ({formatINR(1850)})</span>
-            <Link
-              to="/category/fragrance"
-              className="bg-[#C58A78] text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#a56d8a] transition-colors"
-            >
-              View Fragrances
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. SECTION 9: TOP INDIAN BEAUTY BRANDS SHOWCASE */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center space-y-3 mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F4C6D5]/40 text-[#352137] text-xs font-bold uppercase tracking-wider">
-            <Award className="w-3.5 h-3.5 text-[#D985A5]" />
-            <span>Official Atelier Partners</span>
-          </div>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#352137]">
-            Top Indian & Global Beauty Brands
-          </h2>
-          <p className="text-xs sm:text-sm text-stone-600 max-w-xl mx-auto">
-            100% authentic, dermatologically tested formulations certified for quality, potency, and safety.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {BRANDS.map((brand) => (
-            <div
-              key={brand.id}
-              className="p-5 rounded-2xl bg-white border border-[#F4C6D5] hover:border-[#D985A5] hover:shadow-md transition-all text-center flex flex-col justify-center items-center space-y-1.5 group cursor-pointer"
-            >
-              <span className="font-serif text-sm font-bold text-[#352137] group-hover:text-[#D985A5] transition-colors">
-                {brand.name}
-              </span>
-              <span className="text-[10px] text-stone-500 font-medium">
-                {brand.badge}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 10. SECTION 10: CUSTOMER REVIEWS & TESTIMONIALS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center space-y-3 mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#D985A5]">
-            Loved by Beauty Enthusiasts
-          </span>
-          <h2 className="font-serif text-3xl font-bold text-[#352137]">
-            Verified Customer Stories
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {MOCK_REVIEWS.map((rev) => (
-            <div
-              key={rev.id}
-              className="p-6 rounded-3xl bg-white border border-[#F4C6D5] shadow-xs flex flex-col justify-between space-y-4 hover:shadow-md transition-shadow"
-            >
-              <div className="space-y-3">
-                <div className="flex text-amber-500 gap-1">
-                  {[...Array(rev.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="text-xs text-stone-700 leading-relaxed italic">
-                  "{rev.comment}"
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-[#F4C6D5]/40 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold text-[#352137]">{rev.author}</p>
-                  <p className="text-[10px] text-stone-500">{rev.city}</p>
-                </div>
-                <span className="text-[9px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full border border-emerald-200">
-                  Verified Buyer
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 11. SECTION 11: SPECIAL FESTIVE OFFERS & DISCOUNTS */}
+      {/* 5. SPECIAL OFFERS & DISCOUNTS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative rounded-3xl bg-gradient-to-r from-[#352137] via-[#542B43] to-[#352137] text-white p-8 sm:p-14 overflow-hidden shadow-2xl border border-[#D985A5]/40">
           <div className="relative z-10 max-w-2xl space-y-4 text-center sm:text-left">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#D985A5]/30 text-[#F4C6D5] text-xs font-bold uppercase tracking-wider">
-              <Tag className="w-3.5 h-3.5" /> Festive Beauty Celebrations
+              <Tag className="w-3.5 h-3.5" /> Special Offers & Celebrations
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold leading-tight">
               Get Flat 15% Off Your First Order + Free Express Delivery
             </h2>
             <p className="text-xs sm:text-sm text-[#F4C6D5] leading-relaxed">
-              Enjoy flat 15% discount across all Indian beauty brands. Complimentary express delivery across India on all orders over ₹499.
+              Use promo code <span className="font-mono font-bold text-white">SHOPSYNC15</span> at checkout. Complimentary express shipping across India on orders over ₹499.
             </p>
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-2">
@@ -624,57 +462,147 @@ export function HomePage() {
                 {copiedCode ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
               </button>
 
-              <button
-                onClick={() => setRoleModalOpen(true)}
-                className="bg-[#D985A5] hover:bg-[#F4C6D5] text-[#352137] px-6 py-3 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer"
+              <Link
+                to="/shop"
+                className="bg-[#D985A5] hover:bg-[#F4C6D5] text-[#352137] px-6 py-3 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer inline-flex items-center gap-1.5"
               >
-                Claim Offer & Buy Now
-              </button>
+                <span>Shop Now</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 12. SECTION 12: PERSONALIZED AI RECOMMENDATIONS & INGREDIENT GUARD */}
+      {/* 6. WHY CHOOSE SHOPSYNC */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-white border-2 border-[#F4C6D5] p-8 sm:p-12 shadow-md grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-8 space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D985A5]/20 text-[#352137] text-xs font-bold uppercase tracking-wider">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>SkinSafe™ Ingredient Guard & AI Diagnostics</span>
-            </div>
-            <h2 className="font-serif text-3xl font-bold text-[#352137]">
-              Never Experience Another Cosmetic Reaction
-            </h2>
-            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-xl">
-              Our optical AI scans your face across 8 skin traits, matches exact undertones for warm Indian skin, and flags conflicting allergens (like nut oils, fragrance, or high-percentage BHA) before you checkout.
-            </p>
+        <div className="text-center space-y-3 mb-12">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F4C6D5]/40 text-[#352137] text-xs font-bold uppercase tracking-wider">
+            <Award className="w-3.5 h-3.5 text-[#D985A5]" />
+            <span>The ShopSync Difference</span>
+          </div>
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#352137]">
+            Why Choose ShopSync?
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-600 max-w-xl mx-auto">
+            Combining dermatological safety, AI skin technology, and authentic Indian beauty heritage with local boutique empowerment.
+          </p>
+        </div>
 
-            <div className="flex flex-wrap gap-4 pt-2">
-              <Link
-                to="/ai-skin-analysis"
-                className="bg-[#352137] hover:bg-[#542B43] text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm flex items-center gap-2 transition-transform hover:scale-102"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            {
+              icon: Award,
+              title: '100% Authentic Indian Brands',
+              desc: 'Direct atelier sourcing from Lakmé, Maybelline, Minimalist, Plum, SUGAR, and Dot & Key. No grey market stock.'
+            },
+            {
+              icon: Cpu,
+              title: 'AI Skin & Shade Matching',
+              desc: 'Optical facial scanning calibrated across 8 parameters specifically engineered for warm and olive Indian undertones.'
+            },
+            {
+              icon: ShieldCheck,
+              title: 'SkinSafe™ Allergen Screening',
+              desc: 'Pre-checkout ingredient scans automatically flag parabens, sulfates, nut oils, and fragrance triggers.'
+            },
+            {
+              icon: Truck,
+              title: 'Complimentary Pan-India Delivery',
+              desc: 'Free express shipping across 28,000+ PIN codes on all orders over ₹499 with live tracking updates.'
+            },
+            {
+              icon: RotateCcw,
+              title: 'Hassle-Free Returns & Support',
+              desc: '15-day genuine product return policy backed by our dedicated Vadodara concierge support team.'
+            },
+            {
+              icon: Store,
+              title: 'Integrated Seller POS Ecosystem',
+              desc: 'Local salons and boutique stores leverage our cloud POS, FEFO batch expiry alerts, and inventory intelligence.'
+            }
+          ].map((item, idx) => {
+            const Icon = item.icon
+            return (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                className="p-6 rounded-3xl bg-white border border-[#F4C6D5] shadow-xs hover:shadow-md transition-shadow space-y-3"
               >
-                <Cpu className="w-4 h-4 text-[#F4C6D5]" /> Start Free AI Face Scan
-              </Link>
-              <Link
-                to="/feedback"
-                className="bg-[#FFF9F5] border border-[#F4C6D5] text-[#352137] hover:bg-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-colors"
-              >
-                Report an Allergy / Feedback
-              </Link>
-            </div>
+                <div className="w-12 h-12 rounded-2xl bg-[#FFF9F5] border border-[#F4C6D5] text-[#352137] flex items-center justify-center">
+                  <Icon className="w-6 h-6 text-[#D985A5]" />
+                </div>
+                <h3 className="font-serif text-lg font-bold text-[#352137]">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-stone-600 leading-relaxed">
+                  {item.desc}
+                </p>
+              </motion.div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* 7. ABOUT SHOPSYNC SECTION */}
+      <section id="about" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+        <div className="rounded-3xl bg-white border-2 border-[#F4C6D5] p-8 sm:p-14 shadow-lg space-y-8">
+          <div className="max-w-3xl space-y-3">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#D985A5]">
+              About ShopSync
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#352137]">
+              Smart Beauty. Smarter Business.
+            </h2>
+            <p className="text-sm text-stone-700 leading-relaxed font-normal">
+              ShopSync was born in Vadodara, Gujarat to bridge the gap between premium dermatological formulations and everyday Indian beauty shopping. We unite two vital retail worlds on a single high-performance platform:
+            </p>
           </div>
 
-          <div className="lg:col-span-4 flex justify-center">
-            <div className="p-6 rounded-2xl bg-[#FFF9F5] border border-[#F4C6D5] text-center space-y-3 w-full max-w-xs shadow-xs">
-              <div className="h-12 w-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
-                <ShieldCheck className="w-6 h-6" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-[#F4C6D5]/60">
+            {/* For Customers */}
+            <div className="p-6 rounded-2xl bg-[#FFF9F5] border border-[#F4C6D5] space-y-3">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#352137]">
+                <ShoppingBag className="w-4 h-4 text-[#D985A5]" />
+                <span>For Beauty Lovers</span>
               </div>
-              <p className="font-serif font-bold text-base text-[#352137]">100% Allergen Shield</p>
-              <p className="text-[11px] text-stone-600">
-                140+ irritants cross-checked automatically against your skin profile.
+              <h3 className="font-serif text-xl font-bold text-[#352137]">
+                Clean Formulation & Optical AI
+              </h3>
+              <p className="text-xs text-stone-600 leading-relaxed">
+                Enjoy authentic formulations from top Indian & global ateliers. Our camera-based AI face scanner and SkinSafe™ ingredient check ensure every serum, moisturizer, and lipstick matches your skin profile and allergen needs.
               </p>
+              <Link
+                to="/shop"
+                className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#352137] hover:text-[#D985A5] pt-2"
+              >
+                <span>Browse The Atelier</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* For Sellers */}
+            <div className="p-6 rounded-2xl bg-[#FFF9F5] border border-[#F4C6D5] space-y-3">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#352137]">
+                <Store className="w-4 h-4 text-[#C58A78]" />
+                <span>For Retailers & Salons</span>
+              </div>
+              <h3 className="font-serif text-xl font-bold text-[#352137]">
+                Boutique POS & Expiry Management
+              </h3>
+              <p className="text-xs text-stone-600 leading-relaxed">
+                Empowering independent beauty merchants and salon directors with cloud-based point-of-sale billing, FEFO batch expiry alerts, real-time GST tax compliance, and automated inventory replenishment.
+              </p>
+              <Link
+                to="/admin/login"
+                className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#352137] hover:text-[#C58A78] pt-2"
+              >
+                <span>Enter Seller Console</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </div>
