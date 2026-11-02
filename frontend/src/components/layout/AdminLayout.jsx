@@ -4,102 +4,44 @@ import {
   LayoutDashboard,
   Store,
   Package,
-  PlusCircle,
-  FolderTree,
-  Tag,
-  Palette,
   Boxes,
-  Layers,
-  Calendar,
   FileText,
-  ShoppingBag,
-  Users,
-  FlaskConical,
-  ShieldAlert,
-  TrendingUp,
-  DollarSign,
-  LineChart,
-  RefreshCw,
-  Star,
   MessageSquare,
+  Users,
+  TrendingUp,
+  LineChart,
+  Tag,
   Bell,
   Settings,
   LogOut,
   Menu,
   X,
   Search,
-  ChevronDown,
-  Sparkles
+  ChevronDown
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import PageTransition from '../common/PageTransition'
 
-const NAV_GROUPS = [
-  {
-    group: 'Operations',
-    items: [
-      { name: 'Dashboard Overview', path: '/admin/dashboard', icon: LayoutDashboard },
-      { name: 'POS Billing Register', path: '/admin/pos-billing', icon: Store, badge: 'Live POS' },
-    ]
-  },
-  {
-    group: 'Catalog & Formulations',
-    items: [
-      { name: 'Product Catalog', path: '/admin/products', icon: Package },
-      { name: 'Add Formulation', path: '/admin/products/new', icon: PlusCircle },
-      { name: 'Categories', path: '/admin/categories', icon: FolderTree },
-      { name: 'Atelier Brands', path: '/admin/brands', icon: Tag },
-      { name: 'Product Variants', path: '/admin/variants', icon: Layers },
-      { name: 'Makeup Shades', path: '/admin/shades', icon: Palette },
-    ]
-  },
-  {
-    group: 'Inventory & Batching',
-    items: [
-      { name: 'Stock Levels', path: '/admin/inventory', icon: Boxes },
-      { name: 'Lot & Batch Control', path: '/admin/batches', icon: Layers },
-      { name: 'Expiry Tracking', path: '/admin/expiry', icon: Calendar, alertCount: 3 },
-    ]
-  },
-  {
-    group: 'Orders & Fulfillment',
-    items: [
-      { name: 'Invoices & Receipts', path: '/admin/invoices', icon: FileText },
-      { name: 'Online Orders', path: '/admin/orders', icon: ShoppingBag },
-      { name: 'Client Profiles', path: '/admin/customers', icon: Users },
-    ]
-  },
-  {
-    group: 'Safety & Clean Beauty',
-    items: [
-      { name: 'Ingredient Master', path: '/admin/ingredients', icon: FlaskConical },
-      { name: 'Allergy Sensitivities', path: '/admin/allergies', icon: ShieldAlert },
-    ]
-  },
-  {
-    group: 'AI Analytics & Intelligence',
-    items: [
-      { name: 'Sales Performance', path: '/admin/sales-analytics', icon: TrendingUp },
-      { name: 'Profit Margins', path: '/admin/profit-analytics', icon: DollarSign },
-      { name: 'Demand Forecasting', path: '/admin/demand-forecasting', icon: LineChart },
-      { name: 'Smart Reordering', path: '/admin/smart-reordering', icon: RefreshCw },
-    ]
-  },
-  {
-    group: 'Customer & Store Care',
-    items: [
-      { name: 'Product Reviews', path: '/admin/reviews', icon: Star },
-      { name: 'Client Feedback', path: '/admin/feedback', icon: MessageSquare },
-      { name: 'Notifications', path: '/admin/notifications', icon: Bell, alertCount: 4 },
-      { name: 'Terminal Settings', path: '/admin/settings', icon: Settings },
-    ]
-  }
+// Store Owner Navigation List (Requirement 4: 12 Core Items + Logout)
+const OWNER_NAV_ITEMS = [
+  { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+  { name: 'Products', path: '/admin/products', icon: Package },
+  { name: 'Inventory', path: '/admin/inventory', icon: Boxes },
+  { name: 'POS Billing', path: '/admin/pos-billing', icon: Store, badge: 'Live POS' },
+  { name: 'Purchase Orders', path: '/admin/orders', icon: FileText },
+  { name: 'Customer Reports', path: '/admin/feedback', icon: MessageSquare },
+  { name: 'Customer Management', path: '/admin/customers', icon: Users },
+  { name: 'Sales Analytics', path: '/admin/sales-analytics', icon: TrendingUp },
+  { name: 'AI Predictions', path: '/admin/demand-forecasting', icon: LineChart },
+  { name: 'Suppliers', path: '/admin/brands', icon: Tag },
+  { name: 'Notifications', path: '/admin/notifications', icon: Bell, alertCount: 4 },
+  { name: 'Settings', path: '/admin/settings', icon: Settings },
 ]
 
 export function AdminLayout() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { adminUser, logoutAdmin, isAdminAuthenticated } = useAuth()
+  const { adminUser, user, logout } = useAuth()
 
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [mobileSidebar, setMobileSidebar] = useState(false)
@@ -108,8 +50,8 @@ export function AdminLayout() {
   const [searchQuery, setSearchQuery] = useState('')
 
   const handleLogout = () => {
-    logoutAdmin()
-    navigate('/admin/login')
+    logout()
+    navigate('/', { replace: true })
   }
 
   return (
@@ -148,61 +90,64 @@ export function AdminLayout() {
           </button>
         </div>
 
-        {/* Scrollable Navigation Groups */}
-        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-          {NAV_GROUPS.map((group, gIdx) => (
-            <div key={gIdx} className="space-y-1">
-              {sidebarOpen && (
-                <span className="px-3 text-[10px] uppercase font-bold tracking-wider text-[#827A7F] block">
-                  {group.group}
-                </span>
-              )}
-              {group.items.map((item) => {
-                const isActive = location.pathname === item.path
-                const Icon = item.icon
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                      isActive
-                        ? 'bg-[#542B43] text-white font-semibold shadow-xs'
-                        : 'text-[#E9DED5]/80 hover:bg-[#3B1E2F]/60 hover:text-white'
-                    }`}
-                    title={!sidebarOpen ? item.name : undefined}
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <Icon className="h-4 w-4 shrink-0" />
-                      {sidebarOpen && <span className="truncate">{item.name}</span>}
-                    </div>
+        {/* Scrollable Navigation Items */}
+        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+          {sidebarOpen && (
+            <span className="px-3 text-[10px] uppercase font-bold tracking-wider text-[#827A7F] block mb-2">
+              Store Owner Console
+            </span>
+          )}
+          {OWNER_NAV_ITEMS.map((item) => {
+            const isActive = location.pathname === item.path
+            const Icon = item.icon
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  isActive
+                    ? 'bg-[#542B43] text-white font-semibold shadow-xs'
+                    : 'text-[#E9DED5]/80 hover:bg-[#3B1E2F]/60 hover:text-white'
+                }`}
+                title={!sidebarOpen ? item.name : undefined}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Icon className="h-4 w-4 shrink-0" />
+                  {sidebarOpen && <span className="truncate">{item.name}</span>}
+                </div>
 
-                    {sidebarOpen && item.badge && (
-                      <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                        {item.badge}
-                      </span>
-                    )}
+                {sidebarOpen && item.badge && (
+                  <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    {item.badge}
+                  </span>
+                )}
 
-                    {sidebarOpen && item.alertCount && (
-                      <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-rose-600 text-white">
-                        {item.alertCount}
-                      </span>
-                    )}
-                  </Link>
-                )
-              })}
-            </div>
-          ))}
+                {sidebarOpen && item.alertCount && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-rose-600 text-white">
+                    {item.alertCount}
+                  </span>
+                )}
+              </Link>
+            )
+          })}
         </div>
 
-        {/* Bottom Switch to Storefront */}
-        <div className="p-3 border-t border-[#524B4F]/40 bg-[#1F1C1D]">
+        {/* Bottom Actions: View Store & Logout */}
+        <div className="p-3 border-t border-[#524B4F]/40 bg-[#1F1C1D] space-y-1.5">
           <Link
             to="/"
             className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-[#E9DED5] transition-colors"
           >
-            <Store className="w-3.5 h-3.5" />
-            {sidebarOpen && <span>View Customer Store</span>}
+            <Store className="w-3.5 h-3.5 text-amber-300" />
+            {sidebarOpen && <span>View Storefront</span>}
           </Link>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-xs text-rose-300 font-semibold transition-colors cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            {sidebarOpen && <span>Logout</span>}
+          </button>
         </div>
       </aside>
 
@@ -339,23 +284,30 @@ export function AdminLayout() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            {NAV_GROUPS.map((group, idx) => (
-              <div key={idx} className="space-y-1">
-                <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block">
-                  {group.group}
-                </span>
-                {group.items.map(item => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setMobileSidebar(false)}
-                    className="block px-3 py-2 rounded-xl text-xs text-stone-300 hover:bg-[#542B43] hover:text-white"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-            ))}
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block mb-2">
+                Store Owner Navigation
+              </span>
+              {OWNER_NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileSidebar(false)}
+                  className="block px-3 py-2 rounded-xl text-xs text-stone-300 hover:bg-[#542B43] hover:text-white"
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <button
+                onClick={() => {
+                  setMobileSidebar(false)
+                  handleLogout()
+                }}
+                className="w-full text-left px-3 py-2 mt-4 text-xs text-rose-300 hover:bg-rose-500/20 rounded-xl"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       )}

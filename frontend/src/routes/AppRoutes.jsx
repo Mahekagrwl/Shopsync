@@ -32,7 +32,7 @@ import AISkinAnalysisPage from '../pages/customer/AISkinAnalysisPage'
 import AIRecommendationsPage from '../pages/customer/AIRecommendationsPage'
 import SkinSafeCheckerPage from '../pages/customer/SkinSafeCheckerPage'
 
-// Admin / Seller Pages
+// Admin / Store Owner Pages
 import AdminLoginPage from '../pages/admin/AdminLoginPage'
 import AdminDashboardPage from '../pages/admin/AdminDashboardPage'
 import ProductManagementPage from '../pages/admin/ProductManagementPage'
@@ -67,26 +67,29 @@ export function AppRoutes() {
     <Routes>
       {/* 1. Public & Customer Storefront Routes */}
       <Route path="/" element={<CustomerLayout />}>
-        {/* Public Routes (Accessible without login) */}
+        {/* Public Routes (Accessible to everyone without login) */}
         <Route index element={<HomePage />} />
-        <Route path="login" element={<CustomerLogin />} />
-        <Route path="signup" element={<CustomerSignup />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="shop" element={<ShopAllPage />} />
         <Route path="category/:slug" element={<CategoryPage />} />
         <Route path="product/:id" element={<ProductDetailsPage />} />
         <Route path="search" element={<SearchResultsPage />} />
-        <Route path="wishlist" element={<WishlistPage />} />
-        <Route path="reviews" element={<ProductReviewsPage />} />
-        <Route path="ai-skin-analysis" element={<AISkinAnalysisPage />} />
-        <Route path="ai-recommendations" element={<AIRecommendationsPage />} />
-        <Route path="skinsafe" element={<SkinSafeCheckerPage />} />
+        <Route path="login" element={<CustomerLogin />} />
+        <Route path="signup" element={<CustomerSignup />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
 
-        {/* Customer Protected Routes (Requires login with customer or admin role) */}
+        {/* Customer Protected Routes (Requires login with customer role) */}
+        <Route
+          path="wishlist"
+          element={
+            <ProtectedRoute allowedRoles={['customer']}>
+              <WishlistPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="cart"
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <ProtectedRoute allowedRoles={['customer']}>
               <CartPage />
             </ProtectedRoute>
           }
@@ -94,7 +97,7 @@ export function AppRoutes() {
         <Route
           path="checkout"
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <ProtectedRoute allowedRoles={['customer']}>
               <CheckoutPage />
             </ProtectedRoute>
           }
@@ -102,7 +105,7 @@ export function AppRoutes() {
         <Route
           path="payment-status"
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <ProtectedRoute allowedRoles={['customer']}>
               <PaymentStatusPage />
             </ProtectedRoute>
           }
@@ -110,7 +113,7 @@ export function AppRoutes() {
         <Route
           path="order-confirmation"
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <ProtectedRoute allowedRoles={['customer']}>
               <OrderConfirmationPage />
             </ProtectedRoute>
           }
@@ -118,7 +121,7 @@ export function AppRoutes() {
         <Route
           path="orders"
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <ProtectedRoute allowedRoles={['customer']}>
               <MyOrdersPage />
             </ProtectedRoute>
           }
@@ -126,7 +129,7 @@ export function AppRoutes() {
         <Route
           path="order-tracking"
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <ProtectedRoute allowedRoles={['customer']}>
               <OrderTrackingPage />
             </ProtectedRoute>
           }
@@ -134,7 +137,7 @@ export function AppRoutes() {
         <Route
           path="order-tracking/:orderId"
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <ProtectedRoute allowedRoles={['customer']}>
               <OrderTrackingPage />
             </ProtectedRoute>
           }
@@ -142,7 +145,7 @@ export function AppRoutes() {
         <Route
           path="profile"
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <ProtectedRoute allowedRoles={['customer']}>
               <CustomerProfilePage />
             </ProtectedRoute>
           }
@@ -150,16 +153,50 @@ export function AppRoutes() {
         <Route
           path="saved-addresses"
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <ProtectedRoute allowedRoles={['customer']}>
               <SavedAddressesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="reviews"
+          element={
+            <ProtectedRoute allowedRoles={['customer']}>
+              <ProductReviewsPage />
             </ProtectedRoute>
           }
         />
         <Route
           path="feedback"
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <ProtectedRoute allowedRoles={['customer']}>
               <CustomerFeedbackPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* AI Studio Routes: Accessible ONLY to Authenticated Customers */}
+        <Route
+          path="ai-skin-analysis"
+          element={
+            <ProtectedRoute allowedRoles={['customer']}>
+              <AISkinAnalysisPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="ai-recommendations"
+          element={
+            <ProtectedRoute allowedRoles={['customer']}>
+              <AIRecommendationsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="skinsafe"
+          element={
+            <ProtectedRoute allowedRoles={['customer']}>
+              <SkinSafeCheckerPage />
             </ProtectedRoute>
           }
         />
@@ -168,10 +205,10 @@ export function AppRoutes() {
         <Route path="pos" element={<Navigate to="/admin/pos-billing" replace />} />
       </Route>
 
-      {/* 2. Admin / Seller Standalone Authentication */}
+      {/* 2. Admin / Store Owner Standalone Authentication */}
       <Route path="/admin/login" element={<AdminLoginPage />} />
 
-      {/* 3. Seller / Admin Protected Panel Routes */}
+      {/* 3. Store Owner / Admin Protected Panel Routes */}
       <Route
         path="/admin"
         element={

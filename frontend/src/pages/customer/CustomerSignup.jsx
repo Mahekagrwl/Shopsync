@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, ShieldCheck, Check, ShoppingBag, Store, Sparkles } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import { useCart } from '../../context/CartContext'
 import AnimatedBackground from '../../components/common/AnimatedBackground'
 
 export function CustomerSignup() {
   const navigate = useNavigate()
   const { register } = useAuth()
+  const { addToCart } = useCart()
 
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -85,6 +87,27 @@ export function CustomerSignup() {
       if (res?.user?.role === 'seller') {
         navigate('/admin/dashboard', { replace: true })
       } else {
+        // Customer: resume shopping intent if present
+        const pendingRaw = localStorage.getItem('shopsync_pending_intent')
+        if (pendingRaw) {
+          try {
+            const intent = JSON.parse(pendingRaw)
+            if (intent.product) {
+              addToCart(intent.product, intent.variant, intent.quantity || 1)
+            }
+            localStorage.removeItem('shopsync_pending_intent')
+            if (intent.action === 'buy_now') {
+              navigate('/checkout', { replace: true })
+              return
+            }
+            if (intent.action === 'add_to_cart') {
+              navigate('/cart', { replace: true })
+              return
+            }
+          } catch {
+            localStorage.removeItem('shopsync_pending_intent')
+          }
+        }
         navigate('/shop', { replace: true })
       }
     } catch (err) {
@@ -339,11 +362,11 @@ export function CustomerSignup() {
           </button>
         </form>
 
-        {/* Bottom Link: "Existing account? Login" */}
+        {/* Bottom Link: "Already Have an Account? Sign In" */}
         <div className="pt-4 border-t border-[#F4C6D5] text-center text-xs text-stone-600">
-          Existing account?{' '}
+          Already Have an Account?{' '}
           <Link to="/login" className="font-bold text-[#352137] hover:underline">
-            Login
+            Sign In Here
           </Link>
         </div>
       </motion.div>

@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Heart, Star, Sparkles, Check, AlertCircle, ShoppingBag } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useWishlist } from '../../context/WishlistContext'
 import { useCart } from '../../context/CartContext'
+import { useAuth } from '../../context/AuthContext'
 import { useSkinSafe } from '../../context/SkinSafeContext'
 import { formatINR } from '../../utils/currency'
 
 export function ProductCard({ product, featured = false }) {
+  const navigate = useNavigate()
   const { isInWishlist, toggleWishlist } = useWishlist()
   const { addToCart } = useCart()
+  const { isAuthenticated, isCustomer } = useAuth()
   const { checkProductSafety } = useSkinSafe()
 
   const [selectedShade, setSelectedShade] = useState(
@@ -53,6 +56,19 @@ export function ProductCard({ product, featured = false }) {
     e.preventDefault()
     e.stopPropagation()
 
+    // Requirement: Browsing is public, but clicking Add to Cart / Buy Now redirects to login
+    if (!isAuthenticated || !isCustomer) {
+      localStorage.setItem('shopsync_pending_intent', JSON.stringify({
+        action: 'add_to_cart',
+        product,
+        selectedShade,
+        quantity: 1,
+        targetUrl: '/cart'
+      }))
+      navigate('/login?redirect=%2Fcart&intent=add_to_cart')
+      return
+    }
+
     if (hasShades && !selectedShade) {
       setErrorMessage('Select shade first')
       setTimeout(() => setErrorMessage(''), 2500)
@@ -72,6 +88,12 @@ export function ProductCard({ product, featured = false }) {
   const handleWishlistClick = (e) => {
     e.preventDefault()
     e.stopPropagation()
+
+    if (!isAuthenticated || !isCustomer) {
+      navigate('/login?redirect=' + encodeURIComponent(window.location.pathname) + '&intent=wishlist')
+      return
+    }
+
     toggleWishlist(product.id)
     if (!isFavorited) {
       setHeartSparks(true)

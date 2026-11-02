@@ -11,10 +11,12 @@ import {
   Truck
 } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
+import { useAuth } from '../../context/AuthContext'
 import { formatINR } from '../../utils/currency'
 
 export function CartPage() {
   const navigate = useNavigate()
+  const { isAuthenticated, isCustomer } = useAuth()
   const {
     cartItems,
     totalItemCount,
@@ -239,8 +241,14 @@ export function CartPage() {
 
               {/* Checkout CTA */}
               <button
-                onClick={() => navigate('/checkout')}
-                className="w-full bg-[#542B43] hover:bg-[#3B1E2F] text-white py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                onClick={() => {
+                  if (!isAuthenticated || !isCustomer) {
+                    navigate('/login?redirect=%2Fcheckout')
+                  } else {
+                    navigate('/checkout')
+                  }
+                }}
+                className="w-full bg-[#352137] hover:bg-[#542B43] text-white py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
                 Proceed to Secure Checkout <ArrowRight className="w-4 h-4" />
               </button>

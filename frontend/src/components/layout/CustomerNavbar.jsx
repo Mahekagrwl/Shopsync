@@ -15,29 +15,34 @@ import {
   LayoutDashboard,
   MessageSquare,
   Flame,
-  Star
+  Star,
+  Bell,
+  LogOut,
+  HelpCircle,
+  Package,
+  Layers
 } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
 import { useAuth } from '../../context/AuthContext'
 import { BEAUTY_PRODUCTS } from '../../data/mockBeautyData'
 import { formatINR } from '../../utils/currency'
-import RoleSelectionModal from '../common/RoleSelectionModal'
 
 export function CustomerNavbar() {
   const navigate = useNavigate()
   const location = useLocation()
   const { totalItemCount } = useCart()
   const { wishlistCount } = useWishlist()
-  const { user, isAuthenticated, role, isCustomer, isSeller, customer, logout } = useAuth()
+  const { user, isAuthenticated, isCustomer, isSeller, logout } = useAuth()
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [shopDropdown, setShopDropdown] = useState(false)
   const [categoriesDropdown, setCategoriesDropdown] = useState(false)
   const [aiDropdown, setAiDropdown] = useState(false)
   const [userDropdown, setUserDropdown] = useState(false)
-  const [roleModalOpen, setRoleModalOpen] = useState(false)
+  const [notifDropdown, setNotifDropdown] = useState(false)
 
   const searchResults = searchQuery.trim()
     ? BEAUTY_PRODUCTS.filter(p =>
@@ -56,6 +61,13 @@ export function CustomerNavbar() {
     }
   }
 
+  const handleLogout = () => {
+    setUserDropdown(false)
+    setMobileMenuOpen(false)
+    logout()
+    navigate('/', { replace: true })
+  }
+
   return (
     <>
       <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-[#F4C6D5]/60 shadow-xs">
@@ -66,19 +78,18 @@ export function CustomerNavbar() {
               <Sparkles className="w-3.5 h-3.5" /> India’s Premium Beauty & Retail Platform
             </span>
             <div className="flex-1 text-center font-medium">
-              Complimentary Express Delivery across India on Orders Over <span className="font-bold text-[#F4C6D5]">₹499</span> • Use Code <span className="font-bold text-[#F4C6D5] underline">SHOPSYNC15</span>
+              Complimentary Express Delivery across India on Orders Over <span className="font-bold text-[#F4C6D5]">₹499</span> • Code <span className="font-bold text-[#F4C6D5] underline">SHOPSYNC15</span>
             </div>
             <div className="hidden md:flex items-center gap-3 text-[#F4C6D5] text-[10px]">
-              <button
-                onClick={() => setRoleModalOpen(true)}
-                className="hover:text-white flex items-center gap-1 transition-colors font-bold uppercase tracking-wider cursor-pointer"
-              >
-                <Store className="w-3 h-3 text-amber-300" /> Switch Role / POS
-              </button>
-              <span>•</span>
-              <Link to="/admin/dashboard" className="hover:text-white flex items-center gap-1 transition-colors">
-                <LayoutDashboard className="w-3 h-3" /> Owner Portal
-              </Link>
+              {isSeller ? (
+                <Link to="/admin/dashboard" className="hover:text-white flex items-center gap-1 transition-colors font-bold uppercase tracking-wider">
+                  <LayoutDashboard className="w-3.5 h-3.5 text-amber-300" /> Store Owner Console
+                </Link>
+              ) : (
+                <Link to="/login" className="hover:text-white flex items-center gap-1 transition-colors">
+                  <Store className="w-3 h-3 text-amber-300" /> Store Owner Portal
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -97,7 +108,7 @@ export function CustomerNavbar() {
               </button>
             </div>
 
-            {/* Official SHOPSYNC Logo */}
+            {/* Official SHOPSYNC Brand Logo */}
             <div className="flex items-center">
               <Link to="/" className="flex items-center gap-3 group" title="SHOPSYNC Homepage">
                 <img
@@ -116,133 +127,236 @@ export function CustomerNavbar() {
               </Link>
             </div>
 
-            {/* Desktop Nav Links */}
+            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-6 text-xs font-semibold uppercase tracking-wider text-[#282426]">
-              <Link to="/" className="hover:text-[#352137] transition-colors py-2">
-                Home
-              </Link>
-              <Link to="/shop" className="hover:text-[#352137] transition-colors py-2">
-                Shop
-              </Link>
+              {/* CASE A: PUBLIC VISITOR NAVIGATION (ONLY 4 MAIN OPTIONS) */}
+              {!isAuthenticated && (
+                <>
+                  <Link to="/" className="hover:text-[#352137] transition-colors py-2">
+                    Home
+                  </Link>
 
-              {/* Categories Dropdown */}
-              <div
-                className="relative"
-                onMouseEnter={() => setCategoriesDropdown(true)}
-                onMouseLeave={() => setCategoriesDropdown(false)}
-              >
-                <button
-                  className="flex items-center gap-1 hover:text-[#352137] transition-colors py-2 uppercase font-semibold text-xs cursor-pointer"
-                >
-                  <span>Categories</span>
-                  <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
-                </button>
-                {categoriesDropdown && (
-                  <div className="absolute top-full left-0 w-56 bg-white border border-[#F4C6D5] rounded-2xl shadow-xl py-2 z-50">
-                    <Link
-                      to="/category/skincare"
-                      className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
+                  {/* Shop Dropdown with 6 Categories */}
+                  <div
+                    className="relative"
+                    onMouseEnter={() => setShopDropdown(true)}
+                    onMouseLeave={() => setShopDropdown(false)}
+                  >
+                    <button
+                      onClick={() => navigate('/shop')}
+                      className="flex items-center gap-1 hover:text-[#352137] transition-colors py-2 uppercase font-semibold text-xs cursor-pointer"
                     >
-                      ✨ Skincare Formulations (Minimalist, L’Oréal)
-                    </Link>
-                    <Link
-                      to="/category/makeup"
-                      className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
-                    >
-                      💄 Makeup Essentials (Lakmé, Maybelline, SUGAR)
-                    </Link>
-                    <Link
-                      to="/category/haircare"
-                      className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
-                    >
-                      🌿 Botanical Haircare (Mamaearth Onion Oil)
-                    </Link>
-                    <Link
-                      to="/shop"
-                      className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium border-t border-[#F4C6D5]/40"
-                    >
-                      ✦ Beauty Essentials & Tools
-                    </Link>
+                      <span>Shop</span>
+                      <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
+                    </button>
+                    {shopDropdown && (
+                      <div className="absolute top-full left-0 w-60 bg-white border border-[#F4C6D5] rounded-2xl shadow-xl py-2.5 z-50 animate-in fade-in duration-200">
+                        <Link
+                          to="/category/makeup"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
+                        >
+                          💄 Makeup
+                        </Link>
+                        <Link
+                          to="/category/skincare"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
+                        >
+                          ✨ Skincare
+                        </Link>
+                        <Link
+                          to="/category/haircare"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
+                        >
+                          🌿 Haircare
+                        </Link>
+                        <Link
+                          to="/category/fragrance"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
+                        >
+                          🌹 Fragrance
+                        </Link>
+                        <Link
+                          to="/category/bodycare"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium"
+                        >
+                          🧴 Bodycare
+                        </Link>
+                        <Link
+                          to="/category/accessories"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] hover:text-[#352137] text-xs normal-case tracking-normal font-medium border-t border-[#F4C6D5]/40"
+                        >
+                          ✂️ Beauty Accessories
+                        </Link>
+                        <Link
+                          to="/shop"
+                          className="block px-4 py-2 text-[11px] font-bold text-[#D985A5] hover:underline"
+                        >
+                          Explore All Formulations →
+                        </Link>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              {/* About Us */}
-              <a href="/#about" className="hover:text-[#352137] transition-colors py-2">
-                About Us
-              </a>
+                  {/* About Us */}
+                  <a href="/#about" className="hover:text-[#352137] transition-colors py-2">
+                    About Us
+                  </a>
 
-              {/* Contact */}
-              <a href="#footer-contact" className="hover:text-[#352137] transition-colors py-2">
-                Contact
-              </a>
+                  {/* Help */}
+                  <a href="/#help" className="hover:text-[#352137] transition-colors py-2">
+                    Help
+                  </a>
+                </>
+              )}
 
-              {/* AI Tech Dropdown */}
-              <div
-                className="relative"
-                onMouseEnter={() => setAiDropdown(true)}
-                onMouseLeave={() => setAiDropdown(false)}
-              >
-                <button className="flex items-center gap-1 text-[#352137] bg-[#F4C6D5]/40 px-3 py-1.5 rounded-full hover:bg-[#F4C6D5]/70 transition-all cursor-pointer">
-                  <Cpu className="h-3.5 w-3.5 text-[#352137]" />
-                  <span className="font-bold">AI Studio</span>
-                  <ChevronDown className="h-3 w-3 text-[#352137]" />
-                </button>
-                {aiDropdown && (
-                  <div className="absolute top-full right-0 w-64 bg-white border border-[#F4C6D5] rounded-2xl shadow-xl p-3 z-50">
-                    <Link
-                      to="/ai-skin-analysis"
-                      className="block p-2 rounded-xl hover:bg-[#FFF9F5] transition-colors"
+              {/* CASE B: AUTHENTICATED CUSTOMER NAVIGATION */}
+              {isAuthenticated && isCustomer && (
+                <>
+                  <Link to="/" className="hover:text-[#352137] transition-colors py-2">
+                    Home
+                  </Link>
+
+                  <Link to="/shop" className="hover:text-[#352137] transition-colors py-2">
+                    Shop
+                  </Link>
+
+                  {/* Categories Dropdown */}
+                  <div
+                    className="relative"
+                    onMouseEnter={() => setCategoriesDropdown(true)}
+                    onMouseLeave={() => setCategoriesDropdown(false)}
+                  >
+                    <button
+                      className="flex items-center gap-1 hover:text-[#352137] transition-colors py-2 uppercase font-semibold text-xs cursor-pointer"
                     >
-                      <p className="font-semibold text-xs text-[#352137] flex items-center gap-1.5 normal-case tracking-normal">
-                        <Sparkles className="w-3.5 h-3.5 text-[#D985A5]" /> AI Face Scanner & Analysis
-                      </p>
-                      <p className="text-[11px] text-stone-500 normal-case tracking-normal">
-                        Live camera face alignment & personalized routine
-                      </p>
-                    </Link>
-                    <Link
-                      to="/ai-recommendations"
-                      className="block p-2 rounded-xl hover:bg-[#FFF9F5] transition-colors"
-                    >
-                      <p className="font-semibold text-xs text-[#352137] flex items-center gap-1.5 normal-case tracking-normal">
-                        <Cpu className="w-3.5 h-3.5 text-[#352137]" /> Smart Shade Matching
-                      </p>
-                      <p className="text-[11px] text-stone-500 normal-case tracking-normal">
-                        Under-tone matching for Indian skin tones
-                      </p>
-                    </Link>
-                    <Link
-                      to="/skinsafe"
-                      className="block p-2 rounded-xl hover:bg-[#FFF9F5] transition-colors"
-                    >
-                      <p className="font-semibold text-xs text-emerald-800 flex items-center gap-1.5 normal-case tracking-normal">
-                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> SkinSafe Allergen Checker
-                      </p>
-                      <p className="text-[11px] text-stone-500 normal-case tracking-normal">
-                        Screen nut oils, sulfates & irritants
-                      </p>
-                    </Link>
+                      <span>Categories</span>
+                      <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
+                    </button>
+                    {categoriesDropdown && (
+                      <div className="absolute top-full left-0 w-60 bg-white border border-[#F4C6D5] rounded-2xl shadow-xl py-2 z-50">
+                        <Link
+                          to="/category/makeup"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] text-xs normal-case tracking-normal font-medium"
+                        >
+                          💄 Makeup Essentials
+                        </Link>
+                        <Link
+                          to="/category/skincare"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] text-xs normal-case tracking-normal font-medium"
+                        >
+                          ✨ Clinical Skincare
+                        </Link>
+                        <Link
+                          to="/category/haircare"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] text-xs normal-case tracking-normal font-medium"
+                        >
+                          🌿 Ayurvedic Haircare
+                        </Link>
+                        <Link
+                          to="/category/fragrance"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] text-xs normal-case tracking-normal font-medium"
+                        >
+                          🌹 Royal Fragrances
+                        </Link>
+                        <Link
+                          to="/category/bodycare"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] text-xs normal-case tracking-normal font-medium"
+                        >
+                          🧴 Bodycare Butters
+                        </Link>
+                        <Link
+                          to="/category/accessories"
+                          className="block px-4 py-2 hover:bg-[#FFF9F5] text-xs normal-case tracking-normal font-medium border-t border-[#F4C6D5]/40"
+                        >
+                          ✂️ Beauty Accessories
+                        </Link>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              <Link to="/feedback" className="hover:text-[#352137] transition-colors py-2 flex items-center gap-1">
-                <MessageSquare className="w-3.5 h-3.5 text-[#D985A5]" /> Feedback
-              </Link>
+                  {/* Best Sellers */}
+                  <a href="/#bestsellers" className="hover:text-[#352137] transition-colors py-2 flex items-center gap-1">
+                    <Flame className="w-3.5 h-3.5 text-rose-500" /> Best Sellers
+                  </a>
+
+                  {/* New Arrivals */}
+                  <a href="/#new-arrivals" className="hover:text-[#352137] transition-colors py-2 flex items-center gap-1">
+                    <Star className="w-3.5 h-3.5 text-amber-500" /> New Arrivals
+                  </a>
+
+                  {/* AI Studio (CUSTOMER EXCLUSIVE) */}
+                  <div
+                    className="relative"
+                    onMouseEnter={() => setAiDropdown(true)}
+                    onMouseLeave={() => setAiDropdown(false)}
+                  >
+                    <button className="flex items-center gap-1 text-[#352137] bg-gradient-to-r from-[#F4C6D5]/60 to-[#F4C6D5]/30 px-3.5 py-1.5 rounded-full hover:from-[#F4C6D5] hover:to-[#D985A5]/40 transition-all cursor-pointer border border-[#D985A5]/40 shadow-2xs">
+                      <Cpu className="h-3.5 w-3.5 text-[#352137]" />
+                      <span className="font-bold">AI Studio</span>
+                      <ChevronDown className="h-3 w-3 text-[#352137]" />
+                    </button>
+                    {aiDropdown && (
+                      <div className="absolute top-full right-0 w-64 bg-white border border-[#F4C6D5] rounded-2xl shadow-xl p-3 z-50">
+                        <Link
+                          to="/ai-skin-analysis"
+                          className="block p-2 rounded-xl hover:bg-[#FFF9F5] transition-colors"
+                        >
+                          <p className="font-semibold text-xs text-[#352137] flex items-center gap-1.5 normal-case tracking-normal">
+                            <Sparkles className="w-3.5 h-3.5 text-[#D985A5]" /> Live AI Face Scanner
+                          </p>
+                          <p className="text-[11px] text-stone-500 normal-case tracking-normal">
+                            Real-time camera scan & personalized routine
+                          </p>
+                        </Link>
+                        <Link
+                          to="/ai-recommendations"
+                          className="block p-2 rounded-xl hover:bg-[#FFF9F5] transition-colors"
+                        >
+                          <p className="font-semibold text-xs text-[#352137] flex items-center gap-1.5 normal-case tracking-normal">
+                            <Cpu className="w-3.5 h-3.5 text-[#352137]" /> Smart Shade Matching
+                          </p>
+                          <p className="text-[11px] text-stone-500 normal-case tracking-normal">
+                            Undertone matching for Indian complexions
+                          </p>
+                        </Link>
+                        <Link
+                          to="/skinsafe"
+                          className="block p-2 rounded-xl hover:bg-[#FFF9F5] transition-colors"
+                        >
+                          <p className="font-semibold text-xs text-emerald-800 flex items-center gap-1.5 normal-case tracking-normal">
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> SkinSafe Allergen Checker
+                          </p>
+                          <p className="text-[11px] text-stone-500 normal-case tracking-normal">
+                            Screen nut oils, sulfates & irritants
+                          </p>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* CASE C: STORE OWNER ON STOREFRONT */}
+              {isAuthenticated && isSeller && (
+                <>
+                  <Link to="/" className="hover:text-[#352137] transition-colors py-2">
+                    Home
+                  </Link>
+                  <Link to="/shop" className="hover:text-[#352137] transition-colors py-2">
+                    Shop
+                  </Link>
+                  <a href="/#about" className="hover:text-[#352137] transition-colors py-2">
+                    About Us
+                  </a>
+                  <a href="/#help" className="hover:text-[#352137] transition-colors py-2">
+                    Help
+                  </a>
+                </>
+              )}
             </nav>
 
             {/* Right Action Icons */}
             <div className="flex items-center space-x-3 sm:space-x-4">
-              {/* Glowing BUY NOW / Experience Selector */}
-              <button
-                onClick={() => setRoleModalOpen(true)}
-                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#D985A5] via-[#C58A78] to-[#352137] text-white text-[11px] font-bold uppercase tracking-wider shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-200" />
-                <span>BUY NOW</span>
-              </button>
-
               {/* Search Trigger */}
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
@@ -252,40 +366,88 @@ export function CustomerNavbar() {
                 <Search className="h-5 w-5" />
               </button>
 
-              {/* Wishlist Link */}
-              <Link
-                to="/wishlist"
-                className="relative p-2 text-[#352137] hover:text-[#542B43] hover:bg-[#FFF9F5] rounded-full transition-colors cursor-pointer"
-                aria-label="View Wishlist"
-              >
-                <Heart className="h-5 w-5" />
-                {wishlistCount > 0 && (
-                  <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#352137] text-[9px] font-bold text-white">
-                    {wishlistCount}
-                  </span>
-                )}
-              </Link>
+              {/* CUSTOMER ONLY: Wishlist Icon */}
+              {isAuthenticated && isCustomer && (
+                <Link
+                  to="/wishlist"
+                  className="relative p-2 text-[#352137] hover:text-[#542B43] hover:bg-[#FFF9F5] rounded-full transition-colors cursor-pointer"
+                  aria-label="View Wishlist"
+                >
+                  <Heart className="h-5 w-5" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#352137] text-[9px] font-bold text-white">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </Link>
+              )}
 
-              {/* Cart Link */}
-              <Link
-                to="/cart"
-                className="relative p-2 text-[#352137] hover:text-[#542B43] hover:bg-[#FFF9F5] rounded-full transition-colors cursor-pointer"
-                aria-label="View Shopping Bag"
-              >
-                <ShoppingBag className="h-5 w-5" />
-                {totalItemCount > 0 && (
-                  <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#D985A5] text-[9px] font-bold text-[#352137]">
-                    {totalItemCount}
-                  </span>
-                )}
-              </Link>
+              {/* CUSTOMER ONLY: Shopping Bag / Cart */}
+              {isAuthenticated && isCustomer && (
+                <Link
+                  to="/cart"
+                  className="relative p-2 text-[#352137] hover:text-[#542B43] hover:bg-[#FFF9F5] rounded-full transition-colors cursor-pointer"
+                  aria-label="View Shopping Bag"
+                >
+                  <ShoppingBag className="h-5 w-5" />
+                  {totalItemCount > 0 && (
+                    <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#D985A5] text-[9px] font-bold text-[#352137]">
+                      {totalItemCount}
+                    </span>
+                  )}
+                </Link>
+              )}
 
-              {/* User Profile / Auth Menu */}
+              {/* CUSTOMER ONLY: Notifications Bell */}
+              {isAuthenticated && isCustomer && (
+                <div className="relative">
+                  <button
+                    onClick={() => setNotifDropdown(!notifDropdown)}
+                    className="relative p-2 text-[#352137] hover:text-[#542B43] hover:bg-[#FFF9F5] rounded-full transition-colors cursor-pointer"
+                    aria-label="Customer Notifications"
+                  >
+                    <Bell className="h-5 w-5" />
+                    <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />
+                  </button>
+
+                  {notifDropdown && (
+                    <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl bg-white border border-[#F4C6D5] shadow-xl py-3 px-3 z-50 animate-in fade-in">
+                      <div className="flex items-center justify-between pb-2 border-b border-[#F4C6D5]/60 mb-2">
+                        <span className="text-xs font-bold text-[#352137]">Notifications</span>
+                        <span className="text-[10px] text-[#D985A5] font-semibold">2 New</span>
+                      </div>
+                      <div className="space-y-2 text-xs">
+                        <div className="p-2 rounded-xl bg-[#FFF9F5] border border-[#F4C6D5]/40 space-y-0.5">
+                          <p className="font-semibold text-[#352137]">Festive 15% Discount Active</p>
+                          <p className="text-[11px] text-stone-500">Apply promo code SHOPSYNC15 at checkout.</p>
+                        </div>
+                        <div className="p-2 rounded-xl bg-[#FFF9F5] border border-[#F4C6D5]/40 space-y-0.5">
+                          <p className="font-semibold text-[#352137]">1,250 Loyalty Points Earned</p>
+                          <p className="text-[11px] text-stone-500">Gold tier membership unlocked.</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* STORE OWNER: Direct Dashboard Button */}
+              {isAuthenticated && isSeller && (
+                <Link
+                  to="/admin/dashboard"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#352137] hover:bg-[#542B43] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-xs"
+                >
+                  <LayoutDashboard className="w-3.5 h-3.5 text-[#F4C6D5]" />
+                  <span>Owner Dashboard</span>
+                </Link>
+              )}
+
+              {/* USER PROFILE / AUTH MENU */}
               <div className="relative">
                 {isAuthenticated && user ? (
                   <button
                     onClick={() => setUserDropdown(!userDropdown)}
-                    className="flex items-center gap-2 p-1.5 rounded-full hover:bg-[#FFF9F5] transition-colors cursor-pointer"
+                    className="flex items-center gap-2 p-1 rounded-full hover:bg-[#FFF9F5] transition-colors cursor-pointer"
                     aria-label="User Account Menu"
                   >
                     <img
@@ -298,20 +460,14 @@ export function CustomerNavbar() {
                   <div className="flex items-center gap-2">
                     <Link
                       to="/login"
-                      className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#352137] hover:bg-[#542B43] text-white text-xs font-semibold uppercase tracking-wider transition-all shadow-xs hover:shadow-md active:scale-95 cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#352137] hover:bg-[#542B43] text-white text-xs font-semibold uppercase tracking-wider transition-all shadow-xs hover:shadow-md active:scale-95 cursor-pointer"
                     >
                       Login / Sign Up
-                    </Link>
-                    <Link
-                      to="/login"
-                      className="sm:hidden p-2 text-[#352137] hover:bg-[#FFF9F5] rounded-full transition-colors"
-                      aria-label="Customer Login"
-                    >
-                      <User className="h-5 w-5" />
                     </Link>
                   </div>
                 )}
 
+                {/* User Dropdown */}
                 {userDropdown && isAuthenticated && user && (
                   <div className="absolute right-0 top-full mt-2 w-60 rounded-2xl bg-white border border-[#F4C6D5] shadow-xl py-2 z-50">
                     <div className="px-4 py-2.5 border-b border-[#F4C6D5]/60">
@@ -322,7 +478,7 @@ export function CustomerNavbar() {
                           ? 'bg-[#352137] text-white'
                           : 'bg-[#F4C6D5]/50 text-[#352137]'
                       }`}>
-                        {isSeller ? (user.role === 'admin' ? 'Store Director (Admin)' : 'Seller Partner') : (user.loyaltyTier || 'Customer')}
+                        {isSeller ? 'Store Owner' : (user.loyaltyTier || 'Customer')}
                       </span>
                     </div>
 
@@ -333,7 +489,7 @@ export function CustomerNavbar() {
                           onClick={() => setUserDropdown(false)}
                           className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
                         >
-                          My Profile & Skin Preferences
+                          My Account & Profile
                         </Link>
                         <Link
                           to="/orders"
@@ -341,6 +497,13 @@ export function CustomerNavbar() {
                           className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
                         >
                           My Orders & Tracking
+                        </Link>
+                        <Link
+                          to="/wishlist"
+                          onClick={() => setUserDropdown(false)}
+                          className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
+                        >
+                          Wishlist ({wishlistCount})
                         </Link>
                         <Link
                           to="/cart"
@@ -364,41 +527,23 @@ export function CustomerNavbar() {
                           onClick={() => setUserDropdown(false)}
                           className="block px-4 py-2 text-xs font-bold text-[#352137] hover:bg-[#FFF9F5]"
                         >
-                          📊 Seller Dashboard
+                          📊 Store Owner Dashboard
                         </Link>
                         <Link
                           to="/admin/pos-billing"
                           onClick={() => setUserDropdown(false)}
                           className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
                         >
-                          🏪 POS Billing Register
-                        </Link>
-                        <Link
-                          to="/admin/products"
-                          onClick={() => setUserDropdown(false)}
-                          className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
-                        >
-                          📦 Product Catalog
-                        </Link>
-                        <Link
-                          to="/admin/inventory"
-                          onClick={() => setUserDropdown(false)}
-                          className="block px-4 py-2 text-xs text-[#282426] hover:bg-[#FFF9F5]"
-                        >
-                          📦 Stock & Batch Expiry
+                          🏪 POS Register
                         </Link>
                       </>
                     )}
 
                     <button
-                      onClick={() => {
-                        setUserDropdown(false)
-                        logout()
-                        navigate('/')
-                      }}
-                      className="w-full text-left px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 border-t border-[#F4C6D5]/40 font-semibold cursor-pointer"
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 border-t border-[#F4C6D5]/40 font-semibold cursor-pointer flex items-center gap-1.5"
                     >
-                      Sign Out
+                      <LogOut className="w-3.5 h-3.5" /> Logout
                     </button>
                   </div>
                 )}
@@ -408,12 +553,12 @@ export function CustomerNavbar() {
 
           {/* Search Dropdown / Input Drawer */}
           {searchOpen && (
-            <div className="py-4 border-t border-[#F4C6D5]/60">
+            <div className="py-4 border-t border-[#F4C6D5]/60 animate-in fade-in duration-200">
               <form onSubmit={handleSearchSubmit} className="relative">
                 <input
                   type="text"
                   autoFocus
-                  placeholder="Search Indian beauty brands (Lakmé, Maybelline, Minimalist, Plum)..."
+                  placeholder="Search 100+ authentic Indian beauty formulations (e.g. Lakmé, Minimalist, Niacinamide)..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full rounded-2xl border border-[#F4C6D5] bg-[#FFF9F5] px-4 py-3 pl-11 text-xs text-[#282426] focus:outline-none focus:ring-2 focus:ring-[#D985A5]"
@@ -453,116 +598,145 @@ export function CustomerNavbar() {
         {/* Mobile Drawer Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-[#F4C6D5] bg-[#FFF9F5] px-4 pt-3 pb-6 space-y-2 text-sm font-semibold">
-            <Link
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#352137] hover:text-[#D985A5]"
-            >
-              Home
-            </Link>
-            <Link
-              to="/shop"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#352137] hover:text-[#D985A5]"
-            >
-              Shop All Indian Beauty Products
-            </Link>
-            <Link
-              to="/category/makeup"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#352137] hover:text-[#D985A5]"
-            >
-              Makeup Essentials (Lakmé, Maybelline)
-            </Link>
-            <Link
-              to="/category/skincare"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#352137] hover:text-[#D985A5]"
-            >
-              Skincare (Minimalist, L’Oréal, Plum)
-            </Link>
-            <Link
-              to="/category/haircare"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#352137] hover:text-[#D985A5]"
-            >
-              Haircare & Oils (Mamaearth)
-            </Link>
-            <a
-              href="/#about"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#352137] hover:text-[#D985A5]"
-            >
-              About Us
-            </a>
-            <a
-              href="#footer-contact"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#352137] hover:text-[#D985A5]"
-            >
-              Contact
-            </a>
-            <Link
-              to="/ai-skin-analysis"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#D985A5] flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4" /> AI Face Scanner & Diagnostics
-            </Link>
-            <Link
-              to="/feedback"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-stone-700"
-            >
-              Report Product Reaction & Feedback
-            </Link>
-
-            <div className="pt-4 border-t border-[#F4C6D5] flex flex-col gap-2">
-              {!isAuthenticated ? (
+            {/* PUBLIC VISITOR MOBILE MENU (ONLY 4 MAIN OPTIONS) */}
+            {!isAuthenticated && (
+              <>
                 <Link
-                  to="/login"
+                  to="/"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full bg-[#352137] text-white text-center py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider"
+                  className="block py-2 text-[#352137] hover:text-[#D985A5]"
                 >
-                  Login / Sign Up
+                  Home
                 </Link>
-              ) : (
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false)
-                    logout()
-                  }}
-                  className="w-full bg-rose-50 border border-rose-200 text-rose-700 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider"
+                <Link
+                  to="/shop"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137] hover:text-[#D985A5]"
                 >
-                  Sign Out ({user?.name})
+                  Shop (All Formulations)
+                </Link>
+                <a
+                  href="/#about"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137] hover:text-[#D985A5]"
+                >
+                  About Us
+                </a>
+                <a
+                  href="/#help"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137] hover:text-[#D985A5]"
+                >
+                  Help
+                </a>
+                <div className="pt-3 border-t border-[#F4C6D5]">
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full bg-[#352137] text-white text-center py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider block"
+                  >
+                    Login / Sign Up
+                  </Link>
+                </div>
+              </>
+            )}
+
+            {/* CUSTOMER MOBILE MENU */}
+            {isAuthenticated && isCustomer && (
+              <>
+                <Link
+                  to="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137]"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/shop"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137]"
+                >
+                  Shop
+                </Link>
+                <Link
+                  to="/ai-skin-analysis"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#D985A5] flex items-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4" /> AI Studio Scanner
+                </Link>
+                <Link
+                  to="/wishlist"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137]"
+                >
+                  Wishlist ({wishlistCount})
+                </Link>
+                <Link
+                  to="/cart"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137]"
+                >
+                  Cart ({totalItemCount})
+                </Link>
+                <Link
+                  to="/orders"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137]"
+                >
+                  My Orders
+                </Link>
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137]"
+                >
+                  My Account
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full mt-3 bg-rose-50 border border-rose-200 text-rose-700 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-center"
+                >
+                  Logout ({user?.name})
                 </button>
-              )}
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  setRoleModalOpen(true)
-                }}
-                className="w-full bg-gradient-to-r from-[#D985A5] to-[#352137] text-white py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider"
-              >
-                BUY NOW / Switch Role
-              </button>
-              <Link
-                to="/admin/pos-billing"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full bg-[#352137] text-white text-center py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider"
-              >
-                Store Owner POS Terminal
-              </Link>
-            </div>
+              </>
+            )}
+
+            {/* STORE OWNER MOBILE MENU */}
+            {isAuthenticated && isSeller && (
+              <>
+                <Link
+                  to="/admin/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 font-bold text-[#352137]"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/admin/pos-billing"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137]"
+                >
+                  POS Billing Register
+                </Link>
+                <Link
+                  to="/admin/products"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#352137]"
+                >
+                  Product Catalog
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full mt-3 bg-rose-50 border border-rose-200 text-rose-700 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-center"
+                >
+                  Logout (Owner)
+                </button>
+              </>
+            )}
           </div>
         )}
       </header>
-
-      {/* Role Selection Modal */}
-      <RoleSelectionModal
-        isOpen={roleModalOpen}
-        onClose={() => setRoleModalOpen(false)}
-      />
     </>
   )
 }

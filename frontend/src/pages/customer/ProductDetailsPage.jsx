@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Star,
@@ -12,18 +12,22 @@ import {
   Truck,
   RotateCcw,
   ArrowLeft,
-  Share2
+  Share2,
+  Zap
 } from 'lucide-react'
 import { BEAUTY_PRODUCTS, MOCK_REVIEWS } from '../../data/mockBeautyData'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
+import { useAuth } from '../../context/AuthContext'
 import { useSkinSafe } from '../../context/SkinSafeContext'
 import { formatINR } from '../../utils/currency'
 
 export function ProductDetailsPage() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const { addToCart } = useCart()
   const { isInWishlist, toggleWishlist } = useWishlist()
+  const { isAuthenticated, isCustomer } = useAuth()
   const { checkProductSafety, allergies } = useSkinSafe()
 
   const product = BEAUTY_PRODUCTS.find(p => p.id === id) || BEAUTY_PRODUCTS[0]
@@ -72,6 +76,19 @@ export function ProductDetailsPage() {
       return
     }
 
+    // Login required for shopping actions
+    if (!isAuthenticated || !isCustomer) {
+      localStorage.setItem('shopsync_pending_intent', JSON.stringify({
+        action: 'add_to_cart',
+        product,
+        selectedShade,
+        quantity,
+        targetUrl: `/product/${product.id}`
+      }))
+      navigate(`/login?redirect=${encodeURIComponent(`/product/${product.id}`)}&intent=add_to_cart`)
+      return
+    }
+
     const res = addToCart(product, selectedShade, quantity)
     if (res.success) {
       setAddedToast(true)
@@ -81,7 +98,40 @@ export function ProductDetailsPage() {
     }
   }
 
+  const handleBuyNow = () => {
+    setErrorMsg('')
+    if (hasShades && !selectedShade) {
+      setErrorMsg('Please select your preferred shade before purchasing.')
+      return
+    }
+
+    // Login required for shopping actions
+    if (!isAuthenticated || !isCustomer) {
+      localStorage.setItem('shopsync_pending_intent', JSON.stringify({
+        action: 'buy_now',
+        product,
+        selectedShade,
+        quantity,
+        targetUrl: '/checkout'
+      }))
+      navigate('/login?redirect=%2Fcheckout&intent=buy_now')
+      return
+    }
+
+    const res = addToCart(product, selectedShade, quantity)
+    if (res.success) {
+      navigate('/checkout')
+    } else {
+      setErrorMsg(res.error)
+    }
+  }
+
   const handleWishlistToggle = () => {
+    if (!isAuthenticated || !isCustomer) {
+      navigate('/login?redirect=' + encodeURIComponent(window.location.pathname) + '&intent=wishlist')
+      return
+    }
+
     toggleWishlist(product.id)
     if (!isFavorited) {
       setHeartSparks(true)
@@ -319,10 +369,20 @@ export function ProductDetailsPage() {
               <button
                 type="button"
                 onClick={handleAddToCart}
-                className="flex-1 bg-[#542B43] hover:bg-[#3B1E2F] text-white py-3 px-6 rounded-xl font-bold text-xs uppercase tracking-wider transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                className="flex-1 bg-white hover:bg-[#FFF9F5] text-[#352137] border-2 border-[#D985A5] py-3 px-5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-xs hover:shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
-                <ShoppingBag className="w-4 h-4" />
-                {hasShades ? `Add to Bag (${selectedShade?.code || 'Select Shade'})` : 'Add to Bag'}
+                <ShoppingBag className="w-4 h-4 text-[#D985A5]" />
+                <span>Add to Bag</span>
+              </button>
+
+              {/* Buy Now Button */}
+              <button
+                type="button"
+                onClick={handleBuyNow}
+                className="flex-1 bg-[#352137] hover:bg-[#542B43] active:scale-98 text-white py-3 px-5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Zap className="w-4 h-4 text-amber-300" />
+                <span>Buy Now</span>
               </button>
 
               {/* Wishlist Toggle with Animated Sparks */}

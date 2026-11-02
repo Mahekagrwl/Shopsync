@@ -29,7 +29,11 @@ import {
   ShieldAlert,
   Clock,
   Sparkle,
-  RotateCcw
+  RotateCcw,
+  HelpCircle,
+  Phone,
+  Mail,
+  MessageSquare
 } from 'lucide-react'
 import { BEAUTY_PRODUCTS, BRANDS, MOCK_REVIEWS } from '../../data/mockBeautyData'
 import ProductCard from '../../components/common/ProductCard'
@@ -215,7 +219,7 @@ export function HomePage() {
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" /> 100% Authentic Indian Brands
                 </span>
                 <span className="flex items-center gap-1.5 font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" /> AI Skin & Shade Matching
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Curated Indian Skin Tones
                 </span>
                 <span className="flex items-center gap-1.5 font-medium">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" /> SkinSafe Allergen Screening
@@ -295,7 +299,7 @@ export function HomePage() {
                   </div>
                 </motion.div>
 
-                {/* Floating Holographic AI Badge */}
+                {/* Floating Dermatologically Tested Badge */}
                 <motion.div
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
@@ -308,8 +312,8 @@ export function HomePage() {
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#F4C6D5]">AI Shade Match</p>
-                    <p className="text-xs font-semibold">98.4% Accuracy</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#F4C6D5]">Derm Tested</p>
+                    <p className="text-xs font-semibold">100% Genuine</p>
                   </div>
                 </motion.div>
               </div>
@@ -485,7 +489,7 @@ export function HomePage() {
             Why Choose ShopSync?
           </h2>
           <p className="text-xs sm:text-sm text-stone-600 max-w-xl mx-auto">
-            Combining dermatological safety, AI skin technology, and authentic Indian beauty heritage with local boutique empowerment.
+            Combining dermatological safety, authentic Indian beauty heritage, and pure formulations with local boutique empowerment.
           </p>
         </div>
 
@@ -497,9 +501,9 @@ export function HomePage() {
               desc: 'Direct atelier sourcing from Lakmé, Maybelline, Minimalist, Plum, SUGAR, and Dot & Key. No grey market stock.'
             },
             {
-              icon: Cpu,
-              title: 'AI Skin & Shade Matching',
-              desc: 'Optical facial scanning calibrated across 8 parameters specifically engineered for warm and olive Indian undertones.'
+              icon: Sparkles,
+              title: 'Curated Shade Matching',
+              desc: 'Diverse pigment formulations calibrated specifically for warm, cool, and olive Indian undertones.'
             },
             {
               icon: ShieldCheck,
@@ -570,10 +574,10 @@ export function HomePage() {
                 <span>For Beauty Lovers</span>
               </div>
               <h3 className="font-serif text-xl font-bold text-[#352137]">
-                Clean Formulation & Optical AI
+                Clean Formulations & Dermatological Care
               </h3>
               <p className="text-xs text-stone-600 leading-relaxed">
-                Enjoy authentic formulations from top Indian & global ateliers. Our camera-based AI face scanner and SkinSafe™ ingredient check ensure every serum, moisturizer, and lipstick matches your skin profile and allergen needs.
+                Enjoy authentic formulations from top Indian & global ateliers. Our dermatologist-tested standards and SkinSafe™ ingredient transparency ensure every serum, moisturizer, and lipstick matches your skin profile and allergen needs.
               </p>
               <Link
                 to="/shop"
@@ -604,6 +608,69 @@ export function HomePage() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. HELP & CUSTOMER CONCIERGE SECTION */}
+      <section id="help" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+        <div className="rounded-3xl bg-white border-2 border-[#F4C6D5] p-8 sm:p-12 shadow-lg space-y-8">
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F4C6D5]/40 text-[#352137] text-xs font-bold uppercase tracking-wider">
+              <HelpCircle className="w-3.5 h-3.5 text-[#D985A5]" />
+              <span>Customer Care & FAQs</span>
+            </div>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#352137]">
+              How Can We Help You?
+            </h2>
+            <p className="text-xs sm:text-sm text-stone-600">
+              Our Vadodara beauty concierge team is here to assist with product formulation queries, orders, shipping, and store owner support.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+            <div className="p-6 rounded-2xl bg-[#FFF9F5] border border-[#F4C6D5] space-y-3 text-center sm:text-left">
+              <div className="w-10 h-10 rounded-xl bg-[#F4C6D5]/50 flex items-center justify-center text-[#352137] mx-auto sm:mx-0">
+                <Truck className="w-5 h-5" />
+              </div>
+              <h3 className="font-bold text-sm text-[#352137]">Pan-India Shipping</h3>
+              <p className="text-xs text-stone-600 leading-relaxed">
+                Free standard express shipping on orders exceeding ₹499 across all Indian PIN codes. Orders dispatched within 24 hours.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#FFF9F5] border border-[#F4C6D5] space-y-3 text-center sm:text-left">
+              <div className="w-10 h-10 rounded-xl bg-[#F4C6D5]/50 flex items-center justify-center text-[#352137] mx-auto sm:mx-0">
+                <RotateCcw className="w-5 h-5" />
+              </div>
+              <h3 className="font-bold text-sm text-[#352137]">15-Day Return Guarantee</h3>
+              <p className="text-xs text-stone-600 leading-relaxed">
+                Unopened beauty items or products triggering adverse skin reactions can be returned within 15 days with full refund or store credit.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#FFF9F5] border border-[#F4C6D5] space-y-3 text-center sm:text-left">
+              <div className="w-10 h-10 rounded-xl bg-[#F4C6D5]/50 flex items-center justify-center text-[#352137] mx-auto sm:mx-0">
+                <Phone className="w-5 h-5" />
+              </div>
+              <h3 className="font-bold text-sm text-[#352137]">Concierge Support</h3>
+              <p className="text-xs text-stone-600 leading-relaxed">
+                Speak with our team Mon–Sat (9 AM – 8 PM IST) via WhatsApp or email at <span className="font-semibold text-[#352137]">support@shopsync.in</span>.
+              </p>
+            </div>
+          </div>
+
+          <div className="border-t border-[#F4C6D5]/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-600">
+            <span className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" /> All products sourced directly from authorized brand ateliers
+            </span>
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#352137] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#542B43] transition-colors"
+            >
+              <span>Explore Formulations</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </section>
