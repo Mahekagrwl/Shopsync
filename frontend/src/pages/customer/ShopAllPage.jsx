@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from 'react'
-import { BEAUTY_PRODUCTS, CATEGORIES, BRANDS } from '../../data/mockBeautyData'
+import { CATEGORIES, BRANDS } from '../../data/mockBeautyData'
+import { useProducts } from '../../context/ProductContext'
 import ProductCard from '../../components/common/ProductCard'
 import { Filter, SlidersHorizontal, Sparkles, X, ChevronDown } from 'lucide-react'
 import { formatINR } from '../../utils/currency'
 
 export function ShopAllPage() {
+  const { products } = useProducts()
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedBrand, setSelectedBrand] = useState('all')
   const [sortBy, setSortBy] = useState('featured')
@@ -14,7 +16,7 @@ export function ShopAllPage() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false)
 
   const filteredProducts = useMemo(() => {
-    return BEAUTY_PRODUCTS.filter((prod) => {
+    return products.filter((prod) => {
       // Category filter
       if (selectedCategory !== 'all') {
         if (prod.category !== selectedCategory && prod.subcategory !== selectedCategory) {
@@ -41,7 +43,7 @@ export function ShopAllPage() {
       if (sortBy === 'newest') return (b.isNewArrival ? 1 : 0) - (a.isNewArrival ? 1 : 0)
       return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0)
     })
-  }, [selectedCategory, selectedBrand, sortBy, maxPrice, onlyInStock])
+  }, [products, selectedCategory, selectedBrand, sortBy, maxPrice, onlyInStock])
 
   const clearAllFilters = () => {
     setSelectedCategory('all')

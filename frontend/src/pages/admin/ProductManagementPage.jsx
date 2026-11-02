@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Package, Plus, Search, Edit2, Trash2, Eye, Filter } from 'lucide-react'
-import { BEAUTY_PRODUCTS, CATEGORIES } from '../../data/mockBeautyData'
+import { CATEGORIES } from '../../data/mockBeautyData'
+import { useProducts } from '../../context/ProductContext'
+import { formatINR } from '../../utils/currency'
 
 export function ProductManagementPage() {
-  const [products, setProducts] = useState(BEAUTY_PRODUCTS)
+  const { products } = useProducts()
   const [search, setSearch] = useState('')
   const [selectedCat, setSelectedCat] = useState('all')
 
@@ -101,7 +103,7 @@ export function ProductManagementPage() {
                     <p className="text-[10px]">{prod.barcode}</p>
                   </td>
                   <td className="py-3 px-4 text-[#524B4F]">{prod.brand}</td>
-                  <td className="py-3 px-4 font-bold font-mono text-[#282426]">${prod.price.toFixed(2)}</td>
+                  <td className="py-3 px-4 font-bold font-mono text-[#282426]">{formatINR(prod.price)}</td>
                   <td className="py-3 px-4">
                     <span className={`px-2.5 py-0.5 rounded-full font-bold font-mono text-[11px] ${
                       prod.stockQuantity < 50 ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'

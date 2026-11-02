@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { ordersApi } from '../services/api'
+import { useProducts } from './ProductContext'
 
 const CartContext = createContext()
 
@@ -90,6 +91,8 @@ const INITIAL_ORDERS = [
 ]
 
 export function CartProvider({ children }) {
+  const { validateStock, deductStock, restoreStock } = useProducts()
+
   const [cartItems, setCartItems] = useState(() => {
     const saved = localStorage.getItem('shopsync_cart')
     return saved ? JSON.parse(saved) : INITIAL_CART
@@ -115,15 +118,26 @@ export function CartProvider({ children }) {
     if ((product.category === 'makeup' || (product.shades && product.shades.length > 0)) && !shade) {
       return {
         success: false,
-        error: 'Please select your shade before adding this makeup product to bag.'
+        error: 'Please select your preferred shade before adding to your bag.'
       }
     }
 
     const cartItemId = `${product.id}-${shade ? shade.id : 'default'}`
+    const existing = cartItems.find(item => item.cartItemId === cartItemId)
+    const totalRequested = (existing ? existing.quantity : 0) + quantity
+
+    // Real-time Central Stock Validation (Overselling Prevention)
+    const stockCheck = validateStock(product.id, shade?.id, totalRequested)
+    if (!stockCheck.valid) {
+      return {
+        success: false,
+        error: stockCheck.error
+      }
+    }
 
     setCartItems(prev => {
-      const existing = prev.find(item => item.cartItemId === cartItemId)
-      if (existing) {
+      const match = prev.find(item => item.cartItemId === cartItemId)
+      if (match) {
         return prev.map(item =>
           item.cartItemId === cartItemId
             ? { ...item, quantity: item.quantity + quantity }
@@ -158,13 +172,23 @@ export function CartProvider({ children }) {
   const updateQuantity = (cartItemId, newQty) => {
     if (newQty <= 0) {
       removeFromCart(cartItemId)
-      return
+      return { success: true }
     }
+
+    const item = cartItems.find(i => i.cartItemId === cartItemId)
+    if (item) {
+      const stockCheck = validateStock(item.productId, item.shade?.id, newQty)
+      if (!stockCheck.valid) {
+        return { success: false, error: stockCheck.error }
+      }
+    }
+
     setCartItems(prev =>
       prev.map(item =>
         item.cartItemId === cartItemId ? { ...item, quantity: newQty } : item
       )
     )
+    return { success: true }
   }
 
   const clearCart = () => {
@@ -206,8 +230,23 @@ export function CartProvider({ children }) {
 
   // Checkout submission
   const createOrder = async (orderData) => {
+    if (cartItems.length === 0) {
+      throw new Error('Your shopping bag is empty.')
+    }
+
     let orderNumber = 'SS-IN-' + Math.floor(100000 + Math.random() * 900000)
     let trackingNumber = 'BD-' + Math.floor(1000000 + Math.random() * 9000000) + '-IN'
+    let invoiceNumber = 'INV-' + orderNumber
+
+    // 1. Central Atomic Stock Deduction (Phase 5 - Omnichannel Stock Sync)
+    const deduction = deductStock(cartItems, 'online_order', orderNumber)
+    if (!deduction.success) {
+      throw new Error(deduction.error || 'Stock verification failed for one or more items.')
+    }
+
+    // 2. Separate Payment Status vs Order Status (Phase 3 Requirement)
+    const isCOD = orderData.paymentMethod?.toLowerCase().includes('cash') || orderData.paymentMethod?.toLowerCase().includes('cod')
+    const paymentStatus = isCOD ? 'Pending (Cash Due on Delivery)' : 'Paid (Verified Omnichannel Transaction)'
 
     const payload = {
       customer_name: orderData.fullName || orderData.customerName || 'Ananya Sharma',
@@ -231,6 +270,7 @@ export function CartProvider({ children }) {
       if (res?.order?.order_number) {
         orderNumber = res.order.order_number
         trackingNumber = res.order.tracking_number
+        invoiceNumber = 'INV-' + orderNumber
       }
     } catch (e) {
       console.warn('Online order fallback to local store state:', e.message)
@@ -239,10 +279,12 @@ export function CartProvider({ children }) {
     const newOrder = {
       id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
       orderNumber,
+      invoiceNumber,
       date: new Date().toISOString(),
       status: 'Order Placed',
+      paymentStatus,
       trackingNumber,
-      carrier: 'FedEx Luxury Express',
+      carrier: 'Blue Dart Luxury Express',
       estimatedDelivery: '3 to 5 business days',
       items: [...cartItems],
       subtotal,
@@ -250,14 +292,38 @@ export function CartProvider({ children }) {
       tax: estimatedTax,
       shipping: shippingFee,
       total: grandTotal,
-      paymentMethod: orderData.paymentMethod || 'Credit Card',
+      paymentMethod: orderData.paymentMethod || 'UPI / Card',
       shippingAddress: orderData.shippingAddress || 'Default Address',
-      contactEmail: orderData.email || 'customer@example.com'
+      contactName: orderData.fullName || orderData.customerName || 'Customer',
+      contactEmail: orderData.email || 'customer@example.com',
+      contactPhone: orderData.phone || '+91 98251 45890'
     }
 
     setOrders(prev => [newOrder, ...prev])
     clearCart()
     return newOrder
+  }
+
+  // Cancel order & restore inventory back to central store
+  const cancelOrder = (orderId) => {
+    const target = orders.find(o => o.id === orderId || o.orderNumber === orderId)
+    if (!target) return { success: false, error: 'Order not found' }
+    if (target.status === 'Cancelled') return { success: false, error: 'Order is already cancelled' }
+
+    restoreStock(target.items, 'cancelled_order', target.orderNumber)
+
+    setOrders(prev => prev.map(o => {
+      if (o.id === target.id) {
+        return {
+          ...o,
+          status: 'Cancelled',
+          paymentStatus: o.paymentStatus.includes('Paid') ? 'Refunded' : 'Cancelled'
+        }
+      }
+      return o
+    }))
+
+    return { success: true }
   }
 
   return (
@@ -279,7 +345,8 @@ export function CartProvider({ children }) {
         applyPromoCode,
         removePromoCode,
         orders,
-        createOrder
+        createOrder,
+        cancelOrder
       }}
     >
       {children}

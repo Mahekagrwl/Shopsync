@@ -110,7 +110,7 @@ export function CustomerNavbar() {
 
             {/* Official SHOPSYNC Brand Logo */}
             <div className="flex items-center">
-              <Link to="/" className="flex items-center gap-3 group" title="SHOPSYNC Homepage">
+              <Link to="/store" className="flex items-center gap-3 group" title="SHOPSYNC Homepage">
                 <img
                   src="/logo.jpg"
                   alt="SHOPSYNC Logo"
@@ -132,7 +132,7 @@ export function CustomerNavbar() {
               {/* CASE A: PUBLIC VISITOR NAVIGATION (ONLY 4 MAIN OPTIONS) */}
               {!isAuthenticated && (
                 <>
-                  <Link to="/" className="hover:text-[#352137] transition-colors py-2">
+                  <Link to="/store" className="hover:text-[#352137] transition-colors py-2">
                     Home
                   </Link>
 
@@ -198,12 +198,12 @@ export function CustomerNavbar() {
                   </div>
 
                   {/* About Us */}
-                  <a href="/#about" className="hover:text-[#352137] transition-colors py-2">
+                  <a href="/store#about" className="hover:text-[#352137] transition-colors py-2">
                     About Us
                   </a>
 
                   {/* Help */}
-                  <a href="/#help" className="hover:text-[#352137] transition-colors py-2">
+                  <a href="/store#help" className="hover:text-[#352137] transition-colors py-2">
                     Help
                   </a>
                 </>
@@ -212,7 +212,7 @@ export function CustomerNavbar() {
               {/* CASE B: AUTHENTICATED CUSTOMER NAVIGATION */}
               {isAuthenticated && isCustomer && (
                 <>
-                  <Link to="/" className="hover:text-[#352137] transition-colors py-2">
+                  <Link to="/store" className="hover:text-[#352137] transition-colors py-2">
                     Home
                   </Link>
 
@@ -275,12 +275,12 @@ export function CustomerNavbar() {
                   </div>
 
                   {/* Best Sellers */}
-                  <a href="/#bestsellers" className="hover:text-[#352137] transition-colors py-2 flex items-center gap-1">
+                  <a href="/store#bestsellers" className="hover:text-[#352137] transition-colors py-2 flex items-center gap-1">
                     <Flame className="w-3.5 h-3.5 text-rose-500" /> Best Sellers
                   </a>
 
                   {/* New Arrivals */}
-                  <a href="/#new-arrivals" className="hover:text-[#352137] transition-colors py-2 flex items-center gap-1">
+                  <a href="/store#new-arrivals" className="hover:text-[#352137] transition-colors py-2 flex items-center gap-1">
                     <Star className="w-3.5 h-3.5 text-amber-500" /> New Arrivals
                   </a>
 
@@ -339,16 +339,16 @@ export function CustomerNavbar() {
               {/* CASE C: STORE OWNER ON STOREFRONT */}
               {isAuthenticated && isSeller && (
                 <>
-                  <Link to="/" className="hover:text-[#352137] transition-colors py-2">
+                  <Link to="/store" className="hover:text-[#352137] transition-colors py-2">
                     Home
                   </Link>
                   <Link to="/shop" className="hover:text-[#352137] transition-colors py-2">
                     Shop
                   </Link>
-                  <a href="/#about" className="hover:text-[#352137] transition-colors py-2">
+                  <a href="/store#about" className="hover:text-[#352137] transition-colors py-2">
                     About Us
                   </a>
-                  <a href="/#help" className="hover:text-[#352137] transition-colors py-2">
+                  <a href="/store#help" className="hover:text-[#352137] transition-colors py-2">
                     Help
                   </a>
                 </>
@@ -602,7 +602,7 @@ export function CustomerNavbar() {
             {!isAuthenticated && (
               <>
                 <Link
-                  to="/"
+                  to="/store"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block py-2 text-[#352137] hover:text-[#D985A5]"
                 >
@@ -616,14 +616,14 @@ export function CustomerNavbar() {
                   Shop (All Formulations)
                 </Link>
                 <a
-                  href="/#about"
+                  href="/store#about"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block py-2 text-[#352137] hover:text-[#D985A5]"
                 >
                   About Us
                 </a>
                 <a
-                  href="/#help"
+                  href="/store#help"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block py-2 text-[#352137] hover:text-[#D985A5]"
                 >
@@ -645,7 +645,7 @@ export function CustomerNavbar() {
             {isAuthenticated && isCustomer && (
               <>
                 <Link
-                  to="/"
+                  to="/store"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block py-2 text-[#352137]"
                 >

@@ -1,11 +1,13 @@
 import React, { useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { BEAUTY_PRODUCTS, CATEGORIES } from '../../data/mockBeautyData'
+import { CATEGORIES } from '../../data/mockBeautyData'
+import { useProducts } from '../../context/ProductContext'
 import ProductCard from '../../components/common/ProductCard'
 import { Sparkles, ArrowLeft, SlidersHorizontal } from 'lucide-react'
 
 export function CategoryPage() {
   const { slug } = useParams()
+  const { products: allProducts } = useProducts()
   const [sortBy, setSortBy] = useState('featured')
 
   // Find category metadata
@@ -19,7 +21,7 @@ export function CategoryPage() {
   const subcategories = CATEGORIES.filter(c => c.parent === slug)
 
   const products = useMemo(() => {
-    return BEAUTY_PRODUCTS.filter(p => {
+    return allProducts.filter(p => {
       if (p.category === slug || p.subcategory === slug) {
         return true
       }
@@ -30,7 +32,7 @@ export function CategoryPage() {
       if (sortBy === 'rating') return b.rating - a.rating
       return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0)
     })
-  }, [slug, sortBy])
+  }, [allProducts, slug, sortBy])
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">

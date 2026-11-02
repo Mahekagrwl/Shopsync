@@ -8,6 +8,10 @@ import AdminLayout from '../components/layout/AdminLayout'
 // Route Protection Guard
 import ProtectedRoute from '../components/common/ProtectedRoute'
 
+// Brand & Role Pages (Phase 1 & 2)
+import BrandLandingPage from '../pages/customer/BrandLandingPage'
+import RoleSelectionPage from '../pages/customer/RoleSelectionPage'
+
 // Customer Pages (Storefront & Protected)
 import HomePage from '../pages/customer/HomePage'
 import CustomerLogin from '../pages/customer/CustomerLogin'
@@ -65,10 +69,17 @@ import NotFound from '../pages/NotFound'
 export function AppRoutes() {
   return (
     <Routes>
-      {/* 1. Public & Customer Storefront Routes */}
-      <Route path="/" element={<CustomerLayout />}>
-        {/* Public Routes (Accessible to everyone without login) */}
-        <Route index element={<HomePage />} />
+      {/* 1. Standalone Brand Introduction Landing Page (Phase 1: Strictly 100vh, 2 Buttons) */}
+      <Route path="/" element={<BrandLandingPage />} />
+
+      {/* 2. Standalone Role Selection Gateway (Phase 2: Customer vs Seller) */}
+      <Route path="/role-select" element={<RoleSelectionPage />} />
+
+      {/* 3. Customer Storefront Layout (Phase 3: Complete E-Commerce Experience) */}
+      <Route element={<CustomerLayout />}>
+        {/* Public Storefront Routes */}
+        <Route path="store" element={<HomePage />} />
+        <Route path="home" element={<HomePage />} />
         <Route path="shop" element={<ShopAllPage />} />
         <Route path="category/:slug" element={<CategoryPage />} />
         <Route path="product/:id" element={<ProductDetailsPage />} />

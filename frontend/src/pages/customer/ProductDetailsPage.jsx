@@ -20,6 +20,7 @@ import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
 import { useAuth } from '../../context/AuthContext'
 import { useSkinSafe } from '../../context/SkinSafeContext'
+import { useProducts } from '../../context/ProductContext'
 import { formatINR } from '../../utils/currency'
 
 export function ProductDetailsPage() {
@@ -29,8 +30,9 @@ export function ProductDetailsPage() {
   const { isInWishlist, toggleWishlist } = useWishlist()
   const { isAuthenticated, isCustomer } = useAuth()
   const { checkProductSafety, allergies } = useSkinSafe()
+  const { getProduct, products } = useProducts()
 
-  const product = BEAUTY_PRODUCTS.find(p => p.id === id) || BEAUTY_PRODUCTS[0]
+  const product = getProduct(id) || products.find(p => p.id === id) || products[0]
 
   const [activeImage, setActiveImage] = useState(0)
   const [selectedShade, setSelectedShade] = useState(
@@ -254,9 +256,21 @@ export function ProductDetailsPage() {
                 {formatINR(product.comparePrice)}
               </span>
             )}
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-              In Stock & Ready to Dispatch
-            </span>
+            {product.inStock && product.stockQuantity > 0 ? (
+              <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                product.stockQuantity <= 5
+                  ? 'bg-amber-50 text-amber-800 border-amber-200'
+                  : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+              }`}>
+                {product.stockQuantity <= 5
+                  ? `Only ${product.stockQuantity} Left in Stock`
+                  : `In Stock (${product.stockQuantity} units available)`}
+              </span>
+            ) : (
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                Currently Sold Out
+              </span>
+            )}
           </div>
 
           {/* SkinSafe Allergen Cross-Check Banner */}
@@ -358,8 +372,9 @@ export function ProductDetailsPage() {
                 </span>
                 <button
                   type="button"
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="px-3.5 py-2.5 text-stone-600 hover:bg-[#F8F3EE] transition-colors text-sm font-bold"
+                  disabled={!product.inStock || product.stockQuantity <= 0}
+                  onClick={() => setQuantity(Math.min(product.stockQuantity || 1, quantity + 1))}
+                  className="px-3.5 py-2.5 text-stone-600 hover:bg-[#F8F3EE] transition-colors text-sm font-bold disabled:opacity-40"
                 >
                   +
                 </button>
@@ -368,18 +383,20 @@ export function ProductDetailsPage() {
               {/* Add to Bag Button */}
               <button
                 type="button"
+                disabled={!product.inStock || product.stockQuantity <= 0}
                 onClick={handleAddToCart}
-                className="flex-1 bg-white hover:bg-[#FFF9F5] text-[#352137] border-2 border-[#D985A5] py-3 px-5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-xs hover:shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                className="flex-1 bg-white hover:bg-[#FFF9F5] text-[#352137] border-2 border-[#D985A5] py-3 px-5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-xs hover:shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ShoppingBag className="w-4 h-4 text-[#D985A5]" />
-                <span>Add to Bag</span>
+                <span>{product.inStock && product.stockQuantity > 0 ? 'Add to Bag' : 'Sold Out'}</span>
               </button>
 
               {/* Buy Now Button */}
               <button
                 type="button"
+                disabled={!product.inStock || product.stockQuantity <= 0}
                 onClick={handleBuyNow}
-                className="flex-1 bg-[#352137] hover:bg-[#542B43] active:scale-98 text-white py-3 px-5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+                className="flex-1 bg-[#352137] hover:bg-[#542B43] active:scale-98 text-white py-3 px-5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Zap className="w-4 h-4 text-amber-300" />
                 <span>Buy Now</span>

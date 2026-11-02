@@ -6,6 +6,7 @@ import { useWishlist } from '../../context/WishlistContext'
 import { useCart } from '../../context/CartContext'
 import { useAuth } from '../../context/AuthContext'
 import { useSkinSafe } from '../../context/SkinSafeContext'
+import { useProducts } from '../../context/ProductContext'
 import { formatINR } from '../../utils/currency'
 
 export function ProductCard({ product, featured = false }) {
@@ -14,6 +15,10 @@ export function ProductCard({ product, featured = false }) {
   const { addToCart } = useCart()
   const { isAuthenticated, isCustomer } = useAuth()
   const { checkProductSafety } = useSkinSafe()
+  const { getProduct } = useProducts()
+
+  // Real-time central stock synchronization
+  const liveProduct = getProduct(product.id) || product
 
   const [selectedShade, setSelectedShade] = useState(
     product.shades && product.shades.length > 0 ? product.shades[0] : null
@@ -191,11 +196,13 @@ export function ProductCard({ product, featured = false }) {
         <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-2 group-hover:translate-y-0 z-10">
           <button
             onClick={handleQuickAdd}
-            disabled={!product.inStock}
+            disabled={!liveProduct.inStock || liveProduct.stockQuantity <= 0}
             className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer ${
               addedAnimation
                 ? 'bg-emerald-700 text-white scale-[1.02]'
-                : 'bg-[#542B43] hover:bg-[#3B1E2F] text-white active:scale-95'
+                : liveProduct.inStock && liveProduct.stockQuantity > 0
+                ? 'bg-[#542B43] hover:bg-[#3B1E2F] text-white active:scale-95'
+                : 'bg-stone-300 text-stone-500 cursor-not-allowed'
             }`}
           >
             {addedAnimation ? (
@@ -206,11 +213,13 @@ export function ProductCard({ product, featured = false }) {
               >
                 <Check className="w-3.5 h-3.5" /> Added to Bag
               </motion.div>
-            ) : (
+            ) : liveProduct.inStock && liveProduct.stockQuantity > 0 ? (
               <>
                 <ShoppingBag className="w-3.5 h-3.5 text-[#D9A6AC]" />
                 {hasShades ? `Add (${selectedShade?.name || 'Select'})` : 'Quick Add'}
               </>
+            ) : (
+              'Sold Out'
             )}
           </button>
         </div>
@@ -280,10 +289,18 @@ export function ProductCard({ product, featured = false }) {
 
           <span
             className={`text-[10px] font-bold uppercase tracking-wider ${
-              product.inStock ? 'text-emerald-700' : 'text-stone-400'
+              liveProduct.inStock && liveProduct.stockQuantity > 0
+                ? liveProduct.stockQuantity <= 5
+                  ? 'text-amber-700'
+                  : 'text-emerald-700'
+                : 'text-rose-500'
             }`}
           >
-            {product.inStock ? 'In Stock' : 'Sold Out'}
+            {liveProduct.inStock && liveProduct.stockQuantity > 0
+              ? liveProduct.stockQuantity <= 5
+                ? `Only ${liveProduct.stockQuantity} left`
+                : 'In Stock'
+              : 'Sold Out'}
           </span>
         </div>
 

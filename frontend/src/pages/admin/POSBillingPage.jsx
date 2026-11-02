@@ -19,12 +19,14 @@ import {
   Receipt,
   RotateCcw
 } from 'lucide-react'
-import { BEAUTY_PRODUCTS, CATEGORIES } from '../../data/mockBeautyData'
+import { CATEGORIES } from '../../data/mockBeautyData'
 import { usePOS } from '../../context/POSContext'
 import { useAuth } from '../../context/AuthContext'
+import { useProducts } from '../../context/ProductContext'
 import { formatINR } from '../../utils/currency'
 
 export function POSBillingPage() {
+  const { products } = useProducts()
   const {
     posCart,
     addToPosCart,
@@ -54,8 +56,8 @@ export function POSBillingPage() {
   const [barcodeNotice, setBarcodeNotice] = useState('')
   const [lastAddedId, setLastAddedId] = useState(null)
 
-  // Filter products for POS grid
-  const displayedProducts = BEAUTY_PRODUCTS.filter(p => {
+  // Filter products for POS grid with live central stock
+  const displayedProducts = products.filter(p => {
     if (activeCategory !== 'all' && p.category !== activeCategory) return false
     if (searchQuery && !p.name.toLowerCase().includes(searchQuery.toLowerCase()) && !p.barcode.includes(searchQuery)) return false
     return true
@@ -66,7 +68,7 @@ export function POSBillingPage() {
     e.preventDefault()
     if (!barcodeInput.trim()) return
 
-    const found = BEAUTY_PRODUCTS.find(p => p.barcode === barcodeInput.trim() || p.sku.toLowerCase() === barcodeInput.trim().toLowerCase())
+    const found = products.find(p => p.barcode === barcodeInput.trim() || p.sku.toLowerCase() === barcodeInput.trim().toLowerCase())
     if (found) {
       const shade = found.shades?.[0] || null
       addToPosCart(found, shade)

@@ -1,42 +1,38 @@
 import React, { useState } from 'react'
 import { Boxes, AlertTriangle, ArrowUpDown, Plus, Minus, Search, CheckCircle2 } from 'lucide-react'
-import { BEAUTY_PRODUCTS } from '../../data/mockBeautyData'
+import { useProducts } from '../../context/ProductContext'
 
 export function InventoryManagementPage() {
-  const [stockList, setStockList] = useState(
-    BEAUTY_PRODUCTS.map(p => ({
-      id: p.id,
-      name: p.name,
-      sku: p.sku,
-      brand: p.brand,
-      boutiqueStock: Math.floor(p.stockQuantity * 0.4),
-      warehouseStock: Math.floor(p.stockQuantity * 0.6),
-      reorderPoint: 25,
-      unitCost: 18.50
-    }))
-  )
+  const { products, adjustProductStock } = useProducts()
 
   const [filterLowStock, setFilterLowStock] = useState(false)
   const [search, setSearch] = useState('')
   const [adjustedNotice, setAdjustedNotice] = useState('')
 
   const handleAdjustStock = (id, delta) => {
-    setStockList(prev =>
-      prev.map(item => {
-        if (item.id === id) {
-          const newBoutique = Math.max(0, item.boutiqueStock + delta)
-          return { ...item, boutiqueStock: newBoutique }
-        }
-        return item
-      })
-    )
-    setAdjustedNotice('Stock adjustment recorded in audit log.')
-    setTimeout(() => setAdjustedNotice(''), 2500)
+    const prod = products.find(p => p.id === id)
+    if (prod) {
+      const newStock = Math.max(0, (prod.stockQuantity ?? 0) + delta)
+      adjustProductStock(id, newStock, 'boutique_inventory_adjustment')
+      setAdjustedNotice(`Updated ${prod.name} stock to ${newStock} units. Synchronized across online store & POS.`)
+      setTimeout(() => setAdjustedNotice(''), 3000)
+    }
   }
 
+  const stockList = products.map(p => ({
+    id: p.id,
+    name: p.name,
+    sku: p.sku,
+    brand: p.brand,
+    boutiqueStock: Math.floor((p.stockQuantity ?? 0) * 0.4),
+    warehouseStock: Math.ceil((p.stockQuantity ?? 0) * 0.6),
+    totalStock: p.stockQuantity ?? 0,
+    reorderPoint: 25,
+    inStock: p.inStock
+  }))
+
   const filtered = stockList.filter(item => {
-    const total = item.boutiqueStock + item.warehouseStock
-    if (filterLowStock && total > item.reorderPoint) return false
+    if (filterLowStock && item.totalStock > item.reorderPoint) return false
     if (search && !item.name.toLowerCase().includes(search.toLowerCase()) && !item.sku.toLowerCase().includes(search.toLowerCase())) return false
     return true
   })
@@ -103,7 +99,7 @@ export function InventoryManagementPage() {
           </thead>
           <tbody className="divide-y divide-[#E9DED5]">
             {filtered.map((item) => {
-              const total = item.boutiqueStock + item.warehouseStock
+              const total = item.totalStock
               const isLow = total <= item.reorderPoint
               return (
                 <tr key={item.id} className="hover:bg-[#F8F3EE]">

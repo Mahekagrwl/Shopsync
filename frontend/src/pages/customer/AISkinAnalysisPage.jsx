@@ -28,6 +28,7 @@ import {
 } from 'lucide-react'
 import { useSkinSafe } from '../../context/SkinSafeContext'
 import { useCart } from '../../context/CartContext'
+import { useProducts } from '../../context/ProductContext'
 import { formatINR } from '../../utils/currency'
 import { BEAUTY_PRODUCTS } from '../../data/mockBeautyData'
 import { aiApi } from '../../services/api'
@@ -36,6 +37,7 @@ import { analyzeCanvasFaceImage, detectLiveFaceAlignment } from '../../utils/opt
 export function AISkinAnalysisPage() {
   const { allergies, recentAnalysis, setRecentAnalysis, clearRecentAnalysis } = useSkinSafe()
   const { addToCart } = useCart()
+  const { products } = useProducts()
 
   // Steps: 'setup' | 'camera_active' | 'preview_capture' | 'scanning' | 'results'
   const [step, setStep] = useState(recentAnalysis?.observations ? 'results' : 'setup')

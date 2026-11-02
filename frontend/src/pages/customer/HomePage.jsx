@@ -36,12 +36,14 @@ import {
   MessageSquare
 } from 'lucide-react'
 import { BEAUTY_PRODUCTS, BRANDS, MOCK_REVIEWS } from '../../data/mockBeautyData'
+import { useProducts } from '../../context/ProductContext'
 import ProductCard from '../../components/common/ProductCard'
 import AnimatedBackground from '../../components/common/AnimatedBackground'
 import RoleSelectionModal from '../../components/common/RoleSelectionModal'
 import { formatINR } from '../../utils/currency'
 
 export function HomePage() {
+  const { products } = useProducts()
   const [copiedCode, setCopiedCode] = useState(false)
   const [heroTilt, setHeroTilt] = useState({ x: 0, y: 0 })
   const [roleModalOpen, setRoleModalOpen] = useState(false)
@@ -118,11 +120,11 @@ export function HomePage() {
   ]
 
   const filteredTabProducts = activeCategoryTab === 'all'
-    ? BEAUTY_PRODUCTS.slice(0, 8)
-    : BEAUTY_PRODUCTS.filter(p => p.category === activeCategoryTab)
+    ? products.slice(0, 8)
+    : products.filter(p => p.category === activeCategoryTab)
 
-  const trendingProducts = BEAUTY_PRODUCTS.slice(0, 4)
-  const bestSellers = BEAUTY_PRODUCTS.filter(p => p.isBestSeller).slice(0, 4)
+  const trendingProducts = products.slice(0, 4)
+  const bestSellers = products.filter(p => p.isBestSeller).slice(0, 4)
 
   return (
     <div className="space-y-24 pb-16 overflow-hidden relative bg-[#FFF9F5]">

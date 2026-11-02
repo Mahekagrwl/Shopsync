@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { BEAUTY_PRODUCTS } from '../data/mockBeautyData'
 import { posApi } from '../services/api'
+import { useProducts } from './ProductContext'
 
 const POSContext = createContext()
 
@@ -41,6 +42,8 @@ const INITIAL_INVOICES = [
 ]
 
 export function POSProvider({ children }) {
+  const { validateStock, deductStock } = useProducts()
+
   const [posCart, setPosCart] = useState([])
   const [selectedCustomer, setSelectedCustomer] = useState(null)
   const [discountPercent, setDiscountPercent] = useState(0)
@@ -65,9 +68,18 @@ export function POSProvider({ children }) {
 
   const addToPosCart = (product, shade = null) => {
     const key = `${product.id}-${shade ? shade.id : 'std'}`
+    const existing = posCart.find(item => item.key === key)
+    const requestedQty = (existing ? existing.quantity : 0) + 1
+
+    // Validate available stock in central inventory
+    const check = validateStock(product.id, shade?.id, requestedQty)
+    if (!check.valid) {
+      return { success: false, error: check.error }
+    }
+
     setPosCart(prev => {
-      const existing = prev.find(item => item.key === key)
-      if (existing) {
+      const match = prev.find(item => item.key === key)
+      if (match) {
         return prev.map(item =>
           item.key === key ? { ...item, quantity: item.quantity + 1 } : item
         )
@@ -89,16 +101,27 @@ export function POSProvider({ children }) {
         ]
       }
     })
+    return { success: true }
   }
 
   const updatePosQty = (key, qty) => {
     if (qty <= 0) {
       setPosCart(prev => prev.filter(item => item.key !== key))
-    } else {
-      setPosCart(prev =>
-        prev.map(item => (item.key === key ? { ...item, quantity: qty } : item))
-      )
+      return { success: true }
     }
+
+    const item = posCart.find(i => i.key === key)
+    if (item) {
+      const check = validateStock(item.productId, item.shade?.id, qty)
+      if (!check.valid) {
+        return { success: false, error: check.error }
+      }
+    }
+
+    setPosCart(prev =>
+      prev.map(item => (item.key === key ? { ...item, quantity: qty } : item))
+    )
+    return { success: true }
   }
 
   const removePosItem = (key) => {
@@ -111,17 +134,30 @@ export function POSProvider({ children }) {
     setSelectedCustomer(null)
   }
 
-  // POS calculations
+  // POS calculations (5% GST Indian Cosmetics Standard)
   const subtotal = posCart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const discountAmount = (subtotal * discountPercent) / 100
+  const discountAmount = Math.round((subtotal * discountPercent) / 100)
   const taxableSubtotal = Math.max(0, subtotal - discountAmount)
-  const tax = taxableSubtotal * 0.0825
+  const tax = Math.round(taxableSubtotal * 0.05)
   const total = taxableSubtotal + tax
 
-  // Process POS checkout
+  // Process POS checkout with atomic central stock deduction
   const completePosSale = async (paymentMethod, cashTendered = 0) => {
-    const invoiceNum = 'INV-2026-' + Math.floor(1000 + Math.random() * 9000)
+    if (posCart.length === 0) {
+      return { success: false, error: 'POS register cart is empty.' }
+    }
+
+    const invoiceNum = 'INV-IN-2026-' + Math.floor(1000 + Math.random() * 9000)
     const changeDue = Math.max(0, cashTendered - total)
+
+    // Central Stock Deduction (Phase 5: POS sale decrements central inventory)
+    const deduction = deductStock(posCart, 'pos_sale', invoiceNum)
+    if (!deduction.success) {
+      return {
+        success: false,
+        error: deduction.error || 'Inventory verification failed. One or more items are out of stock.'
+      }
+    }
 
     const payload = {
       customer_id: selectedCustomer?.id || null,
@@ -155,7 +191,7 @@ export function POSProvider({ children }) {
       timestamp: new Date().toISOString(),
       cashierName: terminalSession.cashierName,
       terminalId: terminalSession.terminalId,
-      customerName: selectedCustomer ? selectedCustomer.name : 'Walk-in Client',
+      customerName: selectedCustomer ? selectedCustomer.name : 'Walk-in Boutique Client',
       items: posCart.map(i => ({
         name: `${i.name}${i.shade ? ` (${i.shade.name})` : ''}`,
         quantity: i.quantity,
@@ -166,14 +202,14 @@ export function POSProvider({ children }) {
       tax,
       total,
       paymentMethod: paymentMethod === 'cash'
-        ? `Cash (Received $${cashTendered.toFixed(2)}, Change $${changeDue.toFixed(2)})`
+        ? `Cash (Received ₹${cashTendered.toLocaleString('en-IN')}, Change ₹${changeDue.toLocaleString('en-IN')})`
         : paymentMethod,
       status: 'Paid'
     }
 
     setInvoices(prev => [newInvoice, ...prev])
     clearPosCart()
-    return newInvoice
+    return { success: true, invoice: newInvoice }
   }
 
   return (
