@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { FileText, Printer, Search, CheckCircle2 } from 'lucide-react'
 import { usePOS } from '../../context/POSContext'
+import { formatINR } from '../../utils/currency'
 
 export function InvoiceManagementPage() {
   const { invoices } = usePOS()
@@ -67,7 +68,7 @@ export function InvoiceManagementPage() {
                 <td className="py-3 px-4 text-[#282426]">{inv.cashierName}</td>
                 <td className="py-3 px-4 font-medium text-[#282426]">{inv.customerName}</td>
                 <td className="py-3 px-4 text-stone-500 truncate max-w-xs">{inv.paymentMethod}</td>
-                <td className="py-3 px-4 text-right font-mono font-bold text-[#282426]">${inv.total.toFixed(2)}</td>
+                <td className="py-3 px-4 text-right font-mono font-bold text-[#282426]">{formatINR(inv.total)}</td>
                 <td className="py-3 px-4 text-right">
                   <button
                     onClick={() => setActiveInvoice(inv)}
@@ -95,14 +96,14 @@ export function InvoiceManagementPage() {
               {activeInvoice.items.map((i, idx) => (
                 <div key={idx} className="flex justify-between">
                   <span>{i.name} (x{i.quantity})</span>
-                  <span>${(i.price * i.quantity).toFixed(2)}</span>
+                  <span>{formatINR(i.price * i.quantity)}</span>
                 </div>
               ))}
             </div>
             <div className="pt-2 border-t border-dashed border-stone-300 space-y-1 text-xs">
               <div className="flex justify-between font-bold text-sm text-[#542B43]">
                 <span>TOTAL:</span>
-                <span>${activeInvoice.total.toFixed(2)}</span>
+                <span>{formatINR(activeInvoice.total)}</span>
               </div>
             </div>
             <button

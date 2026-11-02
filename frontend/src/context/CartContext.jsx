@@ -7,85 +7,85 @@ const INITIAL_CART = [
   {
     cartItemId: 'item-1',
     productId: 'prod-001',
-    name: 'Silk Radiance Flawless Luminous Foundation',
-    brand: 'Velour Atelier',
-    price: 48.00,
+    name: 'Lakmé 9 to 5 Primer + Matte Perfect Cover Foundation',
+    brand: 'Lakmé',
+    price: 525,
     image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
     quantity: 1,
     shade: {
       id: 'sh-01',
-      name: 'Porcelain Light',
-      code: '100W',
-      hex: '#F9E4D4',
+      name: 'Warm Crème W120',
+      code: 'W120',
+      hex: '#F6D9C0',
       undertone: 'warm',
-      finish: 'dewy',
+      finish: 'matte',
       coverage: 'medium'
     },
-    sku: 'VA-FND-001'
+    sku: 'LAK-9TO5-001'
   },
   {
     cartItemId: 'item-2',
-    productId: 'prod-002',
-    name: 'Cellular Renewal Peptide Barrier Elixir',
-    brand: 'AuraDerm Labs',
-    price: 72.00,
-    image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&auto=format&fit=crop&q=80',
+    productId: 'prod-004',
+    name: 'Minimalist 10% Niacinamide + Zinc Daily Blemish Serum',
+    brand: 'Minimalist',
+    price: 599,
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80',
     quantity: 1,
     shade: null,
-    sku: 'AD-ELX-002'
+    sku: 'MIN-NIA-004'
   }
 ]
 
 const INITIAL_ORDERS = [
   {
-    id: 'ORD-9842',
-    orderNumber: 'SS-984210',
+    id: 'ORD-IN-9842',
+    orderNumber: 'SS-IN-984210',
     date: '2026-10-28T14:30:00Z',
     status: 'In Transit',
-    trackingNumber: 'TRK-9842881-US',
-    carrier: 'FedEx Luxury Express',
+    trackingNumber: 'BD-9842881-IN',
+    carrier: 'Blue Dart Luxury Express',
     estimatedDelivery: 'Tomorrow by 4:00 PM',
     items: [
       {
-        name: 'Cellular Renewal Peptide Barrier Elixir',
-        brand: 'AuraDerm Labs',
-        price: 72.00,
+        name: 'L’Oréal Paris Revitalift 1.5% Hyaluronic Acid Hydrating Plump Serum',
+        brand: "L'Oréal Paris",
+        price: 999,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&auto=format&fit=crop&q=80'
+        image: 'https://images.unsplash.com/photo-1608248597359-25f0a7199c36?w=800&auto=format&fit=crop&q=80'
       }
     ],
-    subtotal: 72.00,
-    discount: 10.80,
-    tax: 5.05,
-    shipping: 0.00,
-    total: 66.25,
-    paymentMethod: 'Apple Pay (ending in 8841)',
-    shippingAddress: '742 Evergreen Terrace, Apt 4B, San Francisco, CA 94107'
+    subtotal: 999,
+    discount: 150,
+    tax: 42,
+    shipping: 0,
+    total: 891,
+    paymentMethod: 'UPI (ananya@okhdfcbank)',
+    shippingAddress: 'B-402, Sun Villa, Near Akota Garden, Old Padra Road, Vadodara, Gujarat 390007'
   },
   {
-    id: 'ORD-7719',
-    orderNumber: 'SS-771904',
+    id: 'ORD-IN-7719',
+    orderNumber: 'SS-IN-771904',
     date: '2026-10-12T11:15:00Z',
     status: 'Delivered',
-    trackingNumber: 'TRK-7719042-US',
-    carrier: 'DHL Priority',
+    trackingNumber: 'DEL-7719042-IN',
+    carrier: 'Delhivery Priority Air',
     estimatedDelivery: 'Delivered on Oct 14',
     items: [
       {
-        name: 'Mineral Silk Fluid Broad Spectrum SPF 50+',
-        brand: 'Sol Botanica',
-        price: 42.00,
+        name: 'Dot & Key Watermelon Hyaluronic Cooling Sunscreen SPF 50+',
+        brand: 'Dot & Key',
+        price: 495,
         quantity: 2,
-        image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80'
+        image: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80'
       }
     ],
-    subtotal: 84.00,
-    discount: 0.00,
-    tax: 6.93,
-    shipping: 0.00,
-    total: 90.93,
-    paymentMethod: 'Visa (ending in 4242)',
-    shippingAddress: '742 Evergreen Terrace, Apt 4B, San Francisco, CA 94107'
+    subtotal: 990,
+    discount: 0,
+    tax: 48,
+    shipping: 0,
+    total: 1038,
+    paymentMethod: 'HDFC Credit Card (ending in 4242)',
+    shippingAddress: 'Flat 12B, Sea Crest Towers, Bandra West, Mumbai, Maharashtra 400050'
   }
 ]
 
@@ -192,26 +192,28 @@ export function CartProvider({ children }) {
     setPromoError('')
   }
 
-  // Calculations
+  // Calculations in INR
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
-  const discountAmount = appliedPromo ? (subtotal * appliedPromo.discountPercent) / 100 : 0
+  const discountAmount = appliedPromo ? Math.round((subtotal * appliedPromo.discountPercent) / 100) : 0
   const discountedSubtotal = Math.max(0, subtotal - discountAmount)
-  const shippingFee = discountedSubtotal > 50 || discountedSubtotal === 0 ? 0 : 5.99
-  const taxRate = 0.0825
-  const estimatedTax = discountedSubtotal * taxRate
+  // Free Express Shipping across India for orders above ₹499
+  const shippingFee = discountedSubtotal >= 499 || discountedSubtotal === 0 ? 0 : 49
+  // 5% GST on beauty & cosmetics
+  const taxRate = 0.05
+  const estimatedTax = Math.round(discountedSubtotal * taxRate)
   const grandTotal = discountedSubtotal > 0 ? discountedSubtotal + shippingFee + estimatedTax : 0
   const totalItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0)
 
   // Checkout submission
   const createOrder = async (orderData) => {
-    let orderNumber = 'SS-' + Math.floor(100000 + Math.random() * 900000)
-    let trackingNumber = 'TRK-' + Math.floor(1000000 + Math.random() * 9000000) + '-US'
+    let orderNumber = 'SS-IN-' + Math.floor(100000 + Math.random() * 900000)
+    let trackingNumber = 'BD-' + Math.floor(1000000 + Math.random() * 9000000) + '-IN'
 
     const payload = {
-      customer_name: orderData.fullName || orderData.customerName || 'Camille Laurent',
-      customer_email: orderData.email || 'camille.laurent@example.com',
-      shipping_address: orderData.shippingAddress || '742 Evergreen Terrace',
-      payment_method: orderData.paymentMethod || 'Credit Card',
+      customer_name: orderData.fullName || orderData.customerName || 'Ananya Sharma',
+      customer_email: orderData.email || 'ananya.sharma@shopsync.in',
+      shipping_address: orderData.shippingAddress || 'B-402, Sun Villa, Near Akota Garden, Old Padra Road, Vadodara, Gujarat 390007',
+      payment_method: orderData.paymentMethod || 'UPI / Razorpay',
       discount_amount: discountAmount,
       shipping_amount: shippingFee,
       items: cartItems.map(item => ({

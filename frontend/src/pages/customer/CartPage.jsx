@@ -11,6 +11,7 @@ import {
   Truck
 } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
+import { formatINR } from '../../utils/currency'
 
 export function CartPage() {
   const navigate = useNavigate()
@@ -40,8 +41,8 @@ export function CartPage() {
     }
   }
 
-  // Free shipping threshold calculation ($50)
-  const freeShippingThreshold = 50
+  // Free shipping threshold calculation (₹499)
+  const freeShippingThreshold = 499
   const progressToFreeShipping = Math.min(100, (subtotal / freeShippingThreshold) * 100)
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal)
 
@@ -67,8 +68,8 @@ export function CartPage() {
                 <span className="flex items-center gap-1.5 font-semibold text-[#282426]">
                   <Truck className="w-4 h-4 text-[#542B43]" />
                   {remainingForFreeShipping > 0
-                    ? `Add $${remainingForFreeShipping.toFixed(2)} more for Free Express Shipping`
-                    : '🎉 You have unlocked Free Luxury Express Shipping!'}
+                    ? `Add ${formatINR(remainingForFreeShipping)} more for Free Express Delivery`
+                    : '🎉 You have unlocked Free Express Delivery across India!'}
                 </span>
                 <span className="text-[#827A7F] font-mono text-[11px]">{Math.round(progressToFreeShipping)}%</span>
               </div>
@@ -137,11 +138,11 @@ export function CartPage() {
 
                     <div className="text-right">
                       <span className="text-base font-bold text-[#282426]">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {formatINR(item.price * item.quantity)}
                       </span>
                       {item.quantity > 1 && (
                         <span className="block text-[10px] text-stone-400">
-                          ${item.price.toFixed(2)} each
+                          {formatINR(item.price)} each
                         </span>
                       )}
                     </div>
@@ -208,31 +209,31 @@ export function CartPage() {
               <div className="space-y-3 pt-4 border-t border-[#E9DED5] text-xs">
                 <div className="flex justify-between text-[#524B4F]">
                   <span>Subtotal</span>
-                  <span className="font-mono text-[#282426] font-semibold">${subtotal.toFixed(2)}</span>
+                  <span className="font-mono text-[#282426] font-semibold">{formatINR(subtotal)}</span>
                 </div>
 
                 {appliedPromo && (
                   <div className="flex justify-between text-emerald-700">
                     <span>Promo Discount ({appliedPromo.discountPercent}%)</span>
-                    <span className="font-mono font-semibold">-${discountAmount.toFixed(2)}</span>
+                    <span className="font-mono font-semibold">-{formatINR(discountAmount)}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-[#524B4F]">
                   <span>Estimated Shipping</span>
                   <span className="font-mono text-[#282426] font-semibold">
-                    {shippingFee === 0 ? <span className="text-emerald-700">FREE</span> : `$${shippingFee.toFixed(2)}`}
+                    {shippingFee === 0 ? <span className="text-emerald-700 font-bold">FREE</span> : formatINR(shippingFee)}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-[#524B4F]">
-                  <span>Estimated Sales Tax (8.25%)</span>
-                  <span className="font-mono text-[#282426] font-semibold">${estimatedTax.toFixed(2)}</span>
+                  <span>GST (5% Cosmetics)</span>
+                  <span className="font-mono text-[#282426] font-semibold">{formatINR(estimatedTax)}</span>
                 </div>
 
                 <div className="flex justify-between text-base font-bold text-[#282426] pt-3 border-t border-[#E9DED5]">
                   <span>Grand Total</span>
-                  <span className="font-mono text-xl text-[#542B43]">${grandTotal.toFixed(2)}</span>
+                  <span className="font-mono text-xl text-[#542B43]">{formatINR(grandTotal)}</span>
                 </div>
               </div>
 

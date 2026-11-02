@@ -8,7 +8,7 @@ import {
   Minus,
   Trash2,
   CreditCard,
-  DollarSign,
+  IndianRupee,
   QrCode,
   Printer,
   CheckCircle2,
@@ -22,6 +22,7 @@ import {
 import { BEAUTY_PRODUCTS, CATEGORIES } from '../../data/mockBeautyData'
 import { usePOS } from '../../context/POSContext'
 import { useAuth } from '../../context/AuthContext'
+import { formatINR } from '../../utils/currency'
 
 export function POSBillingPage() {
   const {
@@ -239,7 +240,7 @@ export function POSBillingPage() {
                     <h4 className="font-semibold text-xs text-[#282426] line-clamp-1">{p.name}</h4>
                   </div>
                   <div className="pt-2 mt-2 border-t border-[#E9DED5] flex items-center justify-between">
-                    <span className="font-bold text-xs text-[#542B43]">${p.price.toFixed(2)}</span>
+                    <span className="font-bold text-xs text-[#542B43]">{formatINR(p.price)}</span>
                     <span className="text-[10px] text-stone-400 font-mono">Stock: {p.stockQuantity}</span>
                   </div>
                 </motion.div>
@@ -294,7 +295,7 @@ export function POSBillingPage() {
                     <div className="min-w-0 flex-1">
                       <p className="font-semibold text-[#282426] truncate">{item.name}</p>
                       <p className="text-[10px] text-stone-400">
-                        ${item.price.toFixed(2)} {item.shade ? `• ${item.shade.name}` : ''}
+                        {formatINR(item.price)} {item.shade ? `• ${item.shade.name}` : ''}
                       </p>
                     </div>
 
@@ -324,7 +325,7 @@ export function POSBillingPage() {
                     </div>
 
                     <span className="font-mono font-bold text-[#282426] text-right min-w-[55px]">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      {formatINR(item.price * item.quantity)}
                     </span>
 
                     <button
@@ -376,17 +377,17 @@ export function POSBillingPage() {
             <div className="space-y-1.5 text-xs bg-[#F8F3EE]/60 p-3 rounded-2xl border border-[#E9DED5]">
               <div className="flex justify-between text-[#524B4F]">
                 <span>Formulation Subtotal:</span>
-                <span className="font-mono font-medium">${subtotal.toFixed(2)}</span>
+                <span className="font-mono font-medium">{formatINR(subtotal)}</span>
               </div>
               {discountPercent > 0 && (
                 <div className="flex justify-between text-emerald-700 font-medium">
                   <span>VIP Atelier Courtesy ({discountPercent}%):</span>
-                  <span className="font-mono">-${discountAmount.toFixed(2)}</span>
+                  <span className="font-mono">-{formatINR(discountAmount)}</span>
                 </div>
               )}
               <div className="flex justify-between text-[#524B4F]">
-                <span>City & State Tax (8.25%):</span>
-                <span className="font-mono font-medium">${tax.toFixed(2)}</span>
+                <span>GST (5% Cosmetics):</span>
+                <span className="font-mono font-medium">{formatINR(tax)}</span>
               </div>
               <div className="flex justify-between items-center text-base font-bold text-[#282426] pt-2 border-t border-[#E9DED5]">
                 <span>Total Due:</span>
@@ -397,7 +398,7 @@ export function POSBillingPage() {
                   transition={{ duration: 0.3 }}
                   className="font-mono text-xl font-extrabold text-[#542B43]"
                 >
-                  ${total.toFixed(2)}
+                  {formatINR(total)}
                 </motion.span>
               </div>
             </div>
@@ -421,7 +422,7 @@ export function POSBillingPage() {
                 className="py-2.5 rounded-xl bg-gradient-to-r from-[#542B43] to-[#3B1E2F] hover:from-[#6E3958] hover:to-[#542B43] active:scale-98 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-md disabled:opacity-40"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#D9A6AC]" />
-                Charge ${total.toFixed(2)}
+                Charge {formatINR(total)}
               </button>
             </div>
           </div>
@@ -443,7 +444,7 @@ export function POSBillingPage() {
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#D9A6AC]">Payment Processing</span>
                   <h3 className="font-serif font-bold text-xl text-[#282426]">
-                    Collect Tender (${total.toFixed(2)})
+                    Collect Tender ({formatINR(total)})
                   </h3>
                 </div>
                 <div className="w-9 h-9 rounded-2xl bg-[#F8F3EE] flex items-center justify-center text-[#542B43]">
@@ -469,8 +470,8 @@ export function POSBillingPage() {
                   onClick={() => handleCheckoutComplete('cash')}
                   className="p-4 rounded-2xl bg-[#F8F3EE] hover:bg-[#542B43] hover:text-white border border-[#E9DED5] text-center space-y-2 transition-all flex flex-col items-center group cursor-pointer"
                 >
-                  <DollarSign className="w-6 h-6 text-[#542B43] group-hover:text-white transition-colors" />
-                  <span className="font-bold text-[11px]">Cash Tender</span>
+                  <IndianRupee className="w-6 h-6 text-[#542B43] group-hover:text-white transition-colors" />
+                  <span className="font-bold text-[11px]">Cash Tender (₹)</span>
                 </motion.button>
 
                 <motion.button
@@ -480,19 +481,19 @@ export function POSBillingPage() {
                   className="p-4 rounded-2xl bg-[#F8F3EE] hover:bg-[#542B43] hover:text-white border border-[#E9DED5] text-center space-y-2 transition-all flex flex-col items-center group cursor-pointer"
                 >
                   <QrCode className="w-6 h-6 text-[#542B43] group-hover:text-white transition-colors" />
-                  <span className="font-bold text-[11px]">Dynamic QR</span>
+                  <span className="font-bold text-[11px]">UPI / Dynamic QR</span>
                 </motion.button>
               </div>
 
               {/* Cash Calculator */}
               <div className="p-3.5 bg-[#F8F3EE] rounded-2xl border border-[#E9DED5] space-y-2.5">
                 <label className="block text-[10px] uppercase font-bold text-stone-500 tracking-wider">
-                  Cash Tendered Calculator
+                  Cash Tendered Calculator (₹)
                 </label>
                 <div className="flex gap-2">
                   <input
                     type="number"
-                    placeholder="e.g. 100.00"
+                    placeholder="e.g. 1000"
                     value={cashTendered}
                     onChange={(e) => setCashTendered(e.target.value)}
                     className="w-full bg-white rounded-xl p-2 font-mono text-xs border border-[#E9DED5] focus:outline-none focus:border-[#542B43]"
@@ -511,7 +512,7 @@ export function POSBillingPage() {
                     className="text-xs font-bold text-emerald-800 flex items-center justify-between"
                   >
                     <span>Change to Return:</span>
-                    <span className="font-mono text-sm">${(Number(cashTendered) - total).toFixed(2)}</span>
+                    <span className="font-mono text-sm">{formatINR(Number(cashTendered) - total)}</span>
                   </motion.p>
                 )}
               </div>
@@ -554,7 +555,7 @@ export function POSBillingPage() {
 
               <div className="text-center space-y-1 pb-3 border-b border-dashed border-stone-300">
                 <h3 className="font-serif font-bold text-lg text-[#282426]">SHOPSYNC FLAGSHIP</h3>
-                <p className="text-[10px] text-stone-500">San Francisco Boutique • Terminal 01</p>
+                <p className="text-[10px] text-stone-500">Vadodara Boutique (Alkapuri) • GSTIN: 24AAACS9182K1ZU</p>
                 <p className="text-[10px] text-stone-500 font-bold">{completedInvoice.invoiceNumber}</p>
                 <p className="text-[9px] text-stone-400">{completedInvoice.date}</p>
               </div>
@@ -563,7 +564,7 @@ export function POSBillingPage() {
                 {completedInvoice.items.map((i, idx) => (
                   <div key={idx} className="flex justify-between items-center">
                     <span className="truncate max-w-[180px]">{i.name} (x{i.quantity})</span>
-                    <span className="font-semibold">${(i.price * i.quantity).toFixed(2)}</span>
+                    <span className="font-semibold">{formatINR(i.price * i.quantity)}</span>
                   </div>
                 ))}
               </div>
@@ -571,15 +572,15 @@ export function POSBillingPage() {
               <div className="pt-2 border-t border-dashed border-stone-300 space-y-1 text-xs">
                 <div className="flex justify-between text-stone-600">
                   <span>Subtotal:</span>
-                  <span>${completedInvoice.subtotal.toFixed(2)}</span>
+                  <span>{formatINR(completedInvoice.subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-stone-600">
-                  <span>Tax (8.25%):</span>
-                  <span>${completedInvoice.tax.toFixed(2)}</span>
+                  <span>GST (5%):</span>
+                  <span>{formatINR(completedInvoice.tax)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-sm text-[#542B43] pt-1 border-t border-stone-300">
                   <span>TOTAL PAID:</span>
-                  <span>${completedInvoice.total.toFixed(2)}</span>
+                  <span>{formatINR(completedInvoice.total)}</span>
                 </div>
                 <p className="text-[10px] text-stone-500 pt-1">
                   Method: <strong className="text-stone-700">{completedInvoice.paymentMethod}</strong>

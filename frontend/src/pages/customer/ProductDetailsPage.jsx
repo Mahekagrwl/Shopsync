@@ -18,6 +18,7 @@ import { BEAUTY_PRODUCTS, MOCK_REVIEWS } from '../../data/mockBeautyData'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
 import { useSkinSafe } from '../../context/SkinSafeContext'
+import { formatINR } from '../../utils/currency'
 
 export function ProductDetailsPage() {
   const { id } = useParams()
@@ -196,11 +197,11 @@ export function ProductDetailsPage() {
           {/* Price */}
           <div className="flex items-baseline gap-3 pt-2">
             <span className="text-3xl font-bold text-[#282426]">
-              ${product.price.toFixed(2)}
+              {formatINR(product.price)}
             </span>
             {product.comparePrice && (
               <span className="text-sm text-stone-400 line-through">
-                ${product.comparePrice.toFixed(2)}
+                {formatINR(product.comparePrice)}
               </span>
             )}
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -365,7 +366,7 @@ export function ProductDetailsPage() {
           <div className="grid grid-cols-2 gap-3 text-[11px] text-[#524B4F] pt-2">
             <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-[#E9DED5]">
               <Truck className="w-4 h-4 text-[#542B43]" />
-              <span>Free Luxury Express &gt; $50</span>
+              <span>Free Express Delivery &gt; ₹499</span>
             </div>
             <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-[#E9DED5]">
               <RotateCcw className="w-4 h-4 text-[#542B43]" />

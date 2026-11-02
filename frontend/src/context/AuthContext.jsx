@@ -1,45 +1,23 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { authApi } from '../services/api'
+import { INDIAN_ADDRESSES } from '../data/mockBeautyData'
 
 const AuthContext = createContext()
 
 const DEFAULT_CUSTOMER = {
-  id: 'cust-8901',
-  name: 'Camille Laurent',
-  email: 'camille.laurent@example.com',
-  phone: '+1 (555) 234-5678',
+  id: 'cust-in-8901',
+  name: 'Ananya Sharma',
+  email: 'ananya.sharma@shopsync.in',
+  phone: '+91 98251 45890',
   loyaltyTier: 'Gold Member',
   loyaltyPoints: 1250,
   avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
   skinProfile: {
     skinType: 'Combination / Sensitive',
     skinConcerns: ['Redness / Rosacea', 'Dehydration', 'Fine Lines'],
-    allergies: ['Synthetic Fragrance', 'Tree Nut Oils']
+    allergies: ['Synthetic Fragrance / Parfum', 'Tree Nut & Almond Oils']
   },
-  savedAddresses: [
-    {
-      id: 'addr-1',
-      title: 'Home (Default)',
-      fullName: 'Camille Laurent',
-      street: '742 Evergreen Terrace, Apt 4B',
-      city: 'San Francisco',
-      state: 'CA',
-      zip: '94107',
-      country: 'United States',
-      isDefault: true
-    },
-    {
-      id: 'addr-2',
-      title: 'Design Studio',
-      fullName: 'Camille Laurent',
-      street: '120 Montgomery St, Floor 8',
-      city: 'San Francisco',
-      state: 'CA',
-      zip: '94104',
-      country: 'United States',
-      isDefault: false
-    }
-  ]
+  savedAddresses: INDIAN_ADDRESSES
 }
 
 export function AuthProvider({ children }) {
@@ -54,10 +32,13 @@ export function AuthProvider({ children }) {
 
   const [adminUser, setAdminUser] = useState(() => {
     return {
-      name: 'Victoria Vance',
-      role: 'Head of Retail Operations',
-      email: 'admin@shopsync.beauty',
-      terminal: 'Flagship Boutique 01'
+      name: 'Mahek Merchant',
+      role: 'Store Owner & Retail Director',
+      email: 'owner@shopsync.in',
+      phone: '+91 98251 74677',
+      gstin: '24AAACS9182K1ZU',
+      terminal: 'Vadodara Flagship Boutique (Alkapuri)',
+      storeLocation: 'Alkapuri, Vadodara, Gujarat 390007'
     }
   })
 

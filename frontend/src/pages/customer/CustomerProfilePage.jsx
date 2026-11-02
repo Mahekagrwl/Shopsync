@@ -71,7 +71,7 @@ export function CustomerProfilePage() {
             <span>Loyalty Vault</span>
           </div>
           <p className="text-2xl font-bold font-mono text-[#282426] mt-1">{customer.loyaltyPoints}</p>
-          <p className="text-[10px] text-stone-400">Equivalent to $12.50 reward credit</p>
+          <p className="text-[10px] text-stone-400">Equivalent to ₹500 reward credit</p>
         </div>
       </div>
 

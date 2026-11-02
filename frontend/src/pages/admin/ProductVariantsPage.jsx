@@ -4,11 +4,11 @@ import { BEAUTY_PRODUCTS } from '../../data/mockBeautyData'
 
 export function ProductVariantsPage() {
   const [variants, setVariants] = useState([
-    { id: 'var-1', productName: 'Cellular Renewal Peptide Barrier Elixir', sku: 'AD-ELX-30ML', size: '30ml Full Size', priceAdj: '+$0.00', stock: 42 },
-    { id: 'var-2', productName: 'Cellular Renewal Peptide Barrier Elixir', sku: 'AD-ELX-15ML', size: '15ml Discovery Travel', priceAdj: '-$32.00', stock: 25 },
-    { id: 'var-3', productName: 'Caviar Molecular Bond Repair Hair Mask', sku: 'CG-HAR-250ML', size: '250ml Luxury Tub', priceAdj: '+$0.00', stock: 52 },
-    { id: 'var-4', productName: 'Caviar Molecular Bond Repair Hair Mask', sku: 'CG-HAR-500ML', size: '500ml Salon Refill', priceAdj: '+$35.00', stock: 18 },
-    { id: 'var-5', productName: 'Mineral Silk Fluid SPF 50+', sku: 'SB-SPF-50ML', size: '50ml Daily Shield', priceAdj: '+$0.00', stock: 95 }
+    { id: 'var-1', productName: "L'Oréal Paris Revitalift 1.5% Hyaluronic Acid Serum", sku: 'LOR-REV-30ML', size: '30ml Full Size', priceAdj: '+₹0.00', stock: 140 },
+    { id: 'var-2', productName: "L'Oréal Paris Revitalift 1.5% Hyaluronic Acid Serum", sku: 'LOR-REV-15ML', size: '15ml Discovery Travel', priceAdj: '-₹450.00', stock: 65 },
+    { id: 'var-3', productName: 'Mamaearth Onion Hair Oil for Hair Fall Control', sku: 'MAM-ONI-150ML', size: '150ml Standard Bottle', priceAdj: '+₹0.00', stock: 130 },
+    { id: 'var-4', productName: 'Mamaearth Onion Hair Oil for Hair Fall Control', sku: 'MAM-ONI-250ML', size: '250ml Family Pack', priceAdj: '+₹250.00', stock: 45 },
+    { id: 'var-5', productName: 'Dot & Key Watermelon Sunscreen SPF 50+', sku: 'DOT-WML-50G', size: '50g Daily Shield', priceAdj: '+₹0.00', stock: 160 }
   ])
 
   const [search, setSearch] = useState('')

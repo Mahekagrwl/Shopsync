@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Package, Truck, ArrowRight, Clock, CheckCircle2 } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
+import { formatINR } from '../../utils/currency'
 
 export function MyOrdersPage() {
   const { orders } = useCart()
@@ -62,7 +63,7 @@ export function MyOrdersPage() {
                         Qty: {item.quantity} {item.shade ? `• ${item.shade.name}` : ''}
                       </p>
                       <span className="text-xs font-bold font-mono text-[#542B43]">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {formatINR(item.price * item.quantity)}
                       </span>
                     </div>
                   </div>
@@ -75,7 +76,7 @@ export function MyOrdersPage() {
                   Carrier: <strong className="text-[#282426]">{order.carrier}</strong> • Tracking Code: <strong className="text-[#542B43] font-mono">{order.trackingNumber}</strong>
                 </span>
                 <span className="font-bold text-sm text-[#282426]">
-                  Total: ${order.total.toFixed(2)}
+                  Total: {formatINR(order.total)}
                 </span>
               </div>
             </div>

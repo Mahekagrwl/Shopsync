@@ -10,9 +10,9 @@ export function SavedAddressesPage() {
   const [fullName, setFullName] = useState(customer?.name || '')
   const [street, setStreet] = useState('')
   const [city, setCity] = useState('')
-  const [state, setState] = useState('CA')
+  const [state, setState] = useState('Gujarat')
   const [zip, setZip] = useState('')
-  const [country, setCountry] = useState('United States')
+  const [country, setCountry] = useState('India')
 
   if (!isCustomerAuthenticated || !customer) {
     return (
@@ -199,7 +199,7 @@ export function SavedAddressesPage() {
             <div className="text-xs text-[#524B4F] space-y-0.5 leading-relaxed">
               <p className="font-semibold text-[#282426]">{addr.fullName}</p>
               <p>{addr.street}</p>
-              <p>{addr.city}, {addr.state} {addr.zip}</p>
+              <p>{addr.city}, {addr.state} - {addr.pinCode || addr.zip}</p>
               <p>{addr.country}</p>
             </div>
 

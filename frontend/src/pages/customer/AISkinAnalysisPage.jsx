@@ -28,6 +28,7 @@ import {
 } from 'lucide-react'
 import { useSkinSafe } from '../../context/SkinSafeContext'
 import { useCart } from '../../context/CartContext'
+import { formatINR } from '../../utils/currency'
 import { BEAUTY_PRODUCTS } from '../../data/mockBeautyData'
 import { aiApi } from '../../services/api'
 import { analyzeCanvasFaceImage, detectLiveFaceAlignment } from '../../utils/opticalSkinScanner'
@@ -1373,7 +1374,7 @@ export function AISkinAnalysisPage() {
 
                     <div className="pt-3 border-t border-[#E9DED5] flex items-center justify-between">
                       <span className="font-bold text-lg text-[#282426]">
-                        ${Number(item.price).toFixed(2)}
+                        {formatINR(item.price)}
                       </span>
                       <button
                         type="button"

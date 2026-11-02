@@ -6,36 +6,36 @@ const POSContext = createContext()
 
 const INITIAL_INVOICES = [
   {
-    invoiceNumber: 'INV-2026-0891',
+    invoiceNumber: 'INV-IN-2026-0891',
     timestamp: '2026-10-31T16:42:00Z',
-    cashierName: 'Victoria Vance',
-    terminalId: 'POS-01-FLAGSHIP',
-    customerName: 'Sarah Jenkins',
+    cashierName: 'Mahek Merchant',
+    terminalId: 'POS-01-VADODARA',
+    customerName: 'Pooja Shah',
     items: [
-      { name: 'Silk Radiance Foundation (100W)', quantity: 1, price: 48.00 },
-      { name: 'Velvet Cloud Cashmere Lipstick (01PC)', quantity: 1, price: 32.00 }
+      { name: 'Lakmé 9 to 5 Primer + Matte Foundation (W120)', quantity: 1, price: 525 },
+      { name: 'SUGAR Cosmetics Matte As Hell Crayon (01 Scarlett)', quantity: 1, price: 849 }
     ],
-    subtotal: 80.00,
-    discount: 8.00,
-    tax: 5.94,
-    total: 77.94,
-    paymentMethod: 'Credit Card (Terminal EMV)',
+    subtotal: 1374,
+    discount: 137,
+    tax: 62,
+    total: 1299,
+    paymentMethod: 'UPI / QR Code (PhonePe)',
     status: 'Paid'
   },
   {
-    invoiceNumber: 'INV-2026-0890',
+    invoiceNumber: 'INV-IN-2026-0890',
     timestamp: '2026-10-31T15:20:00Z',
-    cashierName: 'Victoria Vance',
-    terminalId: 'POS-01-FLAGSHIP',
-    customerName: 'Walk-in Client',
+    cashierName: 'Mahek Merchant',
+    terminalId: 'POS-01-VADODARA',
+    customerName: 'Walk-in Boutique Client',
     items: [
-      { name: 'Cellular Renewal Peptide Barrier Elixir', quantity: 1, price: 72.00 }
+      { name: 'Minimalist 10% Niacinamide + Zinc Serum', quantity: 2, price: 599 }
     ],
-    subtotal: 72.00,
-    discount: 0.00,
-    tax: 5.94,
-    total: 77.94,
-    paymentMethod: 'Cash (Received $100.00, Change $22.06)',
+    subtotal: 1198,
+    discount: 0,
+    tax: 60,
+    total: 1258,
+    paymentMethod: 'Cash (Received ₹1,500.00, Change ₹242.00)',
     status: 'Paid'
   }
 ]
@@ -49,13 +49,13 @@ export function POSProvider({ children }) {
     return saved ? JSON.parse(saved) : INITIAL_INVOICES
   })
   const [terminalSession, setTerminalSession] = useState({
-    terminalId: 'POS-01-FLAGSHIP',
-    storeLocation: 'San Francisco Flagship Boutique',
-    cashierName: 'Victoria Vance',
+    terminalId: 'POS-01-VADODARA',
+    storeLocation: 'Vadodara Flagship Boutique (Alkapuri)',
+    cashierName: 'Mahek Merchant',
     openedAt: '2026-11-01T08:00:00Z',
-    startingCash: 250.00,
-    totalCashSales: 412.50,
-    totalCardSales: 1240.80,
+    startingCash: 5000,
+    totalCashSales: 18450,
+    totalCardSales: 42800,
     status: 'Active Register Session'
   })
 

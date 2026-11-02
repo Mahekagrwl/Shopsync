@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Sparkles, ShieldCheck, HeartHandshake, Truck, ArrowRight, Check } from 'lucide-react'
+import { Sparkles, ShieldCheck, Truck, ArrowRight, Check, MapPin, Phone, Mail, Award } from 'lucide-react'
 
 export function CustomerFooter() {
   const [email, setEmail] = useState('')
@@ -16,37 +16,37 @@ export function CustomerFooter() {
   }
 
   return (
-    <footer className="w-full bg-[#282426] text-[#F8F3EE] pt-16 pb-12 mt-20 border-t border-[#542B43]/30">
+    <footer id="footer-contact" className="w-full bg-[#352137] text-[#FFF9F5] pt-16 pb-12 mt-20 border-t border-[#F4C6D5]/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Value Proposition Highlights Banner */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12 border-b border-[#524B4F]/40">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12 border-b border-[#F4C6D5]/20">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#542B43] text-[#D9A6AC]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#542B43] text-[#F4C6D5] shrink-0 shadow-sm">
               <ShieldCheck className="h-6 w-6" />
             </div>
             <div>
               <h4 className="font-serif text-base font-semibold text-white">SkinSafe™ Verification</h4>
-              <p className="text-xs text-[#E9DED5]/80 mt-0.5">Every ingredient screened against 140+ irritants & nut allergens.</p>
+              <p className="text-xs text-[#FFF9F5]/80 mt-0.5">Every cosmetic ingredient screened against allergens & harsh irritants.</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#542B43] text-[#D9A6AC]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#542B43] text-[#F4C6D5] shrink-0 shadow-sm">
               <Sparkles className="h-6 w-6" />
             </div>
             <div>
-              <h4 className="font-serif text-base font-semibold text-white">Precision AI Formulations</h4>
-              <p className="text-xs text-[#E9DED5]/80 mt-0.5">Biomimetic peptides and high-pigment shades verified by optical data.</p>
+              <h4 className="font-serif text-base font-semibold text-white">100% Authentic Indian Brands</h4>
+              <p className="text-xs text-[#FFF9F5]/80 mt-0.5">Lakmé, Maybelline, L'Oréal, Minimalist, Plum, Dot & Key, SUGAR & more.</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#542B43] text-[#D9A6AC]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#542B43] text-[#F4C6D5] shrink-0 shadow-sm">
               <Truck className="h-6 w-6" />
             </div>
             <div>
-              <h4 className="font-serif text-base font-semibold text-white">Omnichannel Boutique Sync</h4>
-              <p className="text-xs text-[#E9DED5]/80 mt-0.5">Real-time inventory reserve across online bag and in-store smart POS.</p>
+              <h4 className="font-serif text-base font-semibold text-white">Express Pan-India Delivery</h4>
+              <p className="text-xs text-[#FFF9F5]/80 mt-0.5">Free delivery across 28,000+ PIN codes on all orders over ₹499.</p>
             </div>
           </div>
         </div>
@@ -58,104 +58,123 @@ export function CustomerFooter() {
             <div className="flex items-center gap-3">
               <img
                 src="/logo.jpg"
-                alt="ShopSync"
+                alt="SHOPSYNC"
                 className="h-10 w-10 rounded-xl object-cover shadow-md border border-white/20"
               />
               <div>
                 <span className="font-serif text-2xl font-bold tracking-tight text-white block leading-none">
-                  Shop<span className="text-[#D9A6AC]">Sync</span>
+                  SHOP<span className="text-[#D985A5]">SYNC</span>
                 </span>
-                <span className="text-[9px] uppercase tracking-widest text-[#D9A6AC]/90 font-medium">
-                  Smart Retail. Beautiful Results.
+                <span className="text-[9px] uppercase tracking-widest text-[#F4C6D5]/90 font-medium">
+                  Smart Beauty. Smarter Business.
                 </span>
               </div>
             </div>
-            <p className="text-xs text-[#E9DED5]/80 leading-relaxed max-w-sm">
-              An AI-guided beauty atelier merging dermatological biochemistry with retail technology. Consciously formulated, shade-inclusive, and allergen-screened.
+            <p className="text-xs text-[#FFF9F5]/80 leading-relaxed max-w-sm">
+              India's premier beauty shopping & AI retail ecosystem. Empowering customers with safe, personalized formulations and equipping salon & beauty store owners with intelligent POS, inventory & customer care.
             </p>
 
+            <div className="space-y-1.5 text-xs text-[#F4C6D5] pt-1">
+              <p className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-rose-300" />
+                <span>Flagship: Alkapuri, Vadodara, Gujarat 390007</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <Phone className="w-3.5 h-3.5 text-rose-300" />
+                <span>India Helpline: +91 98251 74677 (Mon-Sat, 9AM-8PM IST)</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 text-rose-300" />
+                <span>GSTIN: 24AAACS9182K1ZU • concierge@shopsync.in</span>
+              </p>
+            </div>
+
             <form onSubmit={handleSubscribe} className="pt-2 max-w-md">
-              <label htmlFor="footer-newsletter" className="block text-[11px] uppercase tracking-wider font-semibold text-[#D9A6AC] mb-2">
-                Join the Private Circle (15% Off First Order)
+              <label htmlFor="footer-newsletter" className="block text-[11px] uppercase tracking-wider font-semibold text-[#F4C6D5] mb-2">
+                Join the Beauty Circle (15% Off Code: SHOPSYNC15)
               </label>
               <div className="flex gap-2">
                 <input
                   id="footer-newsletter"
                   type="email"
                   required
-                  placeholder="Enter your email address"
+                  placeholder="Enter your email for festive deals"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 bg-[#3B1E2F]/60 border border-[#524B4F] rounded-xl px-4 py-2.5 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-[#D9A6AC]"
+                  className="flex-1 bg-[#261628] border border-[#F4C6D5]/30 rounded-xl px-4 py-2.5 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-[#D985A5]"
                 />
                 <button
                   type="submit"
-                  className="bg-[#D9A6AC] hover:bg-[#F2D8DC] text-[#282426] px-4 py-2.5 rounded-xl font-bold text-xs transition-colors flex items-center gap-1"
+                  className="bg-[#D985A5] hover:bg-[#F4C6D5] text-[#352137] px-4 py-2.5 rounded-xl font-bold text-xs transition-colors flex items-center gap-1 cursor-pointer"
                 >
                   {subscribed ? <Check className="w-4 h-4 text-emerald-800" /> : <ArrowRight className="w-4 h-4" />}
                 </button>
               </div>
               {subscribed && (
-                <p className="text-[11px] text-[#D9A6AC] mt-2 font-medium">
-                  Welcome to the circle! Use code SHOPSYNC15 at checkout.
+                <p className="text-[11px] text-[#F4C6D5] mt-2 font-medium">
+                  Welcome! Use coupon code SHOPSYNC15 at checkout for 15% off.
                 </p>
               )}
             </form>
           </div>
 
-          {/* Shop Categories */}
+          {/* Shop Collections */}
           <div>
             <h5 className="font-serif text-sm font-semibold text-white uppercase tracking-wider mb-4">
-              Collections
+              Categories
             </h5>
-            <ul className="space-y-2.5 text-xs text-[#E9DED5]/70">
-              <li><Link to="/category/skincare" className="hover:text-[#D9A6AC] transition-colors">Skincare Elixirs</Link></li>
-              <li><Link to="/category/face-makeup" className="hover:text-[#D9A6AC] transition-colors">Luminous Foundations</Link></li>
-              <li><Link to="/category/lip-makeup" className="hover:text-[#D9A6AC] transition-colors">Velvet Lipsticks</Link></li>
-              <li><Link to="/category/eye-makeup" className="hover:text-[#D9A6AC] transition-colors">Pigmented Palettes</Link></li>
-              <li><Link to="/category/sunscreen" className="hover:text-[#D9A6AC] transition-colors">Mineral Invisible SPF</Link></li>
-              <li><Link to="/category/haircare" className="hover:text-[#D9A6AC] transition-colors">Molecular Haircare</Link></li>
+            <ul className="space-y-2.5 text-xs text-[#FFF9F5]/70">
+              <li><Link to="/category/makeup" className="hover:text-[#F4C6D5] transition-colors">Makeup (Lakmé, Maybelline)</Link></li>
+              <li><Link to="/category/skincare" className="hover:text-[#F4C6D5] transition-colors">Skincare (Minimalist, L’Oréal)</Link></li>
+              <li><Link to="/category/haircare" className="hover:text-[#F4C6D5] transition-colors">Haircare (Mamaearth)</Link></li>
+              <li><Link to="/category/fragrance" className="hover:text-[#F4C6D5] transition-colors">Royal Oud & Fragrances</Link></li>
+              <li><Link to="/category/bodycare" className="hover:text-[#F4C6D5] transition-colors">Bodycare & Butters</Link></li>
+              <li><Link to="/category/accessories" className="hover:text-[#F4C6D5] transition-colors">Beauty Tools & Blenders</Link></li>
             </ul>
           </div>
 
-          {/* AI Tech & Safety */}
+          {/* Client Concierge */}
           <div>
             <h5 className="font-serif text-sm font-semibold text-white uppercase tracking-wider mb-4">
-              AI Beauty Tech
+              Customer Care
             </h5>
-            <ul className="space-y-2.5 text-xs text-[#E9DED5]/70">
-              <li><Link to="/ai-skin-analysis" className="hover:text-[#D9A6AC] transition-colors">AI Skin Diagnostics</Link></li>
-              <li><Link to="/ai-recommendations" className="hover:text-[#D9A6AC] transition-colors">Smart Formulations</Link></li>
-              <li><Link to="/skinsafe" className="hover:text-[#D9A6AC] transition-colors">SkinSafe Ingredient Checker</Link></li>
-              <li><Link to="/feedback" className="hover:text-[#D9A6AC] transition-colors">Customer Feedback</Link></li>
-              <li><Link to="/reviews" className="hover:text-[#D9A6AC] transition-colors">Verified Lab Reviews</Link></li>
+            <ul className="space-y-2.5 text-xs text-[#FFF9F5]/70">
+              <li><a href="/#about" className="hover:text-[#F4C6D5] transition-colors">About SHOPSYNC</a></li>
+              <li><Link to="/feedback" className="hover:text-[#F4C6D5] transition-colors">Report Product Reaction</Link></li>
+              <li><Link to="/order-tracking" className="hover:text-[#F4C6D5] transition-colors">Track Orders (Blue Dart / Delhivery)</Link></li>
+              <li><Link to="/saved-addresses" className="hover:text-[#F4C6D5] transition-colors">Pan-India Addresses</Link></li>
+              <li><Link to="/skinsafe" className="hover:text-[#F4C6D5] transition-colors">SkinSafe™ Allergen Screening</Link></li>
+              <li><Link to="/ai-skin-analysis" className="hover:text-[#F4C6D5] transition-colors">AI Face Scan & Diagnostic</Link></li>
             </ul>
           </div>
 
-          {/* Retail & Admin */}
+          {/* Owner & Platform */}
           <div>
             <h5 className="font-serif text-sm font-semibold text-white uppercase tracking-wider mb-4">
-              Retail Platform
+              Owner Experience
             </h5>
-            <ul className="space-y-2.5 text-xs text-[#E9DED5]/70">
-              <li><Link to="/pos" className="hover:text-[#D9A6AC] transition-colors">In-Store Smart POS</Link></li>
-              <li><Link to="/admin/dashboard" className="hover:text-[#D9A6AC] transition-colors">Admin Management</Link></li>
-              <li><Link to="/orders" className="hover:text-[#D9A6AC] transition-colors">Order Tracking</Link></li>
-              <li><Link to="/profile" className="hover:text-[#D9A6AC] transition-colors">Loyalty Rewards</Link></li>
-              <li><Link to="/saved-addresses" className="hover:text-[#D9A6AC] transition-colors">Shipping Addresses</Link></li>
+            <ul className="space-y-2.5 text-xs text-[#FFF9F5]/70">
+              <li><Link to="/admin/pos-billing" className="hover:text-[#F4C6D5] transition-colors">Smart POS Barcode Register</Link></li>
+              <li><Link to="/admin/dashboard" className="hover:text-[#F4C6D5] transition-colors">Owner Operations Command</Link></li>
+              <li><Link to="/admin/feedback" className="hover:text-[#F4C6D5] transition-colors">Customer Incident Reports</Link></li>
+              <li><Link to="/admin/inventory" className="hover:text-[#F4C6D5] transition-colors">Live Stock & Batch Expiry</Link></li>
+              <li><Link to="/admin/demand-forecasting" className="hover:text-[#F4C6D5] transition-colors">AI Sales & Demand Prediction</Link></li>
+              <li><Link to="/admin/login" className="hover:text-[#F4C6D5] transition-colors">Store Owner Portal Login</Link></li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="pt-8 border-t border-[#524B4F]/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#827A7F]">
-          <p>© {new Date().getFullYear()} ShopSync Technologies Inc. All formulas patented & ethically crafted.</p>
+        {/* Bottom bar with Social & Indian Regulatory Compliance */}
+        <div className="pt-8 border-t border-[#F4C6D5]/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#F4C6D5]/70">
+          <p>© {new Date().getFullYear()} SHOPSYNC Technologies Pvt. Ltd. Crafted with precision for India's beauty retailers & shoppers.</p>
           <div className="flex items-center space-x-6">
-            <span>Clean Beauty Certified</span>
+            <span className="text-[#F4C6D5]">Prices in Indian Rupees (₹)</span>
             <span>•</span>
-            <span>Cruelty-Free International</span>
+            <span className="text-[#F4C6D5]">GST Compliant</span>
             <span>•</span>
-            <span>ISO 22716 GMP Compliant</span>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
+            <span>•</span>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">YouTube</a>
           </div>
         </div>
       </div>

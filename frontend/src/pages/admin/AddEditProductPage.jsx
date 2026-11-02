@@ -178,10 +178,10 @@ export function AddEditProductPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block font-semibold uppercase text-[#524B4F] mb-1">Retail Price ($) *</label>
+              <label className="block font-semibold uppercase text-[#524B4F] mb-1">Retail Price (₹) *</label>
               <input
                 type="number"
-                step="0.01"
+                step="1"
                 required
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
@@ -190,10 +190,10 @@ export function AddEditProductPage() {
             </div>
 
             <div>
-              <label className="block font-semibold uppercase text-[#524B4F] mb-1">Cost of Goods / COGS ($)</label>
+              <label className="block font-semibold uppercase text-[#524B4F] mb-1">Cost of Goods / COGS (₹)</label>
               <input
                 type="number"
-                step="0.01"
+                step="1"
                 value={costPrice}
                 onChange={(e) => setCostPrice(Number(e.target.value))}
                 className="w-full rounded-xl border border-[#E9DED5] bg-[#F8F3EE] p-3 text-xs font-mono"

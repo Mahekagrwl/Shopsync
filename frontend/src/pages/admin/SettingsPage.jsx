@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { Settings, Save, CheckCircle2, Server, Database, Store } from 'lucide-react'
 
 export function SettingsPage() {
-  const [storeLocation, setStoreLocation] = useState('San Francisco Flagship Boutique')
-  const [terminalId, setTerminalId] = useState('POS-01-FLAGSHIP')
-  const [taxRate, setTaxRate] = useState(8.25)
-  const [currency, setCurrency] = useState('USD ($)')
-  const [receiptFooter, setReceiptFooter] = useState('Thank you for visiting ShopSync Atelier. Keep glowing.')
+  const [storeLocation, setStoreLocation] = useState('Vadodara Flagship Boutique (Alkapuri)')
+  const [terminalId, setTerminalId] = useState('POS-01-VADODARA')
+  const [taxRate, setTaxRate] = useState(5.0)
+  const [currency, setCurrency] = useState('INR (₹)')
+  const [receiptFooter, setReceiptFooter] = useState('Thank you for visiting SHOPSYNC Flagship Boutique. GSTIN: 24AAACS9182K1ZU. Keep glowing!')
   const [saved, setSaved] = useState(false)
 
   const handleSave = (e) => {

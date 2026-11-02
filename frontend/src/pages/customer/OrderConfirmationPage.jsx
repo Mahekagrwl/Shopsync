@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CheckCircle2, Sparkles, Package, Truck, ArrowRight, Printer } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
+import { formatINR } from '../../utils/currency'
 
 export function OrderConfirmationPage() {
   const [params] = useSearchParams()
@@ -64,7 +65,7 @@ export function OrderConfirmationPage() {
                     </div>
                   </div>
                   <span className="font-mono font-bold text-[#282426]">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatINR(item.price * item.quantity)}
                   </span>
                 </div>
               ))}
@@ -75,25 +76,25 @@ export function OrderConfirmationPage() {
           <div className="space-y-2 pt-4 border-t border-[#E9DED5] text-xs">
             <div className="flex justify-between text-[#524B4F]">
               <span>Subtotal</span>
-              <span className="font-mono">${currentOrder.subtotal.toFixed(2)}</span>
+              <span className="font-mono">{formatINR(currentOrder.subtotal)}</span>
             </div>
             {currentOrder.discount > 0 && (
               <div className="flex justify-between text-emerald-700">
                 <span>Promotional VIP Discount</span>
-                <span className="font-mono">-${currentOrder.discount.toFixed(2)}</span>
+                <span className="font-mono">-{formatINR(currentOrder.discount)}</span>
               </div>
             )}
             <div className="flex justify-between text-[#524B4F]">
               <span>Shipping</span>
-              <span className="font-mono">{currentOrder.shipping === 0 ? 'FREE' : `$${currentOrder.shipping.toFixed(2)}`}</span>
+              <span className="font-mono">{currentOrder.shipping === 0 ? <span className="text-emerald-700 font-bold">FREE</span> : formatINR(currentOrder.shipping)}</span>
             </div>
             <div className="flex justify-between text-[#524B4F]">
-              <span>Taxes</span>
-              <span className="font-mono">${currentOrder.tax.toFixed(2)}</span>
+              <span>GST (5% Cosmetics)</span>
+              <span className="font-mono">{formatINR(currentOrder.tax)}</span>
             </div>
             <div className="flex justify-between text-sm font-bold text-[#282426] pt-2 border-t border-[#E9DED5]">
               <span>Total Paid</span>
-              <span className="font-mono text-base text-[#542B43]">${currentOrder.total.toFixed(2)}</span>
+              <span className="font-mono text-base font-bold text-[#542B43]">{formatINR(currentOrder.total)}</span>
             </div>
           </div>
 

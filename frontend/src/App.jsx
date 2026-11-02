@@ -5,6 +5,7 @@ import { CartProvider } from './context/CartContext'
 import { WishlistProvider } from './context/WishlistContext'
 import { SkinSafeProvider } from './context/SkinSafeContext'
 import { POSProvider } from './context/POSContext'
+import { ReportProvider } from './context/ReportContext'
 import CustomCursor from './components/common/CustomCursor'
 import AppRoutes from './routes/AppRoutes'
 
@@ -16,8 +17,10 @@ export function App() {
           <WishlistProvider>
             <SkinSafeProvider>
               <POSProvider>
-                <CustomCursor />
-                <AppRoutes />
+                <ReportProvider>
+                  <CustomCursor />
+                  <AppRoutes />
+                </ReportProvider>
               </POSProvider>
             </SkinSafeProvider>
           </WishlistProvider>

@@ -1,12 +1,12 @@
 import React from 'react'
-import { TrendingUp, DollarSign, Store, ShoppingBag, ArrowUpRight } from 'lucide-react'
+import { TrendingUp, IndianRupee, Store, ShoppingBag, ArrowUpRight } from 'lucide-react'
 
 export function SalesAnalyticsPage() {
   const metrics = [
-    { title: 'Total Gross Volume', value: '$128,490.00', change: '+22.4%', sub: 'vs last month' },
-    { title: 'In-Store POS Revenue', value: '$69,380.00', change: '+18.1%', sub: '54% of total sales' },
-    { title: 'Digital Boutique Revenue', value: '$59,110.00', change: '+27.6%', sub: '46% of total sales' },
-    { title: 'Average Order Value (AOV)', value: '$84.20', change: '+$6.40', sub: 'Driven by shade bundles' }
+    { title: 'Total Gross Volume (MTD)', value: '₹1,28,49,000', change: '+22.4%', sub: 'vs last month' },
+    { title: 'In-Store POS Revenue', value: '₹69,38,000', change: '+18.1%', sub: '54% of total sales' },
+    { title: 'Digital Boutique Revenue', value: '₹59,11,000', change: '+27.6%', sub: '46% of total sales' },
+    { title: 'Average Order Value (AOV)', value: '₹1,480', change: '+₹120', sub: 'Driven by shade bundles' }
   ]
 
   return (
@@ -44,10 +44,10 @@ export function SalesAnalyticsPage() {
 
         <div className="space-y-4 text-xs">
           {[
-            { name: 'Cellular Renewal Peptide Barrier Elixir', units: '612 units', rev: '$44,064.00', pct: 85 },
-            { name: 'Silk Radiance Luminous Foundation', units: '740 units', rev: '$35,520.00', pct: 70 },
-            { name: 'Mineral Silk Fluid Broad Spectrum SPF 50+', units: '580 units', rev: '$24,360.00', pct: 52 },
-            { name: 'Velvet Cloud Cashmere Matte Lipstick', units: '420 units', rev: '$13,440.00', pct: 35 },
+            { name: 'Maybelline New York Fit Me Matte+Poreless (Shade 128)', units: '4,820 units', rev: '₹31,28,180', pct: 88 },
+            { name: 'Lakmé 9 to 5 Primer + Matte Perfect Cover', units: '3,910 units', rev: '₹20,52,750', pct: 72 },
+            { name: "L'Oréal Paris Revitalift 1.5% Hyaluronic Acid Serum", units: '1,840 units', rev: '₹18,38,160', pct: 64 },
+            { name: 'Minimalist 10% Niacinamide + Zinc Serum', units: '2,650 units', rev: '₹15,87,350', pct: 55 },
           ].map((item, idx) => (
             <div key={idx} className="space-y-1.5">
               <div className="flex justify-between">

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  DollarSign,
+  IndianRupee,
   TrendingUp,
   ShoppingBag,
   Users,
@@ -15,25 +15,29 @@ import {
   Layers,
   CheckCircle2,
   Sparkles,
-  Activity
+  Activity,
+  ShieldAlert,
+  MessageSquare
 } from 'lucide-react'
 import { BEAUTY_PRODUCTS } from '../../data/mockBeautyData'
 import { usePOS } from '../../context/POSContext'
 import { useCart } from '../../context/CartContext'
+import { useReports } from '../../context/ReportContext'
 
 export function AdminDashboardPage() {
   const { invoices } = usePOS()
   const { orders } = useCart()
+  const { reports, allergyReactionReports, pendingReports } = useReports()
 
   const stats = [
-    { label: "Today's In-Store + Online Sales", value: "$4,820.50", change: "+14.2% vs Yesterday", icon: DollarSign, color: "text-[#542B43]", bg: "bg-[#542B43]/10" },
-    { label: "Monthly Revenue (MTD)", value: "$128,490.00", change: "+22.8% vs Target", icon: TrendingUp, color: "text-emerald-700", bg: "bg-emerald-50" },
-    { label: "Gross Estimated Profit", value: "$79,660.00", change: "62% Healthy Margin", icon: Activity, color: "text-[#542B43]", bg: "bg-[#D9A6AC]/25" },
+    { label: "Today's In-Store + Online Sales", value: "₹4,82,050", change: "+14.2% vs Yesterday", icon: IndianRupee, color: "text-[#542B43]", bg: "bg-[#542B43]/10" },
+    { label: "Monthly Revenue (MTD)", value: "₹1,28,49,000", change: "+22.8% vs Target", icon: TrendingUp, color: "text-emerald-700", bg: "bg-emerald-50" },
+    { label: "Gross Estimated Profit", value: "₹79,66,000", change: "62% Healthy Margin", icon: Activity, color: "text-[#542B43]", bg: "bg-[#D9A6AC]/25" },
     { label: "Total Active Formulations", value: `${BEAUTY_PRODUCTS.length}`, change: "42 SKUs Synced", icon: Package, color: "text-amber-700", bg: "bg-amber-50" },
     { label: "Loyalty Registered Clients", value: "3,412", change: "+180 This Week", icon: Users, color: "text-sky-700", bg: "bg-sky-50" },
     { label: "Pending Online Dispatches", value: `${orders.length}`, change: "Same-Day Delivery", icon: ShoppingBag, color: "text-[#542B43]", bg: "bg-rose-50" },
-    { label: "Low-Stock SKU Alerts", value: "2", change: "Immediate Smart Reorder", icon: AlertTriangle, color: "text-amber-700", bg: "bg-amber-100" },
-    { label: "Near-Expiry Batches (<60d)", value: "3", change: "Discount Promo Active", icon: Calendar, color: "text-rose-700", bg: "bg-rose-100" },
+    { label: "Customer Incident Reports", value: `${pendingReports.length} Pending`, change: `${allergyReactionReports.length} Sensitivity Flags`, icon: ShieldAlert, color: "text-rose-700", bg: "bg-rose-100" },
+    { label: "Near-Expiry Batches (<60d)", value: "3", change: "Discount Promo Active", icon: Calendar, color: "text-amber-700", bg: "bg-amber-100" },
   ]
 
   const lowStockItems = BEAUTY_PRODUCTS.filter(p => p.stockQuantity < 50)
@@ -119,13 +123,13 @@ export function AdminDashboardPage() {
           {/* Graphical Animated Bar Chart */}
           <div className="pt-4 flex items-end justify-between h-48 gap-3 sm:gap-6 border-b border-[#E9DED5] pb-2">
             {[
-              { day: 'Mon', pos: 42, online: 58, total: '$14,200' },
-              { day: 'Tue', pos: 38, online: 62, total: '$16,400' },
-              { day: 'Wed', pos: 55, online: 45, total: '$18,900' },
-              { day: 'Thu', pos: 48, online: 52, total: '$17,300' },
-              { day: 'Fri', pos: 68, online: 72, total: '$24,800' },
-              { day: 'Sat', pos: 92, online: 88, total: '$31,500' },
-              { day: 'Sun (Today)', pos: 78, online: 75, total: '$27,100' },
+              { day: 'Mon', pos: 42, online: 58, total: '₹1,42,000' },
+              { day: 'Tue', pos: 38, online: 62, total: '₹1,64,000' },
+              { day: 'Wed', pos: 55, online: 45, total: '₹1,89,000' },
+              { day: 'Thu', pos: 48, online: 52, total: '₹1,73,000' },
+              { day: 'Fri', pos: 68, online: 72, total: '₹2,48,000' },
+              { day: 'Sat', pos: 92, online: 88, total: '₹3,15,000' },
+              { day: 'Sun (Today)', pos: 78, online: 75, total: '₹2,71,000' },
             ].map((col, idx) => (
               <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group">
                 <div className="w-full flex gap-1 items-end justify-center h-40">
@@ -173,18 +177,31 @@ export function AdminDashboardPage() {
             <h3 className="font-serif font-bold text-sm text-[#282426] flex items-center justify-between">
               <span>Urgent Operational Alerts</span>
               <span className="text-xs text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
-                2 Actions
+                {pendingReports.length > 0 ? `${pendingReports.length} Actions` : 'Optimal'}
               </span>
             </h3>
 
             <div className="space-y-3">
+              {pendingReports.length > 0 && (
+                <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 flex items-start gap-3 text-xs">
+                  <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                  <div className="space-y-0.5">
+                    <p className="font-bold text-rose-900">Incident Reports: {pendingReports.length} Require Review</p>
+                    <p className="text-[11px] text-rose-800">{allergyReactionReports.length} customer allergen reactions flagged for concierge followup.</p>
+                    <Link to="/admin/feedback" className="text-[11px] font-bold text-rose-900 underline block pt-1">
+                      Open Customer Reports Desk →
+                    </Link>
+                  </div>
+                </div>
+              )}
+
               <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-3 text-xs">
                 <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
-                  <p className="font-bold text-amber-900">Critical Stock: Peptide Elixir</p>
-                  <p className="text-[11px] text-amber-800">Only 42 units remain across reserve & floor.</p>
-                  <Link to="/admin/inventory" className="text-[11px] font-bold text-amber-900 underline block pt-1">
-                    Restock Batch →
+                  <p className="font-bold text-amber-900">High Demand: Maybelline Fit Me 128</p>
+                  <p className="text-[11px] text-amber-800">Festive surge predicted. 95 units remaining.</p>
+                  <Link to="/admin/demand-forecasting" className="text-[11px] font-bold text-amber-900 underline block pt-1">
+                    Demand Prediction →
                   </Link>
                 </div>
               </div>

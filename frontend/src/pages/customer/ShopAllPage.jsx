@@ -2,12 +2,13 @@ import React, { useState, useMemo } from 'react'
 import { BEAUTY_PRODUCTS, CATEGORIES, BRANDS } from '../../data/mockBeautyData'
 import ProductCard from '../../components/common/ProductCard'
 import { Filter, SlidersHorizontal, Sparkles, X, ChevronDown } from 'lucide-react'
+import { formatINR } from '../../utils/currency'
 
 export function ShopAllPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedBrand, setSelectedBrand] = useState('all')
   const [sortBy, setSortBy] = useState('featured')
-  const [maxPrice, setMaxPrice] = useState(100)
+  const [maxPrice, setMaxPrice] = useState(4000)
   const [onlyInStock, setOnlyInStock] = useState(false)
   const [onlySafe, setOnlySafe] = useState(false)
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false)
@@ -45,12 +46,12 @@ export function ShopAllPage() {
   const clearAllFilters = () => {
     setSelectedCategory('all')
     setSelectedBrand('all')
-    setMaxPrice(100)
+    setMaxPrice(4000)
     setOnlyInStock(false)
     setSortBy('featured')
   }
 
-  const hasActiveFilters = selectedCategory !== 'all' || selectedBrand !== 'all' || maxPrice < 100 || onlyInStock
+  const hasActiveFilters = selectedCategory !== 'all' || selectedBrand !== 'all' || maxPrice < 4000 || onlyInStock
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -123,13 +124,13 @@ export function ShopAllPage() {
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-bold text-[#524B4F]">
               <span>Max Price</span>
-              <span className="text-[#542B43] font-mono">${maxPrice}.00</span>
+              <span className="text-[#542B43] font-mono">{formatINR(maxPrice)}</span>
             </div>
             <input
               type="range"
-              min="20"
-              max="100"
-              step="5"
+              min="300"
+              max="4000"
+              step="50"
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
               className="w-full accent-[#542B43]"
@@ -200,10 +201,10 @@ export function ShopAllPage() {
                   <button onClick={() => setSelectedBrand('all')}><X className="w-3 h-3" /></button>
                 </span>
               )}
-              {maxPrice < 100 && (
+              {maxPrice < 4000 && (
                 <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-[#542B43] text-white">
-                  Under ${maxPrice}
-                  <button onClick={() => setMaxPrice(100)}><X className="w-3 h-3" /></button>
+                  Under {formatINR(maxPrice)}
+                  <button onClick={() => setMaxPrice(4000)}><X className="w-3 h-3" /></button>
                 </span>
               )}
             </div>

@@ -4,6 +4,7 @@ import { Sparkles, Cpu, ShieldCheck, Heart, ShoppingBag, CheckCircle2, Sliders }
 import { BEAUTY_PRODUCTS } from '../../data/mockBeautyData'
 import { useSkinSafe } from '../../context/SkinSafeContext'
 import { useCart } from '../../context/CartContext'
+import { formatINR } from '../../utils/currency'
 
 export function AIRecommendationsPage() {
   const { allergies } = useSkinSafe()
@@ -138,7 +139,7 @@ export function AIRecommendationsPage() {
                 <div className="flex items-center gap-2 text-xs text-stone-400">
                   <span>{product.brand}</span>
                   <span>•</span>
-                  <span>${product.price.toFixed(2)}</span>
+                  <span>{formatINR(product.price)}</span>
                 </div>
               </div>
             </div>

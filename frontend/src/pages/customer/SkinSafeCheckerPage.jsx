@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { useSkinSafe } from '../../context/SkinSafeContext'
 import { BEAUTY_PRODUCTS, COMMON_ALLERGENS } from '../../data/mockBeautyData'
+import { formatINR } from '../../utils/currency'
 
 export function SkinSafeCheckerPage() {
   const { allergies, addAllergy, removeAllergy } = useSkinSafe()
@@ -370,7 +371,7 @@ export function SkinSafeCheckerPage() {
                 >
                   <img src={productA.images[0]} alt="" className="h-28 w-full object-cover rounded-xl" />
                   <h4 className="font-serif font-bold text-sm text-[#282426] line-clamp-1">{productA.name}</h4>
-                  <p className="font-bold text-[#542B43] font-mono">${productA.price.toFixed(2)}</p>
+                  <p className="font-bold text-[#542B43] font-mono">{formatINR(productA.price)}</p>
                   <p className="text-[11px] text-[#524B4F] line-clamp-3 leading-relaxed">{productA.ingredients}</p>
                 </motion.div>
 
@@ -380,7 +381,7 @@ export function SkinSafeCheckerPage() {
                 >
                   <img src={productB.images[0]} alt="" className="h-28 w-full object-cover rounded-xl" />
                   <h4 className="font-serif font-bold text-sm text-[#282426] line-clamp-1">{productB.name}</h4>
-                  <p className="font-bold text-[#542B43] font-mono">${productB.price.toFixed(2)}</p>
+                  <p className="font-bold text-[#542B43] font-mono">{formatINR(productB.price)}</p>
                   <p className="text-[11px] text-[#524B4F] line-clamp-3 leading-relaxed">{productB.ingredients}</p>
                 </motion.div>
               </div>

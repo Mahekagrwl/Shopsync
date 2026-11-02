@@ -4,15 +4,23 @@
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
-  --color-cream: #F8F3EE;
-  --color-plum: #542B43;
-  --color-plum-dark: #3B1E2F;
-  --color-plum-light: #6E3958;
-  --color-rose: #D9A6AC;
-  --color-rose-light: #F4E2E5;
+  /* SHOPSYNC Luxury Indian Beauty Palette */
+  --color-ivory: #FFF9F5;
+  --color-blush: #F4C6D5;
+  --color-rose: #D985A5;
+  --color-rose-gold: #C58A78;
+  --color-mauve: #A56D8A;
+  --color-plum: #352137;
+  --color-plum-light: #542B43;
+  --color-white: #FFFFFF;
+
+  /* Legacy Brand Aliases for Backwards Compatibility */
+  --color-cream: #FFF9F5;
+  --color-plum-dark: #261628;
+  --color-rose-light: #FCEEF3;
   --color-rose-deep: #B8727A;
-  --color-beige: #E9DED5;
-  --color-beige-light: #F4EFEA;
+  --color-beige: #F4E2E5;
+  --color-beige-light: #FFF9F5;
   --color-charcoal: #282426;
   --color-charcoal-light: #524B4F;
   --color-charcoal-muted: #827A7F;
@@ -20,10 +28,17 @@
 
 @layer base {
   :root {
-    --bg-cream: #F8F3EE;
-    --brand-plum: #542B43;
-    --brand-rose: #D9A6AC;
-    --brand-beige: #E9DED5;
+    --bg-ivory: #FFF9F5;
+    --brand-blush: #F4C6D5;
+    --brand-rose: #D985A5;
+    --brand-rose-gold: #C58A78;
+    --brand-mauve: #A56D8A;
+    --brand-plum: #352137;
+    --brand-white: #FFFFFF;
+
+    /* Legacy mapping */
+    --bg-cream: #FFF9F5;
+    --brand-beige: #F4E2E5;
     --brand-charcoal: #282426;
   }
 
@@ -38,7 +53,7 @@
   body {
     margin: 0;
     font-family: var(--font-sans);
-    background-color: #F8F3EE;
+    background-color: #FFF9F5;
     color: #282426;
     overflow-x: hidden;
   }
@@ -49,14 +64,14 @@
     height: 7px;
   }
   ::-webkit-scrollbar-track {
-    background: #F8F3EE;
+    background: #FFF9F5;
   }
   ::-webkit-scrollbar-thumb {
-    background: #D9A6AC;
+    background: #D985A5;
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #542B43;
+    background: #352137;
   }
 }
 
@@ -169,6 +184,41 @@
   background: linear-gradient(90deg, #542B43 0%, #D9A6AC 50%, #542B43 100%);
   background-size: 200% auto;
   animation: aiShimmer 4s ease-in-out infinite;
+}
+
+/* Rotating category tab animations & luxury styling */
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes reverseSpin {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.animate-slow-spin {
+  animation: slowSpin 24s linear infinite;
+}
+
+.animate-reverse-spin {
+  animation: reverseSpin 28s linear infinite;
+}
+
+.glass-luxury {
+  background: rgba(255, 249, 245, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(217, 133, 165, 0.25);
+  box-shadow: 0 10px 30px -10px rgba(53, 33, 55, 0.08);
+}
+
+.glass-luxury-plum {
+  background: rgba(53, 33, 55, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(244, 198, 213, 0.2);
+  box-shadow: 0 12px 35px -8px rgba(38, 22, 40, 0.35);
 }
 
 /* Hide default cursor on desktop when custom cursor is active */

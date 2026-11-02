@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useWishlist } from '../../context/WishlistContext'
 import { useCart } from '../../context/CartContext'
 import { useSkinSafe } from '../../context/SkinSafeContext'
+import { formatINR } from '../../utils/currency'
 
 export function ProductCard({ product, featured = false }) {
   const { isInWishlist, toggleWishlist } = useWishlist()
@@ -243,14 +244,14 @@ export function ProductCard({ product, featured = false }) {
         )}
 
         {/* Price & Status Row */}
-        <div className="pt-2 border-t border-[#E9DED5] flex items-center justify-between">
+        <div className="pt-2 border-t border-[#F4C6D5]/60 flex items-center justify-between">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-base font-bold text-[#282426] font-mono">
-              ${product.price.toFixed(2)}
+            <span className="text-base font-bold text-[#352137]">
+              {formatINR(product.price)}
             </span>
-            {product.compareAtPrice && (
-              <span className="text-xs text-stone-400 line-through font-mono">
-                ${product.compareAtPrice.toFixed(2)}
+            {(product.comparePrice || product.compareAtPrice) && (
+              <span className="text-xs text-stone-400 line-through">
+                {formatINR(product.comparePrice || product.compareAtPrice)}
               </span>
             )}
           </div>
