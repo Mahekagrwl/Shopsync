@@ -233,7 +233,7 @@ export function AuthProvider({ children }) {
   }
 
   /**
-   * One-click demo session switcher
+   * One-click demo session provider
    */
   const loginAsDemo = (demoRole = 'customer') => {
     let demoUser

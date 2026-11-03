@@ -85,8 +85,12 @@ export function CustomerNavbar() {
                 <Link to="/admin/dashboard" className="hover:text-white flex items-center gap-1 transition-colors font-bold uppercase tracking-wider">
                   <LayoutDashboard className="w-3.5 h-3.5 text-amber-300" /> Store Owner Console
                 </Link>
+              ) : isCustomer ? (
+                <span className="flex items-center gap-1 text-[#F4C6D5]">
+                  <Sparkles className="w-3 h-3 text-[#F4C6D5]" /> {user?.loyaltyTier || 'Beauty Member'}
+                </span>
               ) : (
-                <Link to="/login" className="hover:text-white flex items-center gap-1 transition-colors">
+                <Link to="/seller/login" className="hover:text-white flex items-center gap-1 transition-colors font-medium">
                   <Store className="w-3 h-3 text-amber-300" /> Store Owner Portal
                 </Link>
               )}

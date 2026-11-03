@@ -60,6 +60,22 @@ def test_admin_login():
     assert res.status_code == 200
     assert res.json()["user"]["role"] == "admin"
 
+    # Store owner / seller can also authenticate at admin/seller console endpoint
+    res_seller = client.post("/api/v1/auth/admin/login", json={
+        "email": "seller@shopsync.in",
+        "password": "Seller@ShopSync2026"
+    })
+    assert res_seller.status_code == 200
+    assert res_seller.json()["user"]["role"] == "seller"
+
+    # Customer account attempting to authenticate at admin console endpoint must be forbidden
+    res_customer_blocked = client.post("/api/v1/auth/admin/login", json={
+        "email": "ananya.sharma@shopsync.in",
+        "password": "Beauty@1234"
+    })
+    assert res_customer_blocked.status_code == 403
+    assert "Store Owner or Administrative role required" in res_customer_blocked.json()["detail"]
+
 def test_role_based_registration_and_security():
     # 1. Register as seller succeeds with role="seller"
     seller_email = f"seller_{datetime.now().timestamp()}@shopsync.in"

@@ -160,13 +160,14 @@ async def admin_login(req: UserLoginRequest):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid administrative credentials."
         )
-    if user.get("role") != "admin":
+    if user.get("role") not in ["admin", "seller"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied. Administrative role required."
+            detail="Access denied. Store Owner or Administrative role required."
         )
 
-    token = create_access_token(subject=user["id"], role="admin")
+    user_role = user.get("role", "seller")
+    token = create_access_token(subject=user["id"], role=user_role)
     return {
         "access_token": token,
         "token_type": "bearer",
@@ -174,7 +175,7 @@ async def admin_login(req: UserLoginRequest):
             "id": user["id"],
             "email": user["email"],
             "full_name": user["full_name"],
-            "role": "admin",
+            "role": user_role,
             "avatar_url": user.get("avatar_url", "")
         }
     }

@@ -218,6 +218,7 @@ export function AppRoutes() {
 
       {/* 2. Admin / Store Owner Standalone Authentication */}
       <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route path="/seller/login" element={<AdminLoginPage />} />
 
       {/* 3. Store Owner / Admin Protected Panel Routes */}
       <Route

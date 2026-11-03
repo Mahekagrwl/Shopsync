@@ -39,14 +39,12 @@ import { BEAUTY_PRODUCTS, BRANDS, MOCK_REVIEWS } from '../../data/mockBeautyData
 import { useProducts } from '../../context/ProductContext'
 import ProductCard from '../../components/common/ProductCard'
 import AnimatedBackground from '../../components/common/AnimatedBackground'
-import RoleSelectionModal from '../../components/common/RoleSelectionModal'
 import { formatINR } from '../../utils/currency'
 
 export function HomePage() {
   const { products } = useProducts()
   const [copiedCode, setCopiedCode] = useState(false)
   const [heroTilt, setHeroTilt] = useState({ x: 0, y: 0 })
-  const [roleModalOpen, setRoleModalOpen] = useState(false)
   const [activeCategoryTab, setActiveCategoryTab] = useState('all')
 
   const copyPromo = () => {
@@ -201,13 +199,6 @@ export function HomePage() {
                 >
                   <Compass className="w-4 h-4 text-[#D985A5]" /> Explore Collection
                 </a>
-
-                <button
-                  onClick={() => setRoleModalOpen(true)}
-                  className="bg-gradient-to-r from-[#D985A5] via-[#C58A78] to-[#352137] text-white px-7 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-2xl hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer border border-white/40"
-                >
-                  <Sparkles className="w-4 h-4 text-amber-200" /> Switch Role / POS
-                </button>
               </motion.div>
 
               {/* Trust Badges */}
@@ -676,12 +667,6 @@ export function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Role Selection Modal */}
-      <RoleSelectionModal
-        isOpen={roleModalOpen}
-        onClose={() => setRoleModalOpen(false)}
-      />
     </div>
   )
 }

@@ -139,7 +139,7 @@ export function RoleSelectionPage() {
 
             <div className="space-y-2.5 pt-4">
               <Link
-                to="/admin/login"
+                to="/seller/login"
                 className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#C58A78] to-[#352137] hover:opacity-95 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
               >
                 <span>Store Owner Sign In</span>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Sparkles, ShoppingBag, ShieldCheck, Database, ArrowRight, Layers, Tag, Heart } from 'lucide-react'
+import { Sparkles, ShoppingBag, ShieldCheck, Database, ArrowRight, Tag, Heart } from 'lucide-react'
 import { Card, CardHeader } from '../../components/common/Card'
 import { Badge } from '../../components/common/Badge'
 import { Button } from '../../components/common/Button'
@@ -26,9 +26,9 @@ export function StorefrontHome() {
             Built with modern React.js, clean modular components, and ready for FastAPI + Supabase integration.
           </p>
           <div className="flex flex-wrap gap-3 pt-2">
-            <Link to="/pos">
-              <Button variant="gold" size="md" icon={Layers}>
-                Switch to Smart POS Register
+            <Link to="/shop">
+              <Button variant="gold" size="md" icon={ShoppingBag}>
+                Explore Beauty Catalog
               </Button>
             </Link>
           </div>
