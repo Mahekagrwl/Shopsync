@@ -11,7 +11,7 @@ const INITIAL_CART = [
     name: 'Lakmé 9 to 5 Primer + Matte Perfect Cover Foundation',
     brand: 'Lakmé',
     price: 525,
-    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1557205465-f3762edea6d3?w=800&auto=format&fit=crop&q=80',
     quantity: 1,
     shade: {
       id: 'sh-01',
@@ -52,7 +52,7 @@ const INITIAL_ORDERS = [
         brand: "L'Oréal Paris",
         price: 999,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1608248597359-25f0a7199c36?w=800&auto=format&fit=crop&q=80'
+        image: 'https://images.unsplash.com/photo-1629732047847-50219e9c5aef?w=800&auto=format&fit=crop&q=80'
       }
     ],
     subtotal: 999,

@@ -8,7 +8,7 @@ export const CATEGORIES = [
   { id: 'makeup', name: 'Makeup', slug: 'makeup', icon: 'Palette', description: 'Flawless foundations, velvety lipsticks & radiant blushes' },
   { id: 'skincare', name: 'Skincare', slug: 'skincare', icon: 'Sparkles', description: 'Clinical actives, hydrating serums & barrier creams' },
   { id: 'haircare', name: 'Haircare', slug: 'haircare', icon: 'Wind', description: 'Traditional Ayurvedic oils, bond repair & clarifying shampoos' },
-  { id: 'fragrance', name: 'Fragrance', slug: 'Heart', description: 'Oud, floral attars, luxury eau de parfums & mist' },
+  { id: 'fragrance', name: 'Fragrance', slug: 'fragrance', icon: 'Heart', description: 'Oud, floral attars, luxury eau de parfums & mist' },
   { id: 'bodycare', name: 'Bodycare', slug: 'bodycare', icon: 'Shield', description: 'Botanical butters, brightening lotions & exfoliating scrubs' },
   { id: 'accessories', name: 'Beauty Tools & Accessories', slug: 'accessories', icon: 'Scissors', description: 'Precision beauty blenders, jade rollers & synthetic brush sets' },
 ]
@@ -25,11 +25,18 @@ export const BRANDS = [
   { id: 'kay-beauty', name: 'Kay Beauty by Katrina', origin: 'Mumbai, India', badge: 'High Glam Couture' },
   { id: 'the-derma-co', name: 'The Derma Co', origin: 'Gurugram, India', badge: 'Derm Designed' },
   { id: 'cetaphil', name: 'Cetaphil', origin: 'Galderma Labs', badge: 'Sensitive Skin Doctor Recommended' },
-  { id: 'neutrogena', name: 'Neutrogena', origin: 'Johnson & Johnson', badge: 'Hydro Boost Tech' },
+  { id: 'bath-and-body-works', name: 'Bath & Body Works', origin: 'New Albany, USA', badge: 'Iconic Fragrance & Body' },
+  { id: 'forest-essentials', name: 'Forest Essentials', origin: 'Uttarakhand, India', badge: 'Luxurious Ayurveda' },
+  { id: 'bella-vita', name: 'Bella Vita Luxury', origin: 'Gurugram, India', badge: 'Artisanal Perfumery' },
+  { id: 'chemist-at-play', name: 'Chemist at Play', origin: 'Jaipur, India', badge: 'Ceramide Active Bodycare' },
+  { id: 'nivea', name: 'Nivea', origin: 'Hamburg, Germany', badge: 'Deep Moisture Care' },
   { id: 'mac', name: 'M·A·C Cosmetics', origin: 'Toronto, Canada', badge: 'Global Pro Artistry' }
 ]
 
 export const BEAUTY_PRODUCTS = [
+  // ==========================================
+  // 1. MAKEUP CATEGORY
+  // ==========================================
   {
     id: 'prod-001',
     name: 'Lakmé 9 to 5 Primer + Matte Perfect Cover Foundation',
@@ -48,8 +55,8 @@ export const BEAUTY_PRODUCTS = [
     isNewArrival: false,
     isFeatured: true,
     images: [
-      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=800&auto=format&fit=crop&q=80'
+      'https://images.unsplash.com/photo-1557205465-f3762edea6d3?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1557205465-f3762edea6d3?w=800&auto=format&fit=crop&q=80'
     ],
     description: 'Built-in primer with SPF 20 for seamless Indian weather wear. Gives high medium buildable coverage that glides easily and leaves an even natural matte finish lasting 16 hours.',
     ingredients: 'Aqua, Cyclopentasiloxane, Titanium Dioxide, Dimethicone, Ethylhexyl Methoxycinnamate, Niacinamide, Silica, Tocopheryl Acetate, Iron Oxides (CI 77491, CI 77492, CI 77499).',
@@ -63,7 +70,7 @@ export const BEAUTY_PRODUCTS = [
   },
   {
     id: 'prod-002',
-    name: 'Maybelline New York Fit Me Matte + Poreless Liquid Foundation (Shade 128 Warm Nude)',
+    name: 'Maybelline New York Fit Me Matte + Poreless Liquid Foundation',
     brand: 'Maybelline New York',
     category: 'makeup',
     subcategory: 'face-makeup',
@@ -79,8 +86,8 @@ export const BEAUTY_PRODUCTS = [
     isNewArrival: false,
     isFeatured: true,
     images: [
-      'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1608248597359-25f0a7199c36?w=800&auto=format&fit=crop&q=80'
+      'https://images.unsplash.com/photo-1627384113743-6bd5a479fffd?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1557205465-f3762edea6d3?w=800&auto=format&fit=crop&q=80'
     ],
     description: "India's highest selling foundation. Formulated with aerogel and clay micro-powders that control shine, blur pores, and adapt to warm Indian skin undertones.",
     ingredients: 'Aqua/Water, Cyclohexasiloxane, Nylon-12, Isododecane, Alcohol Denat., Cyclopentasiloxane, PEG-10 Dimethicone, Cetyl PEG/PPG-10/1 Dimethicone, HDI/Trimethylol Hexyllactone Crosspolymer, Titanium Dioxide, Iron Oxides.',
@@ -92,138 +99,8 @@ export const BEAUTY_PRODUCTS = [
     ]
   },
   {
-    id: 'prod-003',
-    name: 'L’Oréal Paris Revitalift 1.5% Hyaluronic Acid Hydrating Plump Serum',
-    brand: "L'Oréal Paris",
-    category: 'skincare',
-    subcategory: 'skincare',
-    price: 999,
-    comparePrice: 1099,
-    rating: 4.92,
-    reviewsCount: 2190,
-    inStock: true,
-    stockQuantity: 140,
-    sku: 'LOR-REV-003',
-    barcode: '890103078903',
-    isBestSeller: true,
-    isNewArrival: false,
-    isFeatured: true,
-    images: [
-      'https://images.unsplash.com/photo-1608248597359-25f0a7199c36?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&auto=format&fit=crop&q=80'
-    ],
-    description: 'Our highest concentration of Pure Hyaluronic Acid (0.5% Macro + 1.0% Micro HA) that instantly hydrates and plumps skin by +42% in 1 hour. Fragrance-free and safe for sensitive skin.',
-    ingredients: 'Aqua/Water, Glycerin, Hydroxyethylpiperazine Ethane Sulfonic Acid, Sodium Hyaluronate, PEG-60 Hydrogenated Castor Oil, Secale Cereale Seed Extract, Calcium Pantothenate, Dipeptide Diaminobutyroyl Benzylamide Diacetate, Ascorbyl Glucoside.',
-    allergyTags: ['Fragrance-Free', 'Paraben-Free', 'Mineral Oil-Free', 'Synthetic Dye-Free'],
-    shades: []
-  },
-  {
-    id: 'prod-004',
-    name: 'Minimalist 10% Niacinamide + Zinc Daily Blemish Serum',
-    brand: 'Minimalist',
-    category: 'skincare',
-    subcategory: 'skincare',
-    price: 599,
-    comparePrice: 649,
-    rating: 4.88,
-    reviewsCount: 2840,
-    inStock: true,
-    stockQuantity: 210,
-    sku: 'MIN-NIA-004',
-    barcode: '890103078904',
-    isBestSeller: true,
-    isNewArrival: true,
-    isFeatured: true,
-    images: [
-      'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&auto=format&fit=crop&q=80'
-    ],
-    description: 'Clinically proven pure 10% Vitamin B3 with 1% Zinc PCA and Aloe Juice. Fades stubborn dark spots, reduces excess sebum production, and evens out hyperpigmentation.',
-    ingredients: 'Aloe Barbadensis Leaf Juice, Niacinamide, Dimethyl Isosorbide, Propanediol, Ethoxydiglycol, Zinc PCA, Phenoxyethanol, Ethylhexylglycerin, Hydroxyethylcellulose, Pullulan.',
-    allergyTags: ['Fragrance-Free', 'Essential Oil-Free', 'Non-Comedogenic', 'Clean Clinical'],
-    shades: []
-  },
-  {
-    id: 'prod-005',
-    name: 'Plum Green Tea Pore Cleansing Face Wash with Glycolic Acid',
-    brand: 'Plum Goodness',
-    category: 'skincare',
-    subcategory: 'skincare',
-    price: 345,
-    comparePrice: 395,
-    rating: 4.75,
-    reviewsCount: 1640,
-    inStock: true,
-    stockQuantity: 115,
-    sku: 'PLU-GNT-005',
-    barcode: '890103078905',
-    isBestSeller: true,
-    isNewArrival: false,
-    isFeatured: false,
-    images: [
-      'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80'
-    ],
-    description: 'Soap-free, non-drying foaming face wash enriched with green tea antioxidants and gentle glycolic acid cellulose beads that combat active acne without stripping moisture.',
-    ingredients: 'Aqua, Camellia Sinensis (Green Tea) Leaf Extract, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycolic Acid, Glycerin, Cellulose Beads, Phenoxyethanol.',
-    allergyTags: ['100% Vegan', 'Cruelty-Free', 'Paraben-Free', 'Phthalate-Free'],
-    shades: []
-  },
-  {
-    id: 'prod-006',
-    name: 'Dot & Key Watermelon Hyaluronic Cooling Sunscreen SPF 50+ PA+++',
-    brand: 'Dot & Key',
-    category: 'skincare',
-    subcategory: 'skincare',
-    price: 495,
-    comparePrice: 545,
-    rating: 4.85,
-    reviewsCount: 1890,
-    inStock: true,
-    stockQuantity: 160,
-    sku: 'DOT-WML-006',
-    barcode: '890103078906',
-    isBestSeller: true,
-    isNewArrival: true,
-    isFeatured: true,
-    images: [
-      'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80'
-    ],
-    description: 'Zero white cast, ultra-lightweight watery fluid sunscreen powered by fresh watermelon extract and hyaluronic acid. Shields against UVA/UVB and blue light with an instant cooling effect.',
-    ingredients: 'Aqua, Ethylhexyl Methoxycinnamate, Zinc Oxide, Citrullus Lanatus (Watermelon) Fruit Extract, Sodium Hyaluronate, Butyl Methoxydibenzoylmethane, Dimethicone, Tocopherol.',
-    allergyTags: ['Zero White Cast', 'Reef Safe', 'Broad Spectrum', 'Alcohol-Free'],
-    shades: []
-  },
-  {
-    id: 'prod-007',
-    name: 'Mamaearth Onion Hair Oil with Redensyl for Hair Fall Control',
-    brand: 'Mamaearth',
-    category: 'haircare',
-    subcategory: 'haircare',
-    price: 419,
-    comparePrice: 499,
-    rating: 4.68,
-    reviewsCount: 3120,
-    inStock: true,
-    stockQuantity: 130,
-    sku: 'MAM-ONI-007',
-    barcode: '890103078907',
-    isBestSeller: false,
-    isNewArrival: false,
-    isFeatured: true,
-    images: [
-      'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80'
-    ],
-    description: 'Enriched with sulfur-rich onion seed oil, Redensyl, bhringraj, and almond oil. Nourishes follicles, curbs scalp itching, and stimulates healthy hair density.',
-    ingredients: 'Helianthus Annuus (Sunflower) Seed Oil, Allium Cepa (Onion) Seed Oil, Redensyl, Prunus Amygdalus Dulcis (Almond) Oil, Eclipta Alba (Bhringraj) Oil, Castor Oil, Vitamin E.',
-    allergyTags: ['Mineral Oil-Free', 'Silicone-Free', 'Dermatologically Tested', 'Contains Nut Oil (Almond)'],
-    shades: []
-  },
-  {
     id: 'prod-008',
-    name: 'SUGAR Cosmetics Matte As Hell Crayon Lipstick (01 Scarlett O’Hara)',
+    name: 'SUGAR Cosmetics Matte As Hell Crayon Lipstick',
     brand: 'SUGAR Cosmetics',
     category: 'makeup',
     subcategory: 'lip-makeup',
@@ -240,7 +117,7 @@ export const BEAUTY_PRODUCTS = [
     isFeatured: true,
     images: [
       'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=800&auto=format&fit=crop&q=80'
+      'https://images.unsplash.com/photo-1591360236480-4ed861025fa1?w=800&auto=format&fit=crop&q=80'
     ],
     description: 'A cult-favourite bold red matte lip crayon engineered for intense coverage in a single stroke. Transfer-proof, feather-light, and packaged with its own custom sharpener.',
     ingredients: 'Dimethicone, Diisostearyl Malate, Synthetic Wax, Polyethylene, Cera Microcristallina, Caprylyl Methicone, Tocopheryl Acetate, CI 15850, CI 77491.',
@@ -270,7 +147,7 @@ export const BEAUTY_PRODUCTS = [
     isFeatured: true,
     images: [
       'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80'
+      'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800&auto=format&fit=crop&q=80'
     ],
     description: 'Enriched with Avocado Butter & Mango Butter for zero cakiness. Gives a high-definition soft-focus blur that locks in foundation and controls humidity shine all day.',
     ingredients: 'Talc, Mica, Silica, Dimethicone, Persea Gratissima (Avocado) Butter, Mangifera Indica (Mango) Seed Butter, Zinc Stearate, Phenoxyethanol, Iron Oxides.',
@@ -279,6 +156,165 @@ export const BEAUTY_PRODUCTS = [
       { id: 'sh-11', name: '110Y Light Yellow', code: '110Y', hex: '#F7DFBE', undertone: 'warm', finish: 'matte', coverage: 'sheer', inStock: true },
       { id: 'sh-12', name: '130N Medium Olive', code: '130N', hex: '#DEC2A0', undertone: 'neutral', finish: 'matte', coverage: 'sheer', inStock: true }
     ]
+  },
+  {
+    id: 'prod-013',
+    name: 'Lakmé Eyeconic 24 Hr Waterproof Kajal (Deep Black)',
+    brand: 'Lakmé',
+    category: 'makeup',
+    subcategory: 'eye-makeup',
+    price: 295,
+    comparePrice: 350,
+    rating: 4.87,
+    reviewsCount: 4210,
+    inStock: true,
+    stockQuantity: 210,
+    sku: 'LAK-EYE-013',
+    barcode: '890103078913',
+    isBestSeller: true,
+    isNewArrival: false,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1583001809873-a128495da465?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Smudge-proof, transfer-proof and dermatologically tested deep black kajal. Glides effortlessly on waterlines with a dramatic matte black payoff lasting 24 hours.',
+    ingredients: 'Cyclomethicone, Trimethylsiloxysilicate, Euphorbia Cerifera Wax, Iron Oxides (CI 77499), Carbon Black (CI 77266), Tocopheryl Acetate.',
+    allergyTags: ['Ophthalmologically Tested', 'Smudge-Proof', 'Waterproof'],
+    shades: []
+  },
+  {
+    id: 'prod-024',
+    name: 'M·A·C Glow Play Sheer Velvety Blush',
+    brand: 'M·A·C Cosmetics',
+    category: 'makeup',
+    subcategory: 'face-makeup',
+    price: 2850,
+    comparePrice: 3100,
+    rating: 4.93,
+    reviewsCount: 860,
+    inStock: true,
+    stockQuantity: 42,
+    sku: 'MAC-GLW-024',
+    barcode: '890103078924',
+    isBestSeller: false,
+    isNewArrival: true,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'An innovative bouncy-touch cream-to-powder blush that delivers an ultra-smooth, weightless natural flush with buildable sheer-to-medium radiance.',
+    ingredients: 'Dimethicone, Silica, HDI/Trimethylol Hexyllactone Crosspolymer, Isononyl Isononanoate, Mica, Titanium Dioxide, Red 7 Lake.',
+    allergyTags: ['Dermatologist-Tested', 'Non-Acnegenic', 'All Skin Types'],
+    shades: [
+      { id: 'sh-13', name: 'Blush Please (Neutral Mauve)', code: 'BP01', hex: '#C2897A', undertone: 'neutral', finish: 'natural', coverage: 'sheer', inStock: true },
+      { id: 'sh-14', name: 'Grand (Warm Coral)', code: 'GR02', hex: '#E27A68', undertone: 'warm', finish: 'dewy', coverage: 'medium', inStock: true }
+    ]
+  },
+
+  // ==========================================
+  // 2. SKINCARE CATEGORY
+  // ==========================================
+  {
+    id: 'prod-003',
+    name: 'L’Oréal Paris Revitalift 1.5% Hyaluronic Acid Hydrating Plump Serum',
+    brand: "L'Oréal Paris",
+    category: 'skincare',
+    subcategory: 'skincare',
+    price: 999,
+    comparePrice: 1099,
+    rating: 4.92,
+    reviewsCount: 2190,
+    inStock: true,
+    stockQuantity: 140,
+    sku: 'LOR-REV-003',
+    barcode: '890103078903',
+    isBestSeller: true,
+    isNewArrival: false,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1629732047847-50219e9c5aef?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Our highest concentration of Pure Hyaluronic Acid (0.5% Macro + 1.0% Micro HA) that instantly hydrates and plumps skin by +42% in 1 hour. Fragrance-free and safe for sensitive skin.',
+    ingredients: 'Aqua/Water, Glycerin, Hydroxyethylpiperazine Ethane Sulfonic Acid, Sodium Hyaluronate, PEG-60 Hydrogenated Castor Oil, Secale Cereale Seed Extract, Calcium Pantothenate, Dipeptide Diaminobutyroyl Benzylamide Diacetate, Ascorbyl Glucoside.',
+    allergyTags: ['Fragrance-Free', 'Paraben-Free', 'Mineral Oil-Free', 'Synthetic Dye-Free'],
+    shades: []
+  },
+  {
+    id: 'prod-004',
+    name: 'Minimalist 10% Niacinamide + Zinc Daily Blemish Serum',
+    brand: 'Minimalist',
+    category: 'skincare',
+    subcategory: 'skincare',
+    price: 599,
+    comparePrice: 649,
+    rating: 4.88,
+    reviewsCount: 2840,
+    inStock: true,
+    stockQuantity: 210,
+    sku: 'MIN-NIA-004',
+    barcode: '890103078904',
+    isBestSeller: true,
+    isNewArrival: true,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1629732047847-50219e9c5aef?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Clinically proven pure 10% Vitamin B3 with 1% Zinc PCA and Aloe Juice. Fades stubborn dark spots, reduces excess sebum production, and evens out hyperpigmentation.',
+    ingredients: 'Aloe Barbadensis Leaf Juice, Niacinamide, Dimethyl Isosorbide, Propanediol, Ethoxydiglycol, Zinc PCA, Phenoxyethanol, Ethylhexylglycerin, Hydroxyethylcellulose, Pullulan.',
+    allergyTags: ['Fragrance-Free', 'Essential Oil-Free', 'Non-Comedogenic', 'Clean Clinical'],
+    shades: []
+  },
+  {
+    id: 'prod-005',
+    name: 'Plum Green Tea Pore Cleansing Face Wash with Glycolic Acid',
+    brand: 'Plum Goodness',
+    category: 'skincare',
+    subcategory: 'skincare',
+    price: 345,
+    comparePrice: 395,
+    rating: 4.75,
+    reviewsCount: 1640,
+    inStock: true,
+    stockQuantity: 115,
+    sku: 'PLU-GNT-005',
+    barcode: '890103078905',
+    isBestSeller: true,
+    isNewArrival: false,
+    isFeatured: false,
+    images: [
+      'https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Soap-free, non-drying foaming face wash enriched with green tea antioxidants and gentle glycolic acid cellulose beads that combat active acne without stripping moisture.',
+    ingredients: 'Aqua, Camellia Sinensis (Green Tea) Leaf Extract, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycolic Acid, Glycerin, Cellulose Beads, Phenoxyethanol.',
+    allergyTags: ['100% Vegan', 'Cruelty-Free', 'Paraben-Free', 'Phthalate-Free'],
+    shades: []
+  },
+  {
+    id: 'prod-006',
+    name: 'Dot & Key Watermelon Hyaluronic Cooling Sunscreen SPF 50+ PA+++',
+    brand: 'Dot & Key',
+    category: 'skincare',
+    subcategory: 'skincare',
+    price: 495,
+    comparePrice: 545,
+    rating: 4.85,
+    reviewsCount: 1890,
+    inStock: true,
+    stockQuantity: 160,
+    sku: 'DOT-WML-006',
+    barcode: '890103078906',
+    isBestSeller: true,
+    isNewArrival: true,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Zero white cast, ultra-lightweight watery fluid sunscreen powered by fresh watermelon extract and hyaluronic acid. Shields against UVA/UVB and blue light with an instant cooling effect.',
+    ingredients: 'Aqua, Ethylhexyl Methoxycinnamate, Zinc Oxide, Citrullus Lanatus (Watermelon) Fruit Extract, Sodium Hyaluronate, Butyl Methoxydibenzoylmethane, Dimethicone, Tocopherol.',
+    allergyTags: ['Zero White Cast', 'Reef Safe', 'Broad Spectrum', 'Alcohol-Free'],
+    shades: []
   },
   {
     id: 'prod-010',
@@ -298,8 +334,7 @@ export const BEAUTY_PRODUCTS = [
     isNewArrival: false,
     isFeatured: false,
     images: [
-      'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80'
+      'https://images.unsplash.com/photo-1617897903246-719242758050?w=800&auto=format&fit=crop&q=80'
     ],
     description: 'Formulated with 2% Salicylic Acid, Witch Hazel, and Willow Bark extract. Penetrates deep into congested pores to eliminate whiteheads, blackheads, and hormonal pimples.',
     ingredients: 'Aqua, Ethoxydiglycol, Salicylic Acid, Hamamelis Virginiana (Witch Hazel) Extract, Salix Alba (Willow) Bark Extract, Hydroxyethylcellulose, Zinc PCA, Phenoxyethanol.',
@@ -324,14 +359,97 @@ export const BEAUTY_PRODUCTS = [
     isNewArrival: false,
     isFeatured: true,
     images: [
-      'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&auto=format&fit=crop&q=80'
+      'https://images.unsplash.com/photo-1576426863848-c21f53c60b19?w=800&auto=format&fit=crop&q=80'
     ],
     description: 'Doctor recommended creamy cleanser with hydrating Vitamin B3 (Niacinamide), Provitamin B5 (Panthenol), and Glycerin. Defends against 5 signs of skin sensitivity.',
     ingredients: 'Water, Cetyl Alcohol, Propylene Glycol, Sodium Lauryl Sulfate, Stearyl Alcohol, Methylparaben, Propylparaben, Butylparaben.',
     allergyTags: ['Soap-Free', 'Hypoallergenic', 'Dermatologist Recommended', 'Fragrance-Free'],
     shades: []
   },
+
+  // ==========================================
+  // 3. HAIRCARE CATEGORY
+  // ==========================================
+  {
+    id: 'prod-007',
+    name: 'Mamaearth Onion Hair Oil with Redensyl for Hair Fall Control',
+    brand: 'Mamaearth',
+    category: 'haircare',
+    subcategory: 'haircare',
+    price: 419,
+    comparePrice: 499,
+    rating: 4.68,
+    reviewsCount: 3120,
+    inStock: true,
+    stockQuantity: 130,
+    sku: 'MAM-ONI-007',
+    barcode: '890103078907',
+    isBestSeller: false,
+    isNewArrival: false,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Enriched with sulfur-rich onion seed oil, Redensyl, bhringraj, and almond oil. Nourishes follicles, curbs scalp itching, and stimulates healthy hair density.',
+    ingredients: 'Helianthus Annuus (Sunflower) Seed Oil, Allium Cepa (Onion) Seed Oil, Redensyl, Prunus Amygdalus Dulcis (Almond) Oil, Eclipta Alba (Bhringraj) Oil, Castor Oil, Vitamin E.',
+    allergyTags: ['Mineral Oil-Free', 'Silicone-Free', 'Dermatologically Tested', 'Contains Nut Oil (Almond)'],
+    shades: []
+  },
+  {
+    id: 'prod-014',
+    name: 'L’Oréal Paris Total Repair 5 Keratin Restoring Shampoo (650ml)',
+    brand: "L'Oréal Paris",
+    category: 'haircare',
+    subcategory: 'haircare',
+    price: 549,
+    comparePrice: 699,
+    rating: 4.81,
+    reviewsCount: 2310,
+    inStock: true,
+    stockQuantity: 175,
+    sku: 'LOR-SHP-014',
+    barcode: '890103078914',
+    isBestSeller: true,
+    isNewArrival: false,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Fights 5 signs of damaged hair: hair fall, dryness, roughness, dullness, and split ends. Formulated with Pro-Keratin and Ceramide for deep fiber repair.',
+    ingredients: 'Aqua/Water, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Dimethicone, Glycol Distearate, Hydroxypropyltrimonium Hydrolyzed Wheat Protein, Salicylic Acid.',
+    allergyTags: ['Keratin-Enriched', 'Strength & Shine', 'Daily Care'],
+    shades: []
+  },
+  {
+    id: 'prod-015',
+    name: 'Minimalist Maleic Bond Repair Complex 5% Hair Serum',
+    brand: 'Minimalist',
+    category: 'haircare',
+    subcategory: 'haircare',
+    price: 599,
+    comparePrice: 699,
+    rating: 4.88,
+    reviewsCount: 1140,
+    inStock: true,
+    stockQuantity: 90,
+    sku: 'MIN-HSR-015',
+    barcode: '890103078915',
+    isBestSeller: false,
+    isNewArrival: true,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1585751119414-ef2636f8aede?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'A revolutionary leave-in bond repair serum formulated with Maleic Acid, Transglutaminase, and Amino Acids. Repairs broken disulphide bonds caused by heat and chemical treatments.',
+    ingredients: 'Aqua, Maleic Acid, Transglutaminase, Cysteine, Arginine, Alanine, Serine, Valine, Proline, Threonine, Isoleucine, Histidine, Phenylalanine.',
+    allergyTags: ['Sulfate-Free', 'Silicone-Free', 'Fragrance-Free', 'Clean Bond Tech'],
+    shades: []
+  },
+
+  // ==========================================
+  // 4. FRAGRANCE CATEGORY
+  // ==========================================
   {
     id: 'prod-012',
     name: 'Royal Velvet Oud & Rose Eau de Parfum (100ml)',
@@ -357,6 +475,214 @@ export const BEAUTY_PRODUCTS = [
     ingredients: 'Alcohol Denat., Parfum/Fragrance, Aqua, Benzyl Salicylate, Linalool, Alpha-Isomethyl Ionone, Citronellol, Geraniol, Coumarin.',
     allergyTags: ['Long-Lasting EDP', 'Cruelty-Free', 'Artisanal Blend', 'Contains Fragrance'],
     shades: []
+  },
+  {
+    id: 'prod-016',
+    name: 'Forest Essentials Pure Rosewater & Nargis Body Mist (130ml)',
+    brand: 'Forest Essentials',
+    category: 'fragrance',
+    subcategory: 'fragrance',
+    price: 1450,
+    comparePrice: 1650,
+    rating: 4.91,
+    reviewsCount: 680,
+    inStock: true,
+    stockQuantity: 60,
+    sku: 'FE-NRG-016',
+    barcode: '890103078916',
+    isBestSeller: true,
+    isNewArrival: false,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1547887537-6158d64c35b3?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Steam-distilled fresh Kashmiri Nargis blossoms infused in steam-distilled Kannauj rosewater and organic grain alcohol. Soft, enchanting floral notes that hydrate the senses.',
+    ingredients: 'Rosa Damascena Flower Water, Narcissus Tazetta (Nargis) Flower Extract, Grain Alcohol, Aloe Barbadensis Leaf Juice, Vitamin E.',
+    allergyTags: ['100% Natural Distillate', 'Paraben-Free', 'Ayurvedic Herb Formulation'],
+    shades: []
+  },
+  {
+    id: 'prod-017',
+    name: 'Bella Vita Luxury CEO Man & Woman Eau De Parfum (100ml)',
+    brand: 'Bella Vita Luxury',
+    category: 'fragrance',
+    subcategory: 'fragrance',
+    price: 799,
+    comparePrice: 999,
+    rating: 4.79,
+    reviewsCount: 3410,
+    inStock: true,
+    stockQuantity: 120,
+    sku: 'BVL-CEO-017',
+    barcode: '890103078917',
+    isBestSeller: false,
+    isNewArrival: false,
+    isFeatured: false,
+    images: [
+      'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'A sophisticated blend of Calabrian bergamot, lemon zest, lavender, and Haitian vetiver with cedarwood base notes. Engineered for all-day office wear and boardroom confidence.',
+    ingredients: 'Alcohol Denat., Aqua, Fragrance (Parfum), Limonene, Linalool, Hydroxycitronellal, Coumarin, Citral.',
+    allergyTags: ['All-Day Wear', 'Cruelty-Free', 'IFRA Certified Fragrance'],
+    shades: []
+  },
+
+  // ==========================================
+  // 5. BODYCARE CATEGORY
+  // ==========================================
+  {
+    id: 'prod-018',
+    name: 'Nécessaire The Multi-Vitamin Daily Body Lotion (200ml)',
+    brand: 'SHOPSYNC Atelier Body',
+    category: 'bodycare',
+    subcategory: 'bodycare',
+    price: 1650,
+    comparePrice: 1850,
+    rating: 4.96,
+    reviewsCount: 740,
+    inStock: true,
+    stockQuantity: 85,
+    sku: 'NEC-BLT-018',
+    barcode: '890103078918',
+    isBestSeller: true,
+    isNewArrival: true,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'A multi-vitamin daily treatment for the body with Niacinamide, Vitamin C, Vitamin E, and Omega-6/9. Absorbs instantly with zero greasy residue to strengthen the skin barrier.',
+    ingredients: 'Aqua/Water, Niacinamide, Squalane, Tocopheryl Acetate, Ascorbyl Palmitate, Linoleic Acid, Simmondsia Chinensis (Jojoba) Seed Oil, Glycerin, Cetearyl Olivate.',
+    allergyTags: ['Fragrance-Free', 'Hypoallergenic', 'Dermatologist Tested', 'Non-Greasy'],
+    shades: []
+  },
+  {
+    id: 'prod-019',
+    name: 'Bath & Body Works Warm Vanilla Sugar Ultra Shea Body Butter (226g)',
+    brand: 'Bath & Body Works',
+    category: 'bodycare',
+    subcategory: 'bodycare',
+    price: 1299,
+    comparePrice: 1499,
+    rating: 4.89,
+    reviewsCount: 1980,
+    inStock: true,
+    stockQuantity: 65,
+    sku: 'BBW-VNL-019',
+    barcode: '890103078919',
+    isBestSeller: true,
+    isNewArrival: false,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Infused with fluffy shea butter, cocoa butter, and soothing aloe. Provides 24 hours of continuous skin-drenching hydration wrapped in cozy vanilla, brown sugar, and toasted coconut.',
+    ingredients: 'Water (Aqua), Butyrospermum Parkii (Shea) Butter, Cetearyl Alcohol, Fragrance (Parfum), Theobroma Cacao (Cocoa) Seed Butter, Aloe Barbadensis Leaf Extract, Tocopherol.',
+    allergyTags: ['24-Hr Moisture', 'Ultra Shea Formula', 'Rich Gourmand Scent'],
+    shades: []
+  },
+  {
+    id: 'prod-020',
+    name: 'Chemist at Play 1% Salicylic Acid Exfoliating Body Polish Scrub (200g)',
+    brand: 'Chemist at Play',
+    category: 'bodycare',
+    subcategory: 'bodycare',
+    price: 549,
+    comparePrice: 649,
+    rating: 4.84,
+    reviewsCount: 920,
+    inStock: true,
+    stockQuantity: 110,
+    sku: 'CAP-SCR-020',
+    barcode: '890103078920',
+    isBestSeller: false,
+    isNewArrival: true,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1519735777090-ec97162dc266?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Powered by 1% BHA (Salicylic Acid), 5 Essential Ceramides, and gentle biodegradable walnut granules. Targets strawberry legs, back acne, and keratosis pilaris for silky-smooth skin.',
+    ingredients: 'Aqua, Juglans Regia (Walnut) Shell Powder, Salicylic Acid, Ceramide NP, Ceramide AP, Ceramide EOP, Phytosphingosine, Lactic Acid, Glycerin.',
+    allergyTags: ['Ceramide Powered', 'Targets KP & Body Acne', 'Silicon-Free'],
+    shades: []
+  },
+
+  // ==========================================
+  // 6. BEAUTY TOOLS & ACCESSORIES
+  // ==========================================
+  {
+    id: 'prod-021',
+    name: 'Natural Rose Quartz Face Roller & Gua Sha Facial Sculpting Set',
+    brand: 'SHOPSYNC Atelier Tools',
+    category: 'accessories',
+    subcategory: 'accessories',
+    price: 899,
+    comparePrice: 1299,
+    rating: 4.94,
+    reviewsCount: 840,
+    inStock: true,
+    stockQuantity: 70,
+    sku: 'SS-QRT-021',
+    barcode: '890103078921',
+    isBestSeller: true,
+    isNewArrival: true,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Handcrafted from 100% natural Brazilian Rose Quartz stone with a reinforced noiseless zinc alloy frame. Stimulates lymphatic drainage, boosts blood flow, and sculpts cheekbones.',
+    ingredients: '100% Authentic Natural Rose Quartz Gemstone, Welded Zinc Alloy Metal Hardware.',
+    allergyTags: ['100% Natural Gemstone', 'Non-Porous', 'Cooling Therapy'],
+    shades: []
+  },
+  {
+    id: 'prod-022',
+    name: 'Professional 12-Piece Cruelty-Free Soft Bristle Makeup Brush Set',
+    brand: 'SHOPSYNC Atelier Tools',
+    category: 'accessories',
+    subcategory: 'accessories',
+    price: 1199,
+    comparePrice: 1599,
+    rating: 4.91,
+    reviewsCount: 1120,
+    inStock: true,
+    stockQuantity: 85,
+    sku: 'SS-BRS-022',
+    barcode: '890103078922',
+    isBestSeller: true,
+    isNewArrival: false,
+    isFeatured: true,
+    images: [
+      'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Complete beauty artist set featuring ultra-plush vegan synthetic Taklon bristles: powder brush, foundation buffing brush, angled blush brush, blending crease brushes, and travel pouch.',
+    ingredients: 'High-Density Vegan Synthetic Taklon Fibers, Recycled Aluminum Ferrules, Sustainable Matte Wooden Handles.',
+    allergyTags: ['100% Vegan Bristles', 'Hypoallergenic', 'Zero Shedding Guarantee'],
+    shades: []
+  },
+  {
+    id: 'prod-023',
+    name: 'Precision Rose Gold Eyelash Curler with Silicone Refill Pads',
+    brand: 'SHOPSYNC Atelier Tools',
+    category: 'accessories',
+    subcategory: 'accessories',
+    price: 349,
+    comparePrice: 499,
+    rating: 4.86,
+    reviewsCount: 650,
+    inStock: true,
+    stockQuantity: 140,
+    sku: 'SS-CRL-023',
+    barcode: '890103078923',
+    isBestSeller: false,
+    isNewArrival: false,
+    isFeatured: false,
+    images: [
+      'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80'
+    ],
+    description: 'Ergonomic contoured lash curler customized for almond and deep-set eyes. Features a calibrated hinge and hypoallergenic thick silicone pads that deliver an eye-opening curl without pinching.',
+    ingredients: 'Carbon Steel Frame with Rose Gold Electroplating, Medical-Grade Silicone Bumper Pads.',
+    allergyTags: ['Nickel-Free Coating', 'Pinch-Free Design', 'Includes 2 Extra Pads'],
+    shades: []
   }
 ]
 
@@ -366,7 +692,7 @@ export const COMMON_ALLERGENS = [
   { id: 'sulfates', name: 'Sulfates (SLS / SLES)', count: '2 Products', severity: 'Medium' },
   { id: 'nut-oils', name: 'Tree Nut & Almond Oils', count: '1 Product (Hair Oil)', severity: 'Medium' },
   { id: 'essential-oils', name: 'Citrus & Herbal Extracts', count: '2 Products', severity: 'Low' },
-  { id: 'salicylic', name: 'Salicylic Acid / BHA Actives', count: '1 Product', severity: 'Medium' }
+  { id: 'salicylic', name: 'Salicylic Acid / BHA Actives', count: '2 Products', severity: 'Medium' }
 ]
 
 export const INDIAN_ADDRESSES = [
@@ -418,7 +744,7 @@ export const MOCK_REVIEWS = [
     verified: true,
     shade: '128 Warm Nude',
     comment: 'The Maybelline 128 foundation match suggested by SHOPSYNC AI was spot-on for my warm Gujarati undertone! Lasted through a humid festive evening without any greasiness.',
-    productName: 'Maybelline Fit Me Matte + Poreless (Shade 128)'
+    productName: 'Maybelline New York Fit Me Matte + Poreless Liquid Foundation'
   },
   {
     id: 'rev-in-2',
@@ -429,7 +755,7 @@ export const MOCK_REVIEWS = [
     verified: true,
     shade: '01 Scarlett O’Hara',
     comment: 'The fastest delivery in Mumbai! Ordered at 10 AM, received in Bandra by 4 PM. The SUGAR Matte As Hell crayon stays put through coffee and lunch.',
-    productName: 'SUGAR Matte As Hell Crayon Lipstick'
+    productName: 'SUGAR Cosmetics Matte As Hell Crayon Lipstick'
   },
   {
     id: 'rev-in-3',
@@ -440,6 +766,6 @@ export const MOCK_REVIEWS = [
     verified: true,
     shade: null,
     comment: 'As a dermatologist, I love that SHOPSYNC flags ingredient conflicts and allergens during checkout. Minimalist 10% Niacinamide is clean, effective, and perfectly priced at ₹599.',
-    productName: 'Minimalist 10% Niacinamide + Zinc Serum'
+    productName: 'Minimalist 10% Niacinamide + Zinc Daily Blemish Serum'
   }
 ]

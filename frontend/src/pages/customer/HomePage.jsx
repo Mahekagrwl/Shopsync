@@ -73,7 +73,7 @@ export function HomePage() {
       id: 'skincare',
       title: 'Skincare',
       description: 'Clinical actives, 10% Niacinamide, Hyaluronic hydration & barrier repair formulations.',
-      image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80',
+      image: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=800&auto=format&fit=crop&q=80',
       link: '/category/skincare',
       badge: 'Clinically Tested',
       productCount: '180+ Formulations'
@@ -82,7 +82,7 @@ export function HomePage() {
       id: 'makeup',
       title: 'Makeup',
       description: 'Flawless matte foundations, high-pigment lipsticks, waterproof kajals & blushes.',
-      image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
+      image: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800&auto=format&fit=crop&q=80',
       link: '/category/makeup',
       badge: 'Pro Artistry',
       productCount: '240+ Shades'
@@ -100,7 +100,7 @@ export function HomePage() {
       id: 'beauty-essentials',
       title: 'Beauty Essentials',
       description: 'Sunscreen fluid SPF 50+, precision blending tools, micellar waters & routine kits.',
-      image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&auto=format&fit=crop&q=80',
+      image: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&auto=format&fit=crop&q=80',
       link: '/shop',
       badge: 'Everyday Must-Haves',
       productCount: '120+ Essentials'
@@ -115,6 +115,7 @@ export function HomePage() {
     { id: 'haircare', label: 'Haircare' },
     { id: 'fragrance', label: 'Fragrance' },
     { id: 'bodycare', label: 'Bodycare' },
+    { id: 'accessories', label: 'Tools & Accessories' },
   ]
 
   const filteredTabProducts = activeCategoryTab === 'all'
@@ -235,7 +236,7 @@ export function HomePage() {
                 {/* Background Showcase Frame */}
                 <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white/60 backdrop-blur-md">
                   <img
-                    src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=900&auto=format&fit=crop&q=80"
+                    src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=900&auto=format&fit=crop&q=80"
                     alt="SHOPSYNC Indian Beauty Collection"
                     className="w-full h-full object-cover"
                   />
@@ -259,7 +260,7 @@ export function HomePage() {
                   }}
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400"
+                    src="https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=400"
                     alt="Minimalist Serum"
                     className="w-full h-28 object-cover rounded-xl"
                   />

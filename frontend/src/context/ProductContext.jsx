@@ -14,13 +14,18 @@ export function ProductProvider({ children }) {
       const saved = localStorage.getItem(STORAGE_KEY)
       if (saved) {
         const parsed = JSON.parse(saved)
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        // Ensure cache contains complete categories, no legacy broken images, and authenticated foundation photos
+        const hasAllCategories = parsed.some(p => p.category === 'bodycare') && parsed.some(p => p.category === 'accessories')
+        const hasBrokenImage = parsed.some(p => p.images && p.images.some(img => img.includes('photo-1608248597359-25f0a7199c36')))
+        const hasTargetFoundationImages = parsed.some(p => p.id === 'prod-001' && p.images && p.images.some(img => img.includes('photo-1557205465'))) && parsed.some(p => p.id === 'prod-002' && p.images && p.images.some(img => img.includes('photo-1627384113')))
+        if (Array.isArray(parsed) && parsed.length >= 20 && hasAllCategories && !hasBrokenImage && hasTargetFoundationImages) {
           return parsed
         }
       }
     } catch (e) {
       console.warn('Error reading stored products:', e)
     }
+    // Seed fresh master dataset
     return BEAUTY_PRODUCTS
   })
 
@@ -50,11 +55,16 @@ export function ProductProvider({ children }) {
       try {
         const res = await productsApi.getAll()
         if (res && res.products && res.products.length > 0 && isMounted) {
-          // Merge with local state to preserve live frontend stocks
+          // Merge with local state to preserve frontend product catalog integrity and stocks
           setProducts(prev => {
             return prev.map(p => {
               const remote = res.products.find(r => r.id === p.id)
-              return remote ? { ...p, ...remote, stockQuantity: p.stockQuantity } : p
+              if (!remote) return p
+              return {
+                ...remote,
+                ...p,
+                stockQuantity: p.stockQuantity ?? remote.stock
+              }
             })
           })
         }

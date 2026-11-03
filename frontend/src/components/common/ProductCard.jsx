@@ -23,9 +23,15 @@ export function ProductCard({ product, featured = false }) {
   const [selectedShade, setSelectedShade] = useState(
     product.shades && product.shades.length > 0 ? product.shades[0] : null
   )
+  const [imgSrc, setImgSrc] = useState(product.images?.[0] || 'https://images.unsplash.com/photo-1629732047847-50219e9c5aef?w=800')
   const [addedAnimation, setAddedAnimation] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [heartSparks, setHeartSparks] = useState(false)
+
+  // Sync image source if product changes
+  React.useEffect(() => {
+    setImgSrc(product.images?.[0] || 'https://images.unsplash.com/photo-1629732047847-50219e9c5aef?w=800')
+  }, [product.images])
 
   // 3D Tilt State
   const [tilt, setTilt] = useState({ rx: 0, ry: 0, glareX: 50, glareY: 50, isHovered: false })
@@ -140,8 +146,9 @@ export function ProductCard({ product, featured = false }) {
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F8F3EE]">
         <Link to={`/product/${product.id}`} className="block w-full h-full">
           <img
-            src={product.images[0]}
+            src={imgSrc}
             alt={product.name}
+            onError={() => setImgSrc('https://images.unsplash.com/photo-1629732047847-50219e9c5aef?w=800')}
             className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-108"
             loading="lazy"
           />
@@ -216,7 +223,7 @@ export function ProductCard({ product, featured = false }) {
             ) : liveProduct.inStock && liveProduct.stockQuantity > 0 ? (
               <>
                 <ShoppingBag className="w-3.5 h-3.5 text-[#D9A6AC]" />
-                {hasShades ? `Add (${selectedShade?.name || 'Select'})` : 'Quick Add'}
+                {hasShades && product.category === 'makeup' ? `Add (${selectedShade?.name || 'Select'})` : 'Quick Add'}
               </>
             ) : (
               'Sold Out'
@@ -247,7 +254,7 @@ export function ProductCard({ product, featured = false }) {
         </p>
 
         {/* Shades Palette if makeup */}
-        {hasShades && (
+        {hasShades && product.category === 'makeup' && (
           <div className="pt-2 flex items-center gap-1.5 overflow-x-auto py-1">
             {product.shades.slice(0, 5).map((shade) => (
               <button
